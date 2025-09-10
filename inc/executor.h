@@ -13,14 +13,14 @@
 #ifndef EXECUTOR_H
 # define EXECUTOR_H
 
-# include <sys/types.h>
+# include "defines.h"
 
-typedef struct s_global_state
+struct s_global_state
 {
 	int		pid_count;
 	pid_t	*pids;
 	int		exit_status;
 	//whatever else is required to track globl status fo executions
-}	t_gstate;
+};
 
 #endif
