@@ -1,21 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.h                                         :+:      :+:    :+:   */
+/*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/10 10:33:34 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/09/10 10:57:47 by jvalkama         ###   ########.fr       */
+/*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
+/*   Updated: 2025/09/09 15:45:13 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXECUTOR_H
-# define EXECUTOR_H
-
-# include "defines.h"
-# include <unistd.h>
-
-//funktio prototyypit, spessumacrot.
-
-#endif
+#include "executor.h"
+#include "" //muiden .c tiedostojen alaheaderit
