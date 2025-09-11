@@ -16,6 +16,7 @@
 # include "defines.h"
 # include <unistd.h>
 
-//funktio prototyypit, spessumacrot.
+//funktio prototyypit tanne joskus. 
+//....mut niiden parametrit vahan riippuu parser outputista
 
 #endif
