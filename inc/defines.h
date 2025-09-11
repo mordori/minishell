@@ -28,11 +28,6 @@
 
 typedef struct s_state			t_state;
 typedef struct s_cmd			t_cmd;
-
-typedef enum
-{
-	SIMPLE,
-	PIPELINE
-}	e_cmd_type;
+typedef enum e_cmd_type			t_cmd_type;
 
 #endif
