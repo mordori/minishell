@@ -38,7 +38,7 @@ typedef struct s_state
 typedef struct s_cmd
 {
 	e_cmd_type		type;
-	char			**argv;
+	char			**argv; //MIKA we can change this memb if parser refines args to data.
 	struct s_cmd	*left; //linked list kaytannossa.
 	struct s_cmd	*right;
 	int				exit_status;
@@ -49,5 +49,16 @@ typedef enum e_cmd_type
 	SIMPLE,
 	PIPELINE
 }	t_cmd_type;
+
+typedef enum e_builtin_type
+{
+	ECHO,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV,
+	EXIT
+}	t_builtin;
 
 #endif
