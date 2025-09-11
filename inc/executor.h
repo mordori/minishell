@@ -16,6 +16,12 @@
 # include "defines.h"
 # include <unistd.h>
 
+enum e_cmd_type
+{
+	SIMPLE,
+	PIPELINE
+};
+
 struct s_state
 {
 	int			pid_count;
