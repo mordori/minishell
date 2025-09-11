@@ -19,9 +19,20 @@
 # include <stddef.h>
 # include <limits.h>
 
-# define ERROR		-1
-# define SUCCESS	0
+// 127 and 126 on bash error codeja, cmd not found, ja cannot execute
+// bashissa 126 cannot-execute triggeroityy yleensa jos bad permissions tai shebang puuttuu
+# define CMD_ERROR_NOTFOUND		127
+# define CMD_ERROR_CANNOTEX		126
+# define ERROR					-1
+# define SUCCESS				0
 
-typedef struct s_global_state	t_gstate;
+typedef struct s_state			t_state;
+typedef struct s_cmd			t_cmd;
+
+typedef enum
+{
+	SIMPLE,
+	PIPELINE
+}	e_cmd_type;
 
 #endif
