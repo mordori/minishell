@@ -16,28 +16,6 @@
 # include "defines.h"
 # include <unistd.h>
 
-enum e_cmd_type
-{
-	SIMPLE,
-	PIPELINE
-};
-
-struct s_state
-{
-	int			pid_count;
-	pid_t		*pids;
-	int			exit_status; //edellisen exit status: tarvitaan $? komentoon
-	char		**env_var; //environment variableille
-	//whatever else is required to track globl status fo executions
-};
-
-struct s_cmd
-{
-	e_cmd_type		type;
-	char			**argv;
-	struct s_cmd	*left; //linked list kaytannossa.
-	struct s_cmd	*right;
-	int				exit_status;
-};
+//funktio prototyypit, spessumacrot.
 
 #endif
