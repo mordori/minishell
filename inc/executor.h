@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 10:33:34 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/09/10 10:57:47 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/09/12 15:55:00 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 # include "defines.h"
 # include <unistd.h>
 
-//funktio prototyypit tanne joskus. 
-//....mut niiden parametrit vahan riippuu parser outputista
+int		cmd_executor(t_cmd **cmd, t_state *shell_state);
+void	execute_simple(t_cmd *cmd, t_state *shell_state);
+void	execute_pipeline(t_cmd **cmd, t_state *shell_state);
 
 #endif
