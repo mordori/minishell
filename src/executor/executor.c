@@ -27,16 +27,17 @@ int	cmd_executor(t_cmd **cmd, t_state *shell_state)
 	return(shell_state->exit_status);
 }
 
-void	execute_simple(t_cmd *cmd, t_state *shell_state) 
+int	execute_simple(t_cmd *cmd, t_state *shell_state) 
 {
 	if (is_builtin(cmd->cmd))
 		exec_builtin(cmd, shell_state);
 	else
 		exec_extern(cmd, shell_state);
+	return (shell_state->exit_status;
 }
 
 //need a loop/recursion to execute the cmds in order when pipeline
-void	execute_pipeline(t_cmd **cmd, t_state *shell_state)
+int	execute_pipeline(t_cmd **cmd, t_state *shell_state)
 {
 	bool		is_builtin;
 
@@ -44,4 +45,27 @@ void	execute_pipeline(t_cmd **cmd, t_state *shell_state)
 	create_pipes(shell_state); //the loop or recursion should break with error ofc.
 	spawn_children(shell_state);
 	close_pipes(shell_state);
+}
+
+// i think is_builtin should be done once and then the dispatch table initiated.
+// is_builtin could be somewhere in cmd_executor, or even the struct...
+
+void	exec_builtin(t_cmd *cmd, t_state *shell_state)
+{
+	cmd_func	*dispatch_table[7];
+
+	dispatch_table = {echo, cd, pwd, export, unset, env, exit};
+	return (dispatch_table[cmd->builtin_cmd](cmd, shell_state));
+}
+
+void	exec_extern(t_cmd *cmd, t_state *shell_state)
+{
+	char		*command;
+	char		**args;
+
+	getenv(); //getenv searches for path to extern command
+	command = cmd->args[0];
+	args = cmd->args + 1;
+	execve(command[0], args);
+	return ;
 }
