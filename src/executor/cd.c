@@ -28,8 +28,5 @@ void	cd(t_cmd *cmd, t_state *shell_state)
 		}
 	}
 	if (chdir(path))
-	{
 		shell_state->exit_status = ERROR_BUILTIN;
-		return ;
-	}
 }

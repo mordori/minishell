@@ -16,8 +16,32 @@
 # include "defines.h"
 # include <unistd.h>
 
+//executor.c
 int		cmd_executor(t_cmd **cmd, t_state *shell_state);
 void	execute_simple(t_cmd *cmd, t_state *shell_state);
 void	execute_pipeline(t_cmd **cmd, t_state *shell_state);
+int		exec_builtin(t_cmd *cmd, t_state *shell_state);
+
+//child_processes.c
+int		exec_extern(t_cmd *cmd);
+
+//exec_pipeline.c
+int		create_pipes(t_state *shell);
+int		spawn_and_run(t_state *shell, t_cmd *cmd);
+
+//cd.c
+void	cd(t_cmd *cmd, t_state *shell_state);
+
+//echo.c
+int		echo(t_state *shell, t_cmd *cmd);
+
+//pwd.c
+void	pwd(t_cmd *cmd, t_state *shell_state);
+
+//executor_utils.c
+bool	is_builtin(t_cmd *command);
+int		fork_child(pid_t *child_pid, t_state *shell);
+
+
 
 #endif

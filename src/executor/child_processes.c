@@ -31,3 +31,11 @@ int	exec_extern(t_cmd *cmd)
 	execve(command, args);
 	exit(errno);
 }
+
+/*
+* I think each child process needs a read FD and a write FD (pipe's read-end and write-end),
+* and the write FD is the read FD for the next child process.
+* But the first node prolly reads from the parent data (not read end),
+* and the last node outputs in stdout (not write end).
+*/
+
