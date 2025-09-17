@@ -21,17 +21,22 @@
  * which is the node above it.
  * There prolly need to be as many forks (PIDs) as cmds in the pipeline, 
  * and the amount of pipes connecting the PIDs is forks-1.
+ * So let's say we have 5 cmds, that's 4 pipes = 8 file-descriptors (1 pipe = 2 file-descriptors per node)
 */
-int		create_pipes(t_state *shell)
+int		create_pipes(t_cmd **cmd, t_state *shell)
 {
+	t_cmd	*node;
 	int		n_pipes;
 	int		i;
 
+	node = *cmd;
 	n_pipes = shell->pid_count - 1;
-	while (i < n_pipes)
+	while (i < n_pipes && node)
 	{
-		if (pipe(shell->pipe_fds))
+		if (pipe(node->pipe_fds))
 			return (ERROR_PIPELINE);
+		node = node->left;
+		i++;
 	}
 	return (SUCCESS);
 }
@@ -54,12 +59,12 @@ int		spawn_and_run(t_state *shell, t_cmd *cmd)
 			return (ERROR_FORKING);
 		i++;
 	}
-	postorder_traversal();
+	postorder_traversal(); //would traverse them after forking everything and traversing until the "end" node
 	return (SUCCESS);
 }
 
 //redirections are processed before the next pipe connection.
-int		run_pipeline();
+int		run_pipeline()
 {
 	int		status;
 

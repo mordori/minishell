@@ -59,7 +59,7 @@ int	execute_pipeline(t_cmd **cmd, t_state *shell_state)
 	bool		is_builtin;
 
 	is_builtin = is_builtin();
-	create_pipes(shell_state);
+	create_pipes(cmd, shell_state);
 	spawn_and_run(cmd, shell_state);
 	close_pipes(shell_state);
 	return (shell_state->exit_status);
