@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/16 16:00:10 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/09/17 19:49:18 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,34 +32,15 @@
 # define SUCCESS				0
 # define CMD					0
 
-typedef int cmd_func(t_cmd, t_state);
+# define READLINE_PROMPT		"[minishell]$ "
 
-typedef struct s_state
-{
-	int			pid_count; //can be parsed from the number of | characters
-	pid_t		*pids;
-	int			exit_status;
-	char		**env_var;
-}	t_state;
+typedef enum e_builtin_type	t_builtin;
+typedef enum e_exec_mode	t_exec_mode;
+typedef struct s_cmd		t_cmd;
+typedef struct s_state		t_state;
+typedef int					t_cmd_func(t_cmd, t_state);
 
-typedef struct s_cmd
-{
-	enum e_exec_mode	mode;
-	enum t_builtin		builtin_cmd;
-	char				**args;
-	struct s_cmd		*left;
-	struct s_cmd		*right;
-	int					pipe_fds[2];
-	int					exit_status;
-}	t_cmd;
-
-typedef enum e_exec_mode
-{
-	SIMPLE,
-	PIPELINE
-}	t_exec_mode;
-
-typedef enum e_builtin_type
+enum e_builtin_type
 {
 	ECHO,
 	CD,
@@ -68,6 +49,31 @@ typedef enum e_builtin_type
 	UNSET,
 	ENV,
 	EXIT
-}	t_builtin;
+};
+
+enum e_exec_mode
+{
+	SIMPLE,
+	PIPELINE
+};
+
+struct s_cmd
+{
+	t_exec_mode	mode;
+	t_builtin	builtin_cmd;
+	char		**args;
+	t_cmd		*left;
+	t_cmd		*right;
+	int			pipe_fds[2];
+	int			exit_status;
+};
+
+struct s_state
+{
+	int		pid_count; //can be parsed from the number of | characters
+	pid_t	*pids;
+	int		exit_status;
+	char	**env_var;
+};
 
 #endif

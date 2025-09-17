@@ -1,20 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   mem_arena.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/17 22:20:08 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/17 22:05:32 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/09/17 22:05:57 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "main.h"
-#include "parsing.h"
+#ifndef MEM_ARENA_H
+# define MEM_ARENA_H
 
-int	main(void)
-{
+# include "defines.h"
 
-	return (EXIT_SUCCESS);
-}
+#endif

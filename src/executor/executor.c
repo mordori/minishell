@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/09/16 16:00:05 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/09/17 19:55:25 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	cmd_executor(t_cmd **cmd, t_state *shell_state)
 {
 	t_cmd		command;
 
-	command = *cmd; 
+	command = *cmd;
 	if (command->type == SIMPLE)
 		execute_simple(command, shell_state);
 	else if (command->type == PIPELINE)
@@ -27,7 +27,7 @@ int	cmd_executor(t_cmd **cmd, t_state *shell_state)
 	return(shell_state->exit_status);
 }
 
-int	execute_simple(t_cmd *cmd, t_state *shell_state) 
+int	execute_simple(t_cmd *cmd, t_state *shell_state)
 {
 	pid_t		child_pid;
 	int			status;
@@ -51,7 +51,7 @@ int	execute_simple(t_cmd *cmd, t_state *shell_state)
 WIP. need a loop/recursion to execute the cmds in order when pipeline
 the loop or recursion should break with error ofc.
 
-pipeline technically needs no forks for the cmds that are builtin, 
+pipeline technically needs no forks for the cmds that are builtin,
 but just forking everything might simplify the process flow.
 */
 int	execute_pipeline(t_cmd **cmd, t_state *shell_state)

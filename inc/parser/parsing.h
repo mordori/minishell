@@ -1,20 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/17 22:20:08 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/09/17 22:15:17 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "main.h"
-#include "parsing.h"
+#ifndef PARSING_H
+# define PARSING_H
 
-int	main(void)
-{
+# include <readline/readline.h>
+# include <readline/history.h>
 
-	return (EXIT_SUCCESS);
-}
+# include "defines.h"
+
+#endif
