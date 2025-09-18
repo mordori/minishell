@@ -12,24 +12,14 @@
 
 #include "executor.h"
 
-/*
-	* getenv("PATH") fetches the whole 'PATH' ENV variable, and passes it to parsing
-	* for extracting the specific command path out of the PATH.
-	*
-	* After it has executed the external command, execve() will exit the child process,
-	* if it succeeds.
-	* But if execve fails, the child calls exit() with exit code set to errno, 
-	* which gives parent more specific info about what happened.
-*/
-int	exec_extern(t_cmd *cmd)
-{
-	char		*command;
-	char		**args;
+//redirections are processed before the next pipe connection!
 
-	command = parse_env(cmd->args[0], get_env("PATH"));
-	args = cmd->args + 1;
-	execve(command, args);
-	exit(errno);
+void	run_pipeline(t_cmd *cmd, t_shell *shell)
+{
+	//FIXME: WORK ON THIS NEXT!!!!!!!!!!
+	//set up the pipe links and shit...
+	dup2();
+	run_pipeline_cmd(cmd, shell);
 }
 
 /*
@@ -38,4 +28,14 @@ int	exec_extern(t_cmd *cmd)
 * But the first node prolly reads from the parent data (not read end),
 * and the last node outputs in stdout (not write end).
 */
-
+void	run_pipeline_cmd(t_cmd *cmd, t_state *shell)
+{
+	if (child_pid == 0)
+	{
+		if (cmd->is_builtin))
+			exec_builtin(cmd, shell_state);
+		else
+			exec_extern(cmd, shell_state);
+		exit(shell_state->exit_status);
+		
+}
