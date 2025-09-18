@@ -15,13 +15,13 @@
 
 bool	is_builtin(t_cmd *command) //the parameter/member format depends on parser output
 {
-	return (command->cmd == ECHO
-		|| command->cmd == CD
-		|| command->cmd == PWD
-		|| command->cmd == EXPORT
-		|| command->cmd == UNSET
-		|| command->cmd == ENV
-		|| command->cmd == EXIT);
+	return (command->builtin_cmd == ECHO
+		|| command->builtin_cmd == CD
+		|| command->builtin_cmd == PWD
+		|| command->builtin_cmd == EXPORT
+		|| command->builtin_cmd == UNSET
+		|| command->builtin_cmd == ENV
+		|| command->builtin_cmd == EXIT);
 }
 
 /* 
@@ -43,4 +43,19 @@ int	fork_child(pid_t *child_pid, t_state *shell);
 		return (ERROR_FORKING);
 	}
 	return (SUCCESS);
+}
+
+void	wait_pids_iteratively(t_cmd *cmd, t_shell *shell)
+{
+	int		status;
+
+	while (i < shell->pid_count)
+	{
+		wait_pid(shell->pids[i], &status, 0);
+		if (WIFEXITED(status))
+			shell->exit_status = WEXITSTATUS(status);
+		if (shell->exit_status)
+			; // if error, should close *everything*, and probably return some msg.
+		i++;
+	}
 }

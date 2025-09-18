@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/16 16:00:10 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/09/18 17:49:40 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef enum e_exec_mode
 
 typedef enum e_builtin_type
 {
+	FALSE,
 	ECHO,
 	CD,
 	PWD,
