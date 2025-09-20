@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/21 01:47:22 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/21 02:06:42 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef	struct s_mem_arena	t_mem_arena;
 
 enum e_builtin_type
 {
+	FALSE,
 	ECHO,
 	CD,
 	PWD,
