@@ -23,22 +23,18 @@
  * and the amount of pipes connecting the PIDs is forks-1.
  * So let's say we have 5 cmds, that's 4 pipes = 8 file-descriptors (1 pipe = 2 file-descriptors per node)
 */
-int		create_pipes(t_cmd **cmd, t_state *shell)
+int	create_pipes(t_cmd *cmd, t_state *shell, int n_pipes)
 {
-	t_cmd	*node;
-	int		n_pipes;
-	int		i;
+	static int		i;
 
-	node = *cmd;
-	n_pipes = shell->pid_count - 1;
-	while (i < n_pipes && node)
+	if (i < n_pipes && shell->exit_status == SUCCESS)
 	{
-		if (pipe(node->pipe_fds))
-			return (ERROR_PIPELINE);
-		node = node->left;
+		if (pipe(cmd->pipe_fds))
+			shell->exit_status += ERROR_PIPELINE;
 		i++;
+		create_pipes(cmd->right, shell, n_pipes);
 	}
-	return (SUCCESS);
+	return (shell->exit_status);
 }
 
 /*
@@ -48,47 +44,35 @@ in sequence, before moving to next fork-pair.
 In that logic, create_pipes makes ALL the pipes BEFORE ANY of the pairs are forked.
 The below spawn_children just iteratively creates all forks rn, in one go.
 */
-int		spawn_and_run(t_state *shell, t_cmd *cmd)
+int	spawn_and_run(t_cmd *cmd, t_shell *shell)
 {
-	int		i;
+	static pid_t	child_pid;
+	static int		i;
 
-	i = 0;
-	while (i < shell->pid_count)
+	if (i < shell->pid_count && cmd)
 	{
-		if (fork_child(shell->pids[i], shell))
-			return (ERROR_FORKING);
-		i++;
-	}
-	postorder_traversal(); //would traverse them after forking everything and traversing until the "end" node
-	return (SUCCESS);
-}
-
-//redirections are processed before the next pipe connection.
-int		run_pipeline()
-{
-	int		status;
-
-	child_pid = fork();
-	if (child_pid == -1)
-	{
-		shell_state->exit_status = ERROR_PIPELINE;
-		return (ERROR_PIPELINE);
-	}
-	else if (child_pid == 0)
-	{
-		if (is_builtin(cmd->cmd))
-			exec_builtin(cmd, shell_state);
+		if (i == 0 || child_pid != 0)
+		{
+			if (fork_child(&child_pid, shell))
+				return (ERROR_FORKING);
+			shell->pids[i] = child_pid;
+		}
+		if (child_pid == 0)
+			run_pipeline(cmd, shell);
 		else
-			exec_extern(cmd, shell_state);
-		exit(shell_state->exit_status);
+		{
+			i++;
+			spawn_and_run(cmd->right, shell);
+		}
 	}
-	wait_pid(child_pid, &status, 0);
-	if (WIFEXITED(status))
-		shell_state->exit_status = WEXITSTATUS(status);
-	return (shell_state->exit_status);
+	i = 0;
+	wait_pids_iteratively(cmd, shell);
+	return (shell->exit_status);
 }
 
-int		close_pipes()
+
+
+int	close_pipes()
 {
 	close();
 	return (SUCCESS);
