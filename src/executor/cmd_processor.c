@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/09/18 17:49:35 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/09/22 18:29:01 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,14 @@ int	exec_extern(t_cmd *cmd)
 	char		*command;
 	char		**args;
 
-	command = parse_env(cmd->args[0], get_env("PATH"));
+	command = get_path(cmd->cmd, get_env("PATH"));
 	args = cmd->args + 1;
 	execve(command, args);
 	exit(errno);
 }
+
+
+if (string[i] == ':')
+	ft_strncmp(string[i + 1], cmd->cmd)
+		if ':'
+			break;

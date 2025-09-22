@@ -36,28 +36,34 @@ typedef int cmd_func(t_cmd, t_state);
 
 typedef struct s_state
 {
-	int			pid_count; //can be parsed from the number of | characters
-	pid_t		*pids;
-	int			exit_status;
-	char		**env_var;
+	t_mode			mode;
+	int				child_count; //can be parsed from the number of | characters
+	pid_t			*pids;
+	int				exit_status;
+	char			**env_var;
 }	t_state;
 
 typedef struct s_cmd
 {
-	enum e_exec_mode	mode;
-	enum t_builtin		builtin_cmd;
-	char				**args;
-	struct s_cmd		*left;
-	struct s_cmd		*right;
-	int					pipe_fds[2];
-	int					exit_status;
+	t_builtin		builtin;
+	char			*cmd;
+	char			**args;
+	int				exit_status;
 }	t_cmd;
 
-typedef enum e_exec_mode
+typedef struct s_node
+{
+	t_cmd			*left;
+	t_node			*next;
+	t_node			*prev;
+	int				pipe_fds[2];
+}	t_node;
+
+typedef enum e_mode
 {
 	SIMPLE,
 	PIPELINE
-}	t_exec_mode;
+}	t_mode;
 
 typedef enum e_builtin_type
 {
