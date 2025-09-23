@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/23 18:58:46 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/23 22:54:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,18 @@
 
 # define READLINE_PROMPT		"\033[0;36m[minishell]\033[0m$ "
 
+# define INT32_LENGTH		11			// byte
+# define INT64_LENGTH		20			// byte
+
 typedef enum e_builtin_type	t_builtin;
 typedef enum e_mode			t_mode;
+typedef enum e_error_code	t_error_code;
 typedef struct s_cmd		t_cmd;
 typedef struct s_state		t_state;
 typedef struct s_node		t_node;
 typedef int					t_cmd_func(t_cmd, t_state);
-typedef	struct s_mem_arena	t_mem_arena;
+typedef struct s_mem_arena	t_mem_arena;
+typedef struct s_minishell	t_minishell;
 
 enum e_builtin_type
 {
@@ -61,36 +66,47 @@ enum e_mode
 	PIPELINE
 };
 
+enum e_error_code
+{
+	STARTUP_MSG,
+};
+
 struct s_node
 {
-	t_cmd			*cmd;
-	t_node			*next;
-	t_node			*prev;
-	int				pipe_fds[2];
+	t_cmd		*cmd;
+	t_node		*next;
+	t_node		*prev;
+	int			pipe_fds[2];
 };
 
 struct s_state
 {
-	t_mode			mode;
-	int				child_count; //can be parsed from the number of | characters
-	pid_t			*pids;
-	int				exit_status;
-	char			**env_var;
+	t_mode		mode;
+	int			child_count; //can be parsed from the number of | characters
+	pid_t		*pids;
+	int			exit_status;
+	char		**env_var;
 };
 
 struct s_cmd
 {
-	t_builtin		builtin;
-	char			*cmd;
-	char			**args;
+	t_builtin	builtin;
+	char		*cmd;
+	char		**args;
 };
 
-
+// Memory arena
 struct s_mem_arena
 {
-	char	*tail;
-	size_t	capacity;
-	size_t	head;
+	char		*base;
+	size_t		capacity;
+	size_t		head;
+};
+
+struct	s_minishell
+{
+	t_mem_arena	arena_system;
+	t_mem_arena	arena_commands;
 };
 
 #endif

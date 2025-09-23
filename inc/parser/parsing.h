@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/23 16:24:12 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/23 22:10:57 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 # include "defines.h"
 
-void	initialize();
-void	prompt_input();
+void	initialize(void);
+void	prompt_input(void);
 
 #endif
