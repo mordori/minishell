@@ -29,6 +29,7 @@
 # define ERROR_GENERAL			1
 # define ERROR_BUILTIN			2
 # define ERROR_PIPELINE			3
+# define ERROR_REDIR			4
 # define SUCCESS				0
 # define CMD					0
 
@@ -37,10 +38,10 @@ typedef int cmd_func(t_cmd, t_state);
 typedef struct s_state
 {
 	t_mode			mode;
-	int				child_count; //can be parsed from the number of | characters
+	int				child_count;
 	pid_t			*pids;
 	int				exit_status;
-	char			**env_var;
+	char			**env_vars;
 }	t_state;
 
 typedef struct s_cmd
@@ -48,12 +49,11 @@ typedef struct s_cmd
 	t_builtin		builtin;
 	char			*cmd;
 	char			**args;
-	int				exit_status;
 }	t_cmd;
 
 typedef struct s_node
 {
-	t_cmd			*left;
+	t_cmd			*cmd;
 	t_node			*next;
 	t_node			*prev;
 	int				pipe_fds[2];
