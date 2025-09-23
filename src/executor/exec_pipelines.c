@@ -12,109 +12,85 @@
 
 #include "executor.h"
 
-/*
- * The ROUGH GIST OF THINGS:
- * pipeline logic. basically PIPEX shit, calld from execute_pipeline in executor.c
- * basically, each pipeline node is a pipe with a left and a right cmd, 
- * i.e. two commands connected by one pipe. 
- * And their output is the input for the next node,
- * which is the node above it.
- * There prolly need to be as many forks (PIDs) as cmds in the pipeline, 
- * and the amount of pipes connecting the PIDs is forks-1.
- * So let's say we have 5 cmds, that's 4 pipes = 8 file-descriptors (1 pipe = 2 file-descriptors per node)
-*/
-int	create_pipes(t_node *node, t_state *shell, int n_pipes)
+int	spawn_and_run(t_node *node, t_shell *shell, int count, int *prev_fd)
 {
-	static int		i;
-
-	if (i < n_pipes && shell->exit_status == SUCCESS)
+	pid_t		child_pid;
+	
+	child_pid = -1;
+	if (node->next)
 	{
-		if (pipe(node->pipe_fds))
-		{
-			shell->exit_status = ERROR_PIPELINE;
-			return (shell->exit_status);
-		}
-		i++;
-		create_pipes(node->next, shell, n_pipes);
+		if (create_pipe(node, shell, prev_fd)
+			return (ERROR_PIPELINE);
 	}
-	i = 0;
-	return (shell->exit_status);
+	if (child_pid != 0) //except builtins shouldn't be forked: unset and env need ability to permanently modify parent ENV variables
+	{
+		if (fork_child(&child_pid, shell))
+			return (ERROR_FORKING);
+		shell->pids[count] = child_pid;
+	}
+	if (child_pid == 0)
+	{
+		if (redirections(node, shell, *prev_fd))
+			return (ERROR_REDIR);
+		run_node(node, shell, count, *prev_fd);
+	}
+	close_parent_pps(node, shell);
+	return (SUCCESS);
 }
 
-/*
-Goin on a hunch, there might have to be a recursive spawn_and_run function,
-which spawns, and then runs and outputs, between each fork-pair individually, 
-in sequence, before moving to next fork-pair.
-In that logic, create_pipes makes ALL the pipes BEFORE ANY of the pairs are forked.
-The below spawn_children just iteratively creates all forks rn, in one go.
-*/
-int	spawn_and_run(t_node *node, t_shell *shell)
+int	fork_child(pid_t *child_pid, t_state *shell);
 {
-	static pid_t	child_pid;
-	static int		i;
-
-	if (i < shell->child_count && node)
+	*child_pid = fork();
+	if (*child_pid == -1)
 	{
-		if (i == 0 || child_pid != 0)
-		{
-			if (fork_child(child_pid, shell))
-				return (ERROR_FORKING);
-			shell->pids[*i] = *child_pid;
-		}
-		if (child_pid == 0)
-			run_node(node, shell, i);
-		i++;
-		spawn_and_run(node->next, shell);
-	}
-	i = 0;
-	return (shell->exit_status);
-}
-
-/*
-int	spawn_pair(pid_t *child_pid, t_state *shell, int *i)
-{
-	if (*i == 0 || *child_pid != 0)
-	{
-		if (fork_child(child_pid, shell))
-			return (ERROR_FORKING);
-		shell->pids[*i] = *child_pid;
-	}
-	if (*child_pid != 0)
-	{
-		*i++;
-		if (fork_child(child_pid, shell))
-			return (ERROR_FORKING);
-		shell->pids[*i] = *child_pid;
+		shell->exit_status = ERROR_FORKING;
+		return (ERROR_FORKING);
 	}
 	return (SUCCESS);
 }
-*/
 
-// MISSING ERROR HANDLING FOR CLOSE() FUNCTIONS.
-int	close_pipes(t_node *node, int needed_pps)
+int	create_pipe(t_node *node, t_state *shell, int *prev_fd)
 {
-	t_node		*tmp;
+	if (pipe(node->pipe_fds))
+	{
+		shell->exit_status = ERROR_PIPELINE;
+		return (ERROR_PIPELINE);
+	}
+	*prev_fd = node->pipe_fds[1];
+	return (SUCCESS);
+}
 
-	if (needed_pps != 2)
+int	redirections(t_node *node, t_state *shell, int prev_fd)
+{
+	if (node->prev)
 	{
-		if (needed_pps == 1)
-			close(node->pipe_fds[0])
-		if (needed_pps == 0)
-			close(node->pipe_fds[1])
+		dup2(prev_fd, STDIN_FILENO);
+		if (close(prev_fd))
+			shell->exit_status = ERROR_REDIR;
 	}
-	tmp = node->prev;
-	while (tmp)
+	else if (node->prev == NULL)
 	{
-		close(tmp->pipe_fds[0]);
-		close(tmp->pipe_fds[1]);
-		tmp = tmp->prev;
+		if (close(prev_fd))
+			shell->exit_status = ERROR_REDIR;
 	}
-	tmp = node->next;
-	while (tmp)
+	if (node->next)
 	{
-		close(tmp->pipe_fds[0]);
-		close(tmp->pipe_fds[1]);
-		tmp = tmp->next;
+		dup2(node->pipe_fds[1], STDOUT_FILENO);
+		if (close(node->pipe_fds[0]))
+			shell->exit_status = ERROR_REDIR;
+	}
+	return (shell->exit_status);
+
+}
+
+int	close_parent_pps(t_node *node, t_state *shell)
+{
+	if (close(node->pipe_fds[0]))
+		shell->exit_status = ERROR_REDIR;
+	if (node->prev)
+	{
+		if (close(node->prev->pipe_fds[1]))
+			shell->exit_status = ERROR_REDIR;
 	}
 	return (SUCCESS);
 }
