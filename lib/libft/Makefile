@@ -6,23 +6,23 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/02 20:19:00 by myli-pen          #+#    #+#              #
-#    Updated: 2025/09/02 16:51:40 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/09/17 22:13:27 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		=libft.a
+NAME		:=libft.a
 
-CC			=cc
-CFLAGS		=-Wall -Wextra -Werror -Wunreachable-code -O3
+CC			:=cc
+CFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code -O3 -march=native -funroll-loops -fno-plt
 MAKEFLAGS	+= --no-print-directory
 
-DIR_INC		=inc/
-DIR_SRC		=src/
-DIR_OBJ		=obj/
-DIR_DEP		=dep/
+DIR_INC		:=inc/
+DIR_SRC		:=src/
+DIR_OBJ		:=obj/
+DIR_DEP		:=dep/
 
-HEADERS		=-I $(DIR_INC)
-SRCS		=$(addprefix $(DIR_SRC), \
+INCS		:=-I $(DIR_INC)
+SRCS		:=$(addprefix $(DIR_SRC), \
 			ft_atoi.c ft_isalpha.c ft_itoa.c ft_memmove.c ft_putnbr_fd.c \
 			ft_bzero.c ft_isascii.c ft_memchr.c ft_memset.c ft_toupper.c \
 			ft_calloc.c ft_isdigit.c ft_memcmp.c ft_putchar_fd.c \
@@ -40,18 +40,15 @@ SRCS		=$(addprefix $(DIR_SRC), \
 			ft_vec4.c ft_vec3.c ft_vec3_2.c ft_matrix_utils.c \
 			ft_vec2.c ft_vec4_2.c ft_vec2i.c ft_vec2i_2.c ft_math_2.c \
 			ft_colors.c ft_vector_utils_2.c)
-OBJS		=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
-DEPS		=$(patsubst $(DIR_SRC)%.c, $(DIR_DEP)%.d, $(SRCS))
+OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
+DEPS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_DEP)%.d, $(SRCS))
 
-YELLOW		=\033[1;33m
-GREEN		=\033[1;32m
-RED			=\033[1;31m
-COLOR		=\033[0m
+YELLOW		:=\033[1;33m
+GREEN		:=\033[1;32m
+RED			:=\033[1;31m
+COLOR		:=\033[0m
 
 all: $(NAME)
-
-$(DIR_OBJ):
-	@mkdir -p $(DIR_LIB) $(DIR_OBJ) $(DIR_DEP)
 
 $(NAME): $(OBJS)
 	@ar -rcs $(NAME) $(OBJS)
@@ -59,15 +56,17 @@ $(NAME): $(OBJS)
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c
 	@mkdir -p $(dir $@) $(patsubst $(DIR_OBJ)%, $(DIR_DEP)%, $(dir $@))
-	@$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP -MF $(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $@) $(HEADERS)
+	@$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP -MF $(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $@) $(INCS)
 
 clean:
-	@if [ -d "$(DIR_OBJ)" ]; then rm -rf $(DIR_OBJ) $(DIR_DEP); \
+	@if [ -d "$(DIR_OBJ)" ]; then rm -rf $(DIR_OBJ); \
 		echo "$(RED) [-]$(COLOR) removed libft/$(DIR_OBJ)"; \
-		echo "$(RED) [-]$(COLOR) removed libft/$(DIR_DEP)"; \
 	fi
 
 fclean: clean
+	@if [ -d "$(DIR_DEP)" ]; then rm -rf $(DIR_DEP); \
+		echo "$(RED) [-]$(COLOR) removed libft/$(DIR_DEP)"; \
+	fi
 	@if [ -e "$(NAME)" ]; then rm -f $(NAME); \
 		echo "$(RED) [-]$(COLOR) removed libft.a"; \
 	fi

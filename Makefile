@@ -3,40 +3,54 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+         #
+#    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/09/10 17:30:56 by jvalkama         ###   ########.fr        #
+#    Updated: 2025/09/19 16:12:12 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		=minishell
+NAME		:=minishell
 
-LIBFT		=$(DIR_LIBFT)libft.a
-
-CC			=cc
-CFLAGS		=-Wall -Wextra -Werror -Wunreachable-code -O3 -march=native
+CC			:=cc
+CFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code -O3 -march=native -funroll-loops -fno-plt
+LDFLAGS		:=-lreadline -flto
 MAKEFLAGS	+= --no-print-directory
 
-DIR_INC		=inc/
-DIR_SRC		=src/
-DIR_LIB		=lib/
-DIR_OBJ		=obj/
-DIR_DEP		=dep/
-DIR_LIBFT	=$(DIR_LIB)libft/
+DIR_INC		:=inc/
+DIR_SRC		:=src/
+DIR_LIB		:=lib/
+DIR_OBJ		:=obj/
+DIR_DEP		:=dep/
+DIR_EXE		:=executor/
+DIR_PAR		:=parser/
 
-INCS		=$(addprefix -I , \
-				$(DIR_INC) $(DIR_LIBFT)$(DIR_INC))
-SRCS		=$(addprefix $(DIR_SRC), \
+DIR_LIBFT	:=$(DIR_LIB)libft/
+LIBFT		:=$(DIR_LIBFT)libft.a
+
+INCS		:=$(addprefix -I, \
+				$(DIR_INC) $(DIR_INC)$(DIR_EXE) $(DIR_INC)$(DIR_PAR) $(DIR_LIBFT)$(DIR_INC))
+
+SRCS		:=$(addprefix $(DIR_SRC), \
 				main.c)
-OBJS		=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
-DEPS		=$(patsubst $(DIR_SRC)%.c, $(DIR_DEP)%.d, $(SRCS))
 
-BLUE		=\033[1;34m
-YELLOW		=\033[1;33m
-GREEN		=\033[1;32m
-RED			=\033[1;31m
-COLOR		=\033[0m
+SRCS_EXE	:=$(addprefix $(DIR_SRC)$(DIR_EXE), \
+				unset.c)
+
+SRCS_PAR	:=$(addprefix $(DIR_SRC)$(DIR_PAR), \
+				parsing.c mem_arena.c)
+
+OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
+OBJS		+=$(patsubst $(DIR_SRC)$(DIR_EXE)%.c, $(DIR_OBJ)$(DIR_EXE)%.o, $(SRCS_EXE))
+OBJS		+=$(patsubst $(DIR_SRC)$(DIR_PAR)%.c, $(DIR_OBJ)$(DIR_PAR)%.o, $(SRCS_PAR))
+
+DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
+
+BLUE		:=\033[1;34m
+YELLOW		:=\033[1;33m
+GREEN		:=\033[1;32m
+RED			:=\033[1;31m
+COLOR		:=\033[0m
 
 all: $(LIBFT) $(NAME)
 
@@ -45,7 +59,7 @@ $(LIBFT):
 	@+make -C $(DIR_LIBFT)
 
 $(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT)
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBFT)
 	@echo "$(YELLOW) [✔] $(NAME) created$(COLOR)"
 
 $(OBJS): $(LIBFT)

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/18 17:49:40 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:58:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,39 +33,17 @@
 # define SUCCESS				0
 # define CMD					0
 
-typedef int cmd_func(t_cmd, t_state);
+# define READLINE_PROMPT		"\033[0;36m[minishell]\033[0m$ "
 
-typedef struct s_state
-{
-	t_mode			mode;
-	int				child_count;
-	pid_t			*pids;
-	int				exit_status;
-	char			**env_vars;
-}	t_state;
+typedef enum e_builtin_type	t_builtin;
+typedef enum e_mode			t_mode;
+typedef struct s_cmd		t_cmd;
+typedef struct s_state		t_state;
+typedef struct s_node		t_node;
+typedef int					t_cmd_func(t_cmd, t_state);
+typedef	struct s_mem_arena	t_mem_arena;
 
-typedef struct s_cmd
-{
-	t_builtin		builtin;
-	char			*cmd;
-	char			**args;
-}	t_cmd;
-
-typedef struct s_node
-{
-	t_cmd			*cmd;
-	t_node			*next;
-	t_node			*prev;
-	int				pipe_fds[2];
-}	t_node;
-
-typedef enum e_mode
-{
-	SIMPLE,
-	PIPELINE
-}	t_mode;
-
-typedef enum e_builtin_type
+enum e_builtin_type
 {
 	FALSE,
 	ECHO,
@@ -75,6 +53,44 @@ typedef enum e_builtin_type
 	UNSET,
 	ENV,
 	EXIT
-}	t_builtin;
+};
+
+enum e_mode
+{
+	SIMPLE,
+	PIPELINE
+};
+
+struct s_node
+{
+	t_cmd			*cmd;
+	t_node			*next;
+	t_node			*prev;
+	int				pipe_fds[2];
+};
+
+struct s_state
+{
+	t_mode			mode;
+	int				child_count; //can be parsed from the number of | characters
+	pid_t			*pids;
+	int				exit_status;
+	char			**env_var;
+};
+
+struct s_cmd
+{
+	t_builtin		builtin;
+	char			*cmd;
+	char			**args;
+};
+
+
+struct s_mem_arena
+{
+	char	*tail;
+	size_t	capacity;
+	size_t	head;
+};
 
 #endif
