@@ -6,45 +6,41 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/09/21 02:08:08 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/23 16:36:25 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include ""
 
 //SOME OF THESE PARAS DO DEPEND ON PARSER OUTPUT. so, SUBJECT TO CHANGE.
 
-int	cmd_executor(t_cmd **cmd, t_state *shell_state)
+int	executor(t_node *node, t_state *shell)
 {
-	t_cmd		command;
-
-	command = *cmd;
-	if (command->type == SIMPLE)
-		execute_simple(command, shell_state);
-	else if (command->type == PIPELINE)
-		execute_pipeline(command, shell_state);
-	return(shell_state->exit_status);
+	if (shell->mode == SIMPLE)
+		execute_simple(node, shell);
+	else if (shell->mode == PIPELINE)
+		execute_pipeline(node, shell);
+	return(shell->exit_status);
 }
 
-int	execute_simple(t_cmd *cmd, t_state *shell_state)
+int	execute_simple(t_node *node, t_state *shell)
 {
 	pid_t		child_pid;
 	int			status;
 
 	if (is_builtin(cmd->cmd))
-		exec_builtin(cmd, shell_state);
+		exec_builtin(cmd, shell);
 	else
 	{
-		if (fork_child(&child_pid, shell_state))
+		if (fork_child(&child_pid, shell))
 			return (ERROR_FORKING);
 		if (child_pid == 0)
-			exec_extern(cmd, shell_state);
+			exec_extern(cmd, shell);
 		wait_pid(child_pid, &status, 0);
 		if (WIFEXITED(status))
-			shell_state->exit_status = WEXITSTATUS(status);
+			shell->exit_status = WEXITSTATUS(status);
 	}
-	return (shell_state->exit_status);
+	return (shell->exit_status);
 }
 
 /*
@@ -54,15 +50,14 @@ the loop or recursion should break with error ofc.
 pipeline technically needs no forks for the cmds that are builtin,
 but just forking everything might simplify the process flow.
 */
-int	execute_pipeline(t_cmd *cmd, t_state *shell_state)
+int	execute_pipeline(t_cmd *cmd, t_state *shell)
 {
 	bool		is_builtin;
 	int			n_pipes;
 
-	n_pipes = shell->pid_count - 1;
-	is_builtin = is_builtin();
-	create_pipes(cmd, shell_state, n_pipes);
-	spawn_and_run(cmd, shell_state);
-	close_pipes(shell_state);
-	return (shell_state->exit_status);
+	n_pipes = shell->child_count;
+	create_pipes(cmd, shell, n_pipes);
+	spawn_and_run(cmd, shell);
+	wait_pids(node, shell);
+	return (shell->exit_status);
 }

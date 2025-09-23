@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/23 16:29:11 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/23 16:36:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,38 @@ typedef int					t_cmd_func(t_cmd, t_state);
 typedef	struct s_mem_arena	t_mem_arena;
 
 enum e_builtin_type
+typedef struct s_state
+{
+	t_mode			mode;
+	int				child_count; //can be parsed from the number of | characters
+	pid_t			*pids;
+	int				exit_status;
+	char			**env_var;
+}	t_state;
+
+typedef struct s_cmd
+{
+	t_builtin		builtin;
+	char			*cmd;
+	char			**args;
+	int				exit_status;
+}	t_cmd;
+
+typedef struct s_node
+{
+	t_cmd			*left;
+	t_node			*next;
+	t_node			*prev;
+	int				pipe_fds[2];
+}	t_node;
+
+typedef enum e_mode
+{
+	SIMPLE,
+	PIPELINE
+}	t_mode;
+
+typedef enum e_builtin_type
 {
 	FALSE,
 	ECHO,
