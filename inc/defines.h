@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/23 16:42:20 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:58:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # define ERROR_GENERAL			1
 # define ERROR_BUILTIN			2
 # define ERROR_PIPELINE			3
+# define ERROR_REDIR			4
 # define SUCCESS				0
 # define CMD					0
 
@@ -60,6 +61,14 @@ enum e_mode
 	PIPELINE
 };
 
+struct s_node
+{
+	t_cmd			*cmd;
+	t_node			*next;
+	t_node			*prev;
+	int				pipe_fds[2];
+};
+
 struct s_state
 {
 	t_mode			mode;
@@ -74,16 +83,8 @@ struct s_cmd
 	t_builtin		builtin;
 	char			*cmd;
 	char			**args;
-	int				exit_status;
 };
 
-struct s_node
-{
-	t_cmd			*left;
-	t_node			*next;
-	t_node			*prev;
-	int				pipe_fds[2];
-};
 
 struct s_mem_arena
 {

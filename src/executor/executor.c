@@ -50,14 +50,21 @@ the loop or recursion should break with error ofc.
 pipeline technically needs no forks for the cmds that are builtin,
 but just forking everything might simplify the process flow.
 */
-int	execute_pipeline(t_cmd *cmd, t_state *shell)
+int	execute_pipeline(t_node *node, t_state *shell)
 {
 	bool		is_builtin;
-	int			n_pipes;
+	int			prev_fd;
+	int			count;
 
-	n_pipes = shell->child_count;
-	create_pipes(cmd, shell, n_pipes);
-	spawn_and_run(cmd, shell);
+	count = 0;
+	prev_fd = -1;
+	while (node)
+	{
+		if (spawn_and_run(node, shell, count, &prev_fd))
+			return (shell->exit_status);
+		node = node->next;
+		count++;
+	}
 	wait_pids(node, shell);
-	return (shell->exit_status);
+	return (SUCCESS);
 }

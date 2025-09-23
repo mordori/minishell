@@ -12,34 +12,8 @@
 
 #include "executor.h"
 
-//redirections are processed before the next pipe connection!
-
-void	run_node(t_node *node, t_shell *shell, int i)
+void	run_node(t_node *node, t_shell *shell)
 {
-	int		needed_pps;
-
-	if (i == 0) //guess each node has to close each unused pipe_fd in all the linked structs.
-	{
-		needed_pps = 1;
-		close(1);
-		dup2(node->pipe_fds[needed_pps], STDOUT_FILENO);
-		close_pipes(node, needed_pps);
-	}
-	else if (i == shell->child_count - 1)
-	{
-		needed_pps = 0;
-		close(0);
-		dup2(node->pipe_fds[needed_pps], STDIN_FILENO);
-		close_pipes(node, needed_pps);
-	}
-	else
-	{
-		needed_pps = 2;
-		dup2(node->pipe_fds[0], STDIN_FILENO);
-		dup2(node->pipe_fds[1], STDOUT_FILENO);
-		close_pipes(node, needed_pps);
-	}
-	//close the used up pipes. All need to be closed.
 	run_pipeline_cmd(cmd, shell);
 }
 
@@ -56,4 +30,12 @@ void	run_pipeline_cmd(t_cmd *cmd, t_state *shell)
 	else
 		exec_extern(cmd, shell_state);
 	exit(shell_state->exit_status);
+}
+
+clean_exit()
+{
+	// invoke in CHILD ALSO
+	//take memory arena
+	free();
+	exit();
 }
