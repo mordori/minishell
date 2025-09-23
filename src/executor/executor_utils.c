@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:58:00 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/09/16 16:00:09 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/09/22 18:29:01 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	fork_child(pid_t *child_pid, t_state *shell);
 	return (SUCCESS);
 }
 
-void	wait_pids_iteratively(t_cmd *cmd, t_shell *shell)
+void	wait_pids(t_cmd *cmd, t_shell *shell)
 {
 	int		status;
 

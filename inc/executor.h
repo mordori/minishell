@@ -17,7 +17,7 @@
 # include <unistd.h>
 
 //executor.c
-int		cmd_executor(t_cmd **cmd, t_state *shell_state);
+int		executor(t_cmd **cmd, t_state *shell_state);
 void	execute_simple(t_cmd *cmd, t_state *shell_state);
 void	execute_pipeline(t_cmd **cmd, t_state *shell_state);
 int		exec_builtin(t_cmd *cmd, t_state *shell_state);
