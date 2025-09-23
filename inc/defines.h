@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/21 02:06:42 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/23 16:29:11 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define SUCCESS				0
 # define CMD					0
 
-# define READLINE_PROMPT		"[minishell]$ "
+# define READLINE_PROMPT		"\033[0;36m[minishell]\033[0m$ "
 
 typedef enum e_builtin_type	t_builtin;
 typedef enum e_exec_mode	t_exec_mode;
