@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 05:40:33 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 20:12:09 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	error_exit(t_minishell *ms, char *msg, char *file, int line)
  */
 static inline void	print_error(char *file, int line, char *msg)
 {
-	char 	str_line[INT32_LENGTH + 1];
+	char	str_line[INT32_LENGTH + 1];
 	size_t	len_line;
 	int		bytes;
 

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:46:28 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/09 00:20:10 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 18:47:44 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ bool		ft_isdigit(int c);
 bool		ft_isalnum(int c);
 bool		ft_isascii(int c);
 bool		ft_isprint(int c);
+bool		ft_isspace(char c);
 int			ft_atoi(const char *str);
 int			ft_atoi_base(const char *str, const char *base);
 int			ft_toupper(char *c);
