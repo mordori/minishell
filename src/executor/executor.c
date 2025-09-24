@@ -14,12 +14,14 @@
 
 //SOME OF THESE PARAS DO DEPEND ON PARSER OUTPUT. so, SUBJECT TO CHANGE.
 
-int	executor(t_node *node, t_state *shell)
+int	executor(t_minishell *ms, t_node *node, t_state *shell)
 {
 	if (shell->mode == SIMPLE)
 		execute_simple(node, shell);
 	else if (shell->mode == PIPELINE)
 		execute_pipeline(node, shell);
+	if (shell->exit_status)
+		error_exit(ms); //also need to clean up node and maye shell
 	return(shell->exit_status);
 }
 
@@ -36,7 +38,7 @@ int	execute_simple(t_node *node, t_state *shell)
 			return (ERROR_FORKING);
 		if (child_pid == 0)
 			exec_extern(cmd, shell);
-		wait_pid(child_pid, &status, 0);
+		waitpid(child_pid, &status, 0);
 		if (WIFEXITED(status))
 			shell->exit_status = WEXITSTATUS(status);
 	}
@@ -60,11 +62,12 @@ int	execute_pipeline(t_node *node, t_state *shell)
 	prev_fd = -1;
 	while (node)
 	{
-		if (spawn_and_run(node, shell, count, &prev_fd))
+		shell->exit_status = spawn_and_run(node, shell, count, &prev_fd))
+		if (shell->exit_status)
 			return (shell->exit_status);
 		node = node->next;
 		count++;
 	}
 	wait_pids(node, shell);
-	return (SUCCESS);
+	return (shell->exit_status);
 }
