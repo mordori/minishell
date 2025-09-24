@@ -1,21 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   child_processes.c                                  :+:      :+:    :+:   */
+/*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/16 13:41:25 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/09/22 18:29:02 by jvalkama         ###   ########.fr       */
+/*   Created: 2025/09/12 15:58:00 by jvalkama          #+#    #+#             */
+/*   Updated: 2025/09/24 13:59:49 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#include "executor_utils.h"
 
-void	run_node(t_node *node, t_state *shell) //t_state contained in T_MINISHELL, if wholistic mem management adopted.
+void	wait_pids(t_cmd *cmd, t_shell *shell)
 {
-	//parent's custom signal handling set back to default
-	exec_extern(cmd, shell);
-	//if (ms->state->exit_status)		IF WE AVOID WRITES INTO MEMORY ENTIRELY, MAYBE NO NEED TO CLEAN IN CHILD (except if parent wrote in meantime)
-	//	error_exit();
+	int		status;
+
+	while (i < shell->pid_count)
+	{
+		wait_pid(shell->pids[i], &status, 0);
+		if (WIFEXITED(status))
+			shell->exit_status = WEXITSTATUS(status);
+		if (shell->exit_status)
+			return (shell->exit_status); // if error, should close *everything*, and probably return some msg.
+		i++;
+	}
 }

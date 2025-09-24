@@ -101,6 +101,7 @@ struct s_state
 	pid_t		*pids;
 	int			exit_status;
 	char		**env_var;
+	int			open_fds[3];
 };
 
 struct s_cmd
@@ -121,6 +122,7 @@ struct	s_minishell
 {
 	t_mem_arena	mem_system;
 	t_mem_arena	mem_pool;
+	t_state		*state;
 	bool		exit;
 };
 
