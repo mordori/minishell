@@ -1,26 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/17 18:15:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/23 16:25:28 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/09/24 04:19:41 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#ifndef PARSER_H
+# define PARSER_H
 
-void	initialize()
-{
+# include "defines.h"
 
-}
-
-void	prompt_input()
-{
-	while (true)
-	{
-		readline(READLINE_PROMPT);
-	}
-}
+#endif

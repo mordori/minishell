@@ -1,25 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.h                                             :+:      :+:    :+:   */
+/*   string_utils.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/02 16:53:19 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 05:40:28 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/23 21:34:49 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/09/23 21:56:58 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAIN_H
-# define MAIN_H
-
-# include <stdlib.h>
-# include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
+#ifndef STRING_UTILS_H
+# define STRING_UTILS_H
 
 # include "defines.h"
 
-void	clean(t_minishell *ms);
+size_t		int_to_str(int n, char *buf);
+int64_t		str_to_int64(char *str, char *end);
+uint64_t	str_to_uint64(char *str, char *end);
 
 #endif

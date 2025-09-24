@@ -1,24 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.h                                          :+:      :+:    :+:   */
+/*   mem_arena.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/23 16:24:12 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/17 22:05:32 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/09/24 02:46:00 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSING_H
-# define PARSING_H
+#ifndef MEM_ARENA_H
+# define MEM_ARENA_H
 
-# include <readline/readline.h>
-# include <readline/history.h>
+# include <stdlib.h>
 
 # include "defines.h"
 
-void	initialize();
-void	prompt_input();
+t_mem_arena	arena_create(size_t capacity);
+void		*arena_alloc(t_mem_arena *arena, size_t size);
+void		arena_reset(t_mem_arena *arena);
+void		arena_destroy(t_mem_arena *arena);
 
 #endif

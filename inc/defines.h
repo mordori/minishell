@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/23 18:58:46 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 05:28:41 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,26 @@
 # define SUCCESS				0
 # define CMD					0
 
-# define READLINE_PROMPT		"\033[0;36m[minishell]\033[0m$ "
+# define INT32_LENGTH			11			// byte
+# define INT64_LENGTH			20			// byte
+
+# define MEM_SIZE_SYSTEM		256
+# define MEM_SIZE_POOL			1024
+
+# define PROMPT					"\033[0;36m[minishell]\033[0m$ "
 
 typedef enum e_builtin_type	t_builtin;
 typedef enum e_mode			t_mode;
+typedef enum e_type			t_type;
+
+typedef struct s_token		t_token;
 typedef struct s_cmd		t_cmd;
 typedef struct s_state		t_state;
 typedef struct s_node		t_node;
+typedef struct s_mem_arena	t_mem_arena;
+typedef struct s_minishell	t_minishell;
+
 typedef int					t_cmd_func(t_cmd, t_state);
-typedef	struct s_mem_arena	t_mem_arena;
 
 enum e_builtin_type
 {
@@ -61,36 +72,56 @@ enum e_mode
 	PIPELINE
 };
 
+enum e_type
+{
+	WORD,
+	QUOTED_WORD,
+	REDIRECTION,
+	OPERATOR
+};
+
+struct s_token
+{
+	char		*token;
+	t_type		type;
+};
+
 struct s_node
 {
-	t_cmd			*cmd;
-	t_node			*next;
-	t_node			*prev;
-	int				pipe_fds[2];
+	t_cmd		*cmd;
+	t_node		*next;
+	t_node		*prev;
+	int			pipe_fds[2];
 };
 
 struct s_state
 {
-	t_mode			mode;
-	int				child_count; //can be parsed from the number of | characters
-	pid_t			*pids;
-	int				exit_status;
-	char			**env_var;
+	t_mode		mode;
+	int			child_count; //can be parsed from the number of | characters
+	pid_t		*pids;
+	int			exit_status;
+	char		**env_var;
 };
 
 struct s_cmd
 {
-	t_builtin		builtin;
-	char			*cmd;
-	char			**args;
+	t_builtin	builtin;
+	char		*cmd;
+	char		**args;
 };
-
 
 struct s_mem_arena
 {
-	char	*tail;
-	size_t	capacity;
-	size_t	head;
+	char		*base;
+	size_t		capacity;
+	size_t		head;
+};
+
+struct	s_minishell
+{
+	t_mem_arena	mem_system;
+	t_mem_arena	mem_pool;
+	bool		exit;
 };
 
 #endif

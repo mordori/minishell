@@ -1,25 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.h                                             :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/02 16:53:19 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 05:40:28 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/24 04:09:10 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/09/24 04:17:42 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAIN_H
-# define MAIN_H
+#include "lexer.h"
 
-# include <stdlib.h>
-# include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
+t_token	*create_tokens(char *src)
+{
+	t_token	*tokens;
 
-# include "defines.h"
-
-void	clean(t_minishell *ms);
-
-#endif
+	tokens = NULL;
+	(void)src;
+	return (tokens);
+}
