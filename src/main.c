@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 05:09:25 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 05:25:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static inline void	initialize(t_minishell *ms)
 	ms->mem_system = arena_create(MEM_SIZE_SYSTEM);
 	ms->mem_pool = arena_create(MEM_SIZE_POOL);
 	if (!ms->mem_system.base || !ms->mem_pool.base)
-		ERROR_EXIT(ms, "Minishell initialization failed");
+		error_exit(ms, "Minishell initialization failed", __FILE__, __LINE__);
 }
 
 /**
@@ -73,6 +73,7 @@ static inline void	run(t_minishell *ms)
 		// execute();
 		arena_reset(&ms->mem_pool);
 		free(line);
+		error_exit(ms, "Test error", __FILE__, __LINE__);
 		if (ms->exit)
 			break ;
 		line = readline(PROMPT);
@@ -109,5 +110,5 @@ static inline void	startup_msg(void)
 "╲__╱__╱__╱ ╲________╱╲__╱_____╱ ╲________╱╲___",
 "_____╱╲___╱____╱╲________╱╲________╱╲________╱ \n") \
 < 0)
-		ERROR_EXIT(NULL, "Startup message failed to print");
+		error_exit(NULL, "Startup message failed to print", __FILE__, __LINE__);
 }

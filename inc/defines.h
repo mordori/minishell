@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 05:07:09 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 05:28:41 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,6 @@
 # define MEM_SIZE_POOL			1024
 
 # define PROMPT					"\033[0;36m[minishell]\033[0m$ "
-
-/**
- * @brief	Macro for general error function.
- *
- * Passes caller file name and line information as parameters to the function
- * from anywhere.
- */
-# define ERROR_EXIT(ms, msg)	error_exit(__FILE__, __LINE__, ms, msg)
 
 typedef enum e_builtin_type	t_builtin;
 typedef enum e_mode			t_mode;

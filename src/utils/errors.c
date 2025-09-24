@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 04:59:38 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 05:22:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ static inline void	print_error(char *file, int line, char *msg);
  * @brief	General error function that cleans the program, prints a detailed
  * 			error message, and exits the program.
  *
- * @note	To be used with macro ERROR_EXIT(ms, msg).
+ * @note	To be used with built-in macros __FILE__ and __LINE__.
  *
  * @param file	Name of the file where the error occurred.
  * @param line	Line where the error occurred.
  * @param ms	Pointer to the minishell.
  * @param msg	Error message.
  */
-void	error_exit(char *file, int line, t_minishell *ms, char *msg)
+void	error_exit(t_minishell *ms, char *msg, char *file, int line)
 {
 	if (ms)
 		clean_minishell(ms);
