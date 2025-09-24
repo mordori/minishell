@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:53:19 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 04:12:35 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 05:40:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,6 @@
 
 # include "defines.h"
 
-void	clean_minishell(t_minishell *ms);
+void	clean(t_minishell *ms);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 05:22:43 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 05:40:33 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static inline void	print_error(char *file, int line, char *msg);
 void	error_exit(t_minishell *ms, char *msg, char *file, int line)
 {
 	if (ms)
-		clean_minishell(ms);
+		clean(ms);
 	print_error(file, line, msg);
 	exit(EXIT_FAILURE);
 }
@@ -49,13 +49,14 @@ static inline void	print_error(char *file, int line, char *msg)
 	size_t	len_line;
 	int		bytes;
 
-	len_line = int_to_str(line, str_line);
+	bytes = write(STDERR_FILENO, "-----------------------------------\n", 36);
 	bytes = write(STDERR_FILENO, "Error: ", 7);
 	if (msg)
 		bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
 	bytes = write(STDERR_FILENO, "\n", 1);
 	bytes = write(STDERR_FILENO, file, ft_strlen(file));
 	bytes = write(STDERR_FILENO, ", line: ", 8);
+	len_line = int_to_str(line, str_line);
 	bytes = write(STDERR_FILENO, str_line, len_line);
 	bytes = write(STDERR_FILENO, "\n", 1);
 	(void)bytes;

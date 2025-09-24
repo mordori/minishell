@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 05:25:07 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 05:42:26 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "mem_arena.h"
 #include "lexer.h"
 
-static inline void	startup_msg(void);
+static inline void	startup(void);
 static inline void	initialize(t_minishell *ms);
 static inline void	run(t_minishell *ms);
 
@@ -31,10 +31,10 @@ int	main(void)
 {
 	t_minishell	ms;
 
-	startup_msg();
+	startup();
 	initialize(&ms);
 	run(&ms);
-	clean_minishell(&ms);
+	clean(&ms);
 	return (EXIT_SUCCESS);
 }
 
@@ -49,7 +49,7 @@ static inline void	initialize(t_minishell *ms)
 	ms->mem_system = arena_create(MEM_SIZE_SYSTEM);
 	ms->mem_pool = arena_create(MEM_SIZE_POOL);
 	if (!ms->mem_system.base || !ms->mem_pool.base)
-		error_exit(ms, "Minishell initialization failed", __FILE__, __LINE__);
+		error_exit(ms, "Memory arena creation", __FILE__, __LINE__);
 }
 
 /**
@@ -83,7 +83,7 @@ static inline void	run(t_minishell *ms)
 /**
  * @brief	Destroys created memory arenas from minishell.
  */
-void	clean_minishell(t_minishell *ms)
+void	clean(t_minishell *ms)
 {
 	if (!ms)
 		return ;
@@ -96,7 +96,7 @@ void	clean_minishell(t_minishell *ms)
  *
  * @return	Success status of the operation.
  */
-static inline void	startup_msg(void)
+static inline void	startup(void)
 {
 	if (printf("%s%s%s%s%s%s%s%s%s%s\n",
 "   ________   ________  ________   ________  _",
@@ -110,5 +110,5 @@ static inline void	startup_msg(void)
 "╲__╱__╱__╱ ╲________╱╲__╱_____╱ ╲________╱╲___",
 "_____╱╲___╱____╱╲________╱╲________╱╲________╱ \n") \
 < 0)
-		error_exit(NULL, "Startup message failed to print", __FILE__, __LINE__);
+		error_exit(NULL, "Startup message print", __FILE__, __LINE__);
 }
