@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mem_arena.h                                        :+:      :+:    :+:   */
+/*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/17 22:05:32 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 02:46:00 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/24 04:11:12 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/09/24 04:14:49 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MEM_ARENA_H
-# define MEM_ARENA_H
-
-# include <stdlib.h>
+#ifndef LEXER_H
+# define LEXER_H
 
 # include "defines.h"
 
-t_mem_arena	arena_create(size_t capacity);
-void		*arena_alloc(t_mem_arena *arena, size_t size);
-void		arena_reset(t_mem_arena *arena);
-void		arena_destroy(t_mem_arena *arena);
+t_token	*create_tokens(char *src);
 
 #endif

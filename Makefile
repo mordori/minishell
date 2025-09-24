@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/09/23 21:47:55 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/09/24 04:19:50 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,9 @@ NAME		:=minishell
 
 CC			:=cc
 CFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code -O3 -march=native -funroll-loops -fno-plt
-LDFLAGS		:=-lreadline -flto
+LDFLAGS		:=-flto
+LIBS		:=-lreadline
+
 MAKEFLAGS	+= --no-print-directory
 
 DIR_INC		:=inc/
@@ -26,6 +28,7 @@ DIR_DEP		:=dep/
 DIR_BUILT	:=builtin/
 DIR_ENV		:=env/
 DIR_EXE		:=executor/
+DIR_LEX		:=lexer/
 DIR_PAR		:=parser/
 DIR_UTILS	:=utils/
 
@@ -38,6 +41,7 @@ INCS		:=$(addprefix -I, \
 				$(DIR_INC)$(DIR_BUILT) \
 				$(DIR_INC)$(DIR_ENV) \
 				$(DIR_INC)$(DIR_EXE) \
+				$(DIR_INC)$(DIR_LEX) \
 				$(DIR_INC)$(DIR_PAR) \
 				$(DIR_INC)$(DIR_UTILS) \
 				)
@@ -54,13 +58,17 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIRDIR_ENV_EXE), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EXE), \
 				 \
 				)
+SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LEX), \
+				lexer.c \
+				 \
+				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
-				parsing.c \
+				parser.c \
 				 \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				mem_arena.c \
-				errors_utils.c \
+				errors.c \
 				string_utils.c \
 				)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
@@ -79,7 +87,7 @@ $(LIBFT):
 	@+make -C $(DIR_LIBFT)
 
 $(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBFT)
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBS) $(LIBFT)
 	@echo "$(YELLOW) [✔] $(NAME) created$(COLOR)"
 
 $(OBJS): $(LIBFT)

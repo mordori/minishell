@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/23 22:54:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 04:26:13 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,28 @@
 # define SUCCESS				0
 # define CMD					0
 
-# define READLINE_PROMPT		"\033[0;36m[minishell]\033[0m$ "
+# define INT32_LENGTH			11			// byte
+# define INT64_LENGTH			20			// byte
 
-# define INT32_LENGTH		11			// byte
-# define INT64_LENGTH		20			// byte
+# define MEM_SIZE_SYSTEM		256
+# define MEM_SIZE_POOL			1024
+
+# define PROMPT					"\033[0;36m[minishell]\033[0m$ "
+
+# define ERROR_EXIT(ms, msg)	error_exit(__FILE__, __LINE__, ms, msg)
 
 typedef enum e_builtin_type	t_builtin;
 typedef enum e_mode			t_mode;
-typedef enum e_error_code	t_error_code;
+typedef enum e_type			t_type;
+
+typedef struct s_token		t_token;
 typedef struct s_cmd		t_cmd;
 typedef struct s_state		t_state;
 typedef struct s_node		t_node;
-typedef int					t_cmd_func(t_cmd, t_state);
 typedef struct s_mem_arena	t_mem_arena;
 typedef struct s_minishell	t_minishell;
+
+typedef int					t_cmd_func(t_cmd, t_state);
 
 enum e_builtin_type
 {
@@ -66,9 +74,18 @@ enum e_mode
 	PIPELINE
 };
 
-enum e_error_code
+enum e_type
 {
-	STARTUP_MSG,
+	WORD,
+	QUOTED_WORD,
+	REDIRECTION,
+	OPERATOR
+};
+
+struct s_token
+{
+	char		*token;
+	t_type		type;
 };
 
 struct s_node
@@ -95,7 +112,6 @@ struct s_cmd
 	char		**args;
 };
 
-// Memory arena
 struct s_mem_arena
 {
 	char		*base;
@@ -105,8 +121,9 @@ struct s_mem_arena
 
 struct	s_minishell
 {
-	t_mem_arena	arena_system;
-	t_mem_arena	arena_commands;
+	t_mem_arena	mem_system;
+	t_mem_arena	mem_pool;
+	bool		exit;
 };
 
 #endif

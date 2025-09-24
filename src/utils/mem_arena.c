@@ -6,11 +6,12 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 22:05:05 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/23 22:51:55 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 03:57:45 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mem_arena.h"
+#include "libft_mem.h"
 
 /**
  * @brief	Allocates memory for the arena and initializes it.
@@ -23,9 +24,7 @@ t_mem_arena	arena_create(size_t capacity)
 {
 	t_mem_arena	arena;
 
-	arena.base = malloc(capacity);
-	if (arena.base)
-		memset(arena.base, 0, capacity);
+	arena.base = ft_calloc(sizeof(char), capacity);
 	arena.capacity = capacity;
 	arena.head = 0;
 	return (arena);
@@ -69,6 +68,9 @@ void	arena_reset(t_mem_arena *arena)
  */
 void	arena_destroy(t_mem_arena *arena)
 {
-	free(arena->base);
+	if (!arena)
+		return ;
+	if (arena->base)
+		free(arena->base);
 	arena->base = NULL;
 }
