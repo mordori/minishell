@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 02:55:33 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 04:59:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,17 @@
 
 static inline void	print_error(char *file, int line, char *msg);
 
+/**
+ * @brief	General error function that cleans the program, prints a detailed
+ * 			error message, and exits the program.
+ *
+ * @note	To be used with macro ERROR_EXIT(ms, msg).
+ *
+ * @param file	Name of the file where the error occurred.
+ * @param line	Line where the error occurred.
+ * @param ms	Pointer to the minishell.
+ * @param msg	Error message.
+ */
 void	error_exit(char *file, int line, t_minishell *ms, char *msg)
 {
 	if (ms)
@@ -25,6 +36,13 @@ void	error_exit(char *file, int line, t_minishell *ms, char *msg)
 	exit(EXIT_FAILURE);
 }
 
+/**
+ * @brief	Prints a detailed error message.
+ *
+ * @param file	Name of the file where the error occurred.
+ * @param line	Line where the error occurred.
+ * @param msg	Error message.
+ */
 static inline void	print_error(char *file, int line, char *msg)
 {
 	char 	str_line[INT32_LENGTH + 1];

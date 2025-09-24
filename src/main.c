@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 04:40:16 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 05:09:25 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static inline void	run(t_minishell *ms);
 /**
  * @brief	Entry point to the program.
  *
- * @author		Mika Yli-Pentti		(https://github.com/mordori)
- * @author		Janne Valkama		(https://github.com/cubicajupiter)
+ * @author		Mika Yli-Pentti		https://github.com/mordori
+ * @author		Janne Valkama		https://github.com/cubicajupiter
  */
 int	main(void)
 {
@@ -52,6 +52,11 @@ static inline void	initialize(t_minishell *ms)
 		ERROR_EXIT(ms, "Minishell initialization failed");
 }
 
+/**
+ * @brief	WIP
+ *
+ * @param ms	Pointer to the minishell.
+ */
 static inline void	run(t_minishell *ms)
 {
 	char	*line;
@@ -66,6 +71,7 @@ static inline void	run(t_minishell *ms)
 		// expand();
 		// redirect();
 		// execute();
+		arena_reset(&ms->mem_pool);
 		free(line);
 		if (ms->exit)
 			break ;
