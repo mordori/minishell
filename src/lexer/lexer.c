@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 04:09:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 20:16:35 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/25 04:15:01 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "string_utils.h"
 #include "mem_arena.h"
 #include "errors.h"
+#include "mem_utils.h"
 
 static inline void	tokenize_src(t_token *token);
 
@@ -23,21 +24,15 @@ t_token	**create_tokens(char *src, t_minishell *ms)
 	char	**srcs;
 	int		i;
 
-	srcs = str_split(src, &ms->pool);
-	if (!srcs)
-		error_exit(ms, "Source string split failed", __FILE__, __LINE__);
+	srcs = str_split(ms, src);
 	i = 0;
 	while (srcs[i])
 		++i;
-	tokens = arena_alloc(&ms->pool, sizeof(t_token *) * (i + 1));
-	if (!tokens)
-		error_exit(ms, "Tokens array alloc failed", __FILE__, __LINE__);
+	tokens = alloc_pool(ms, sizeof(*tokens) * (i + 1));
 	i = 0;
 	while (srcs[i])
 	{
-		tokens[i] = arena_alloc(&ms->pool, sizeof(t_token));
-		if (!tokens[i])
-			error_exit(ms, "Token alloc failed", __FILE__, __LINE__);
+		tokens[i] = alloc_pool(ms, sizeof(*tokens[i]));
 		tokens[i]->src = srcs[i];
 		tokenize_src(tokens[i]);
 		++i;
@@ -55,12 +50,17 @@ t_token	**create_tokens(char *src, t_minishell *ms)
 
 static inline void	tokenize_src(t_token *token)
 {
-	if (*token->src == '\"')
+	static const char	*quotes[] = {"\"", "\'"};
+	static const char	*pipe[] = {"|"};
+	static const char	*redirections[] = \
+{">", ">>", ">>", "<", "<<", "<<<"};
+
+	if (*token->src == *quotes[0])
 		token->type = QUOTED_WORD;
-	else if (*token->src == '<' || *token->src == '>')
+	else if (*token->src == *redirections[0])
 		token->type = REDIRECTION;
-	else if (*token->src == '|')
-		token->type = OPERATOR;
+	else if (*token->src == *pipe[0])
+		token->type = PIPE;
 	else
 		token->type = WORD;
 }

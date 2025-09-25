@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/09/24 17:50:08 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/09/25 04:17:08 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,9 +16,10 @@ POOL_SIZE	?= 1024
 CONF		:=.config
 
 DEFS		:=-D POOL_SIZE=$(POOL_SIZE)
+# TODO: Add OPTS
 OPTS		:=-O3 -march=native -funroll-loops -fno-plt
 CC			:=cc
-CFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code $(DEFS) $(OPTS)
+CFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code $(DEFS)
 LDFLAGS		:=-flto
 LIBS		:=-lreadline
 
@@ -72,8 +73,9 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
 				 \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
-				mem_arena.c \
 				errors.c \
+				mem_arena.c \
+				mem_utils.c \
 				string_utils.c \
 				)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 20:17:19 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/25 04:21:31 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "libft_mem.h"
 #include "mem_arena.h"
 #include "lexer.h"
+#include "mem_utils.h"
 
 static inline void	startup(void);
 static inline void	initialize(t_minishell *ms);
@@ -62,7 +63,7 @@ static inline void	run(t_minishell *ms)
 	t_token	**tokens;
 
 	ms->line = readline(PROMPT);
-	while (ms->line)
+	while (*ms->line)
 	{
 		// reg sig handlesre
 		tokens = create_tokens(ms->line, ms);
@@ -76,6 +77,7 @@ static inline void	run(t_minishell *ms)
 		if (ms->exit)
 			break ;
 		arena_reset(&ms->pool);
+		free(ms->line);
 		ms->line = readline(PROMPT);
 	}
 }
@@ -114,5 +116,5 @@ static inline void	startup(void)
 "╲__╱__╱__╱ ╲________╱╲__╱_____╱ ╲________╱╲___", \
 "_____╱╲___╱____╱╲________╱╲________╱╲________╱ \n") \
 < 0)
-		error_exit(NULL, "Startup message print failed", __FILE__, __LINE__);
+		error_exit(NULL, "Startup message failed", __FILE__, __LINE__);
 }

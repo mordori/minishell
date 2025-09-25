@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 20:24:32 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/25 04:12:47 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ enum e_type
 	WORD,
 	QUOTED_WORD,
 	REDIRECTION,
-	OPERATOR
+	PIPE
 };
 
 enum e_errors

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 20:13:01 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/25 03:50:02 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 #include "libft_str.h"
 #include "libft_mem.h"
 #include "libft_utils.h"
-#include "mem_arena.h"
+#include "mem_utils.h"
 
-static inline size_t	ft_count_words(char const *s);
-static inline size_t	ft_word_len(char const **s);
+static inline size_t	count_words(char const *s);
+static inline size_t	word_length(char const **s);
 
 /**
  * @brief Converts an signed 64-bit integer to a string.
@@ -65,7 +65,7 @@ size_t	int_to_str(int n, char *buf)
  * @param s Source string.
  * @return New array of strings split from the string `s`.
  */
-char	**str_split(char const *src, t_mem_arena *arena)
+char	**str_split(t_minishell *ms, char const *src)
 {
 	char	**strs;
 	size_t	words;
@@ -74,23 +74,20 @@ char	**str_split(char const *src, t_mem_arena *arena)
 
 	if (!src)
 		return (NULL);
-	words = ft_count_words(src);
-	strs = arena_alloc(arena, (words + 1) * sizeof (char *));
-	if (!strs)
-		return (NULL);
+	words = count_words(src);
+	strs = alloc_pool(ms, sizeof(*strs) * (words + 1));
 	i = 0;
 	while (words--)
 	{
-		word_len = ft_word_len(&src);
-		strs[i] = str_sub(src - word_len, 0, word_len, arena);
-		if (!strs[i++])
-			return (NULL);
+		word_len = word_length(&src);
+		strs[i] = str_sub(ms, src - word_len, 0, word_len);
+		++i;
 	}
 	strs[i] = NULL;
 	return (strs);
 }
 
-static inline size_t	ft_count_words(char const *src)
+static inline size_t	count_words(char const *src)
 {
 	size_t	count;
 
@@ -107,7 +104,7 @@ static inline size_t	ft_count_words(char const *src)
 	return (count);
 }
 
-static inline size_t	ft_word_len(char const **src)
+static inline size_t	word_length(char const **src)
 {
 	size_t	len;
 
@@ -123,7 +120,7 @@ static inline size_t	ft_word_len(char const **src)
 }
 
 char	*str_sub(\
-char const *src, unsigned int start, size_t len, t_mem_arena *arena)
+t_minishell *ms, char const *src, unsigned int start, size_t len)
 {
 	char	*sub;
 	size_t	i;
@@ -134,11 +131,8 @@ char const *src, unsigned int start, size_t len, t_mem_arena *arena)
 	if (ft_strlen(src) > start)
 		while (src[start + i] && i < len)
 			++i;
-	sub = arena_alloc(arena, (i + 1) * sizeof (char));
-	if (sub)
-	{
-		ft_memcpy(sub, &src[start], i);
-		sub[i] = '\0';
-	}
+	sub = alloc_pool(ms, (i + 1) * sizeof(char));
+	ft_memcpy(sub, &src[start], i);
+	sub[i] = '\0';
 	return (sub);
 }
