@@ -6,14 +6,14 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/09/15 17:34:38 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/09/25 14:42:23 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#include "builtin.h"
 
 //still VERIFY ARG SYNTAX
-void	cd(t_cmd *cmd, t_state *shell_state)
+void	ft_cd(t_cmd *cmd, t_state *state)
 {
 	char	*path;
 
@@ -23,10 +23,10 @@ void	cd(t_cmd *cmd, t_state *shell_state)
 		path = getenv("HOME");
 		if (!path)
 		{
-			shell_state->exit_status = ERROR_BUILTIN;
+			state->exit_status = ERROR_BUILTIN;
 			return ;
 		}
 	}
 	if (chdir(path))
-		shell_state->exit_status = ERROR_BUILTIN;
+		state->exit_status = ERROR_BUILTIN;
 }

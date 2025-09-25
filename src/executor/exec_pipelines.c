@@ -26,7 +26,7 @@ int	spawn_and_run(t_node *node, t_state *shell, int count, int *prev_fd)
 	{
 		if (fork_child(&child_pid, shell))
 			return (ERROR_FORKING);
-		shell->pids[count] = child_pid; //this creates a copy to child i think.
+		shell->pids[count] = child_pid; //this creates a copy (COW) to child of shell i think.
 	}
 	if (child_pid == 0)
 	{

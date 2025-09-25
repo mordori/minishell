@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 05:42:26 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/25 15:02:04 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ static inline void	run(t_minishell *ms);
  * @author		Mika Yli-Pentti		https://github.com/mordori
  * @author		Janne Valkama		https://github.com/cubicajupiter
  */
-int	main(void)
+int	main(int ac, char **av, char **envp)
 {
 	t_minishell	ms;
 
 	startup();
-	initialize(&ms);
+	initialize(&ms, envp);
 	run(&ms);
 	clean(&ms);
 	return (EXIT_SUCCESS);
@@ -43,13 +43,14 @@ int	main(void)
  *
  * @param	minishell Pointer to the minishell.
  */
-static inline void	initialize(t_minishell *ms)
+static inline void	initialize(t_minishell *ms, char **envp)
 {
 	ft_memset(ms, 0, sizeof(*ms));
 	ms->mem_system = arena_create(MEM_SIZE_SYSTEM);
 	ms->mem_pool = arena_create(MEM_SIZE_POOL);
 	if (!ms->mem_system.base || !ms->mem_pool.base)
 		error_exit(ms, "Memory arena creation", __FILE__, __LINE__);
+	init_env(ms, envp);
 }
 
 /**

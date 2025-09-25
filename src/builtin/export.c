@@ -6,13 +6,13 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:25:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/09/15 17:34:45 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/09/25 14:32:13 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-void	export()
+void	ft_export()
 {
 	//in bash export sets env variables so they are available for child prcesses and extern programas
 }

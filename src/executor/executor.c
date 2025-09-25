@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/09/23 16:36:25 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/25 15:02:10 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 //SOME OF THESE PARAS DO DEPEND ON PARSER OUTPUT. so, SUBJECT TO CHANGE.
 
-int	executor(t_minishell *ms, t_node *node, t_state *shell)
+int	executor(t_minishell *ms, t_node *node, t_state *state)
 {
-	if (shell->mode == SIMPLE)
-		execute_simple(node, shell);
-	else if (shell->mode == PIPELINE)
-		execute_pipeline(node, shell);
-	if (shell->exit_status)
-		error_exit(ms); //also need to clean up node and maye shell
-	return(shell->exit_status);
+	if (state->mode == SIMPLE)
+		execute_simple(node, state);
+	else if (state->mode == PIPELINE)
+		execute_pipeline(node, state);
+	if (state->exit_status)
+		clean_reset(node, state);
+	return(state->exit_status);
 }
 
 int	execute_simple(t_node *node, t_state *shell)
@@ -45,13 +45,6 @@ int	execute_simple(t_node *node, t_state *shell)
 	return (shell->exit_status);
 }
 
-/*
-WIP. need a loop/recursion to execute the cmds in order when pipeline
-the loop or recursion should break with error ofc.
-
-pipeline technically needs no forks for the cmds that are builtin,
-but just forking everything might simplify the process flow.
-*/
 int	execute_pipeline(t_node *node, t_state *shell)
 {
 	bool		is_builtin;

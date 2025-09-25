@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 05:28:41 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/25 15:02:13 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef enum e_builtin_type	t_builtin;
 typedef enum e_mode			t_mode;
 typedef enum e_type			t_type;
 
+typedef struct s_env		t_env;
 typedef struct s_token		t_token;
 typedef struct s_cmd		t_cmd;
 typedef struct s_state		t_state;
@@ -80,6 +81,13 @@ enum e_type
 	OPERATOR
 };
 
+struct s_env
+{
+	char		*key;
+	char		*value;
+	t_env		*next;
+};
+
 struct s_token
 {
 	char		*token;
@@ -100,7 +108,7 @@ struct s_state
 	int			child_count; //can be parsed from the number of | characters
 	pid_t		*pids;
 	int			exit_status;
-	char		**env_var;
+	t_env		*env;
 	int			open_fds[3];
 };
 
