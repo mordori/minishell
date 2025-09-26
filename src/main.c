@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 05:42:26 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/25 14:38:29 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "libft_mem.h"
 #include "mem_arena.h"
 #include "lexer.h"
+#include "mem_utils.h"
 
 static inline void	startup(void);
 static inline void	initialize(t_minishell *ms);
@@ -46,10 +47,10 @@ int	main(void)
 static inline void	initialize(t_minishell *ms)
 {
 	ft_memset(ms, 0, sizeof(*ms));
-	ms->mem_system = arena_create(MEM_SIZE_SYSTEM);
-	ms->mem_pool = arena_create(MEM_SIZE_POOL);
-	if (!ms->mem_system.base || !ms->mem_pool.base)
-		error_exit(ms, "Memory arena creation", __FILE__, __LINE__);
+	ms->system = arena_create(SYSTEM_SIZE);
+	ms->pool = arena_create(POOL_SIZE);
+	if (!ms->system.base || !ms->pool.base)
+		error_exit(ms, "Arena creation failed");
 }
 
 /**
@@ -59,24 +60,25 @@ static inline void	initialize(t_minishell *ms)
  */
 static inline void	run(t_minishell *ms)
 {
-	char	*line;
-	t_token	*tokens;
+	t_token	**tokens;
 
-	line = readline(PROMPT);
-	while (line)
+	ms->line = readline(PROMPT);
+	while (*ms->line)
 	{
-		tokens = create_tokens(line);
-		(void)tokens;
-		// parse(line);
+		// reg sig handlesre
+		tokens = create_tokens(ms->line, ms);
+		parse(tokens);
 		// expand();
-		// redirect();
+		// redirect(); HEREDOC
+		// sig handler
 		// execute();
-		arena_reset(&ms->mem_pool);
-		free(line);
-		error_exit(ms, "Test error", __FILE__, __LINE__);
+		if (*ms->line)
+			add_history(ms->line);
 		if (ms->exit)
 			break ;
-		line = readline(PROMPT);
+		arena_reset(&ms->pool);
+		free(ms->line);
+		ms->line = readline(PROMPT);
 	}
 }
 
@@ -87,8 +89,12 @@ void	clean(t_minishell *ms)
 {
 	if (!ms)
 		return ;
-	arena_destroy(&ms->mem_pool);
-	arena_destroy(&ms->mem_system);
+	arena_destroy(&ms->pool);
+	arena_destroy(&ms->system);
+	rl_clear_history();
+	if (ms->line)
+		free(ms->line);
+	ms->line = NULL;
 }
 
 /**
@@ -98,17 +104,17 @@ void	clean(t_minishell *ms)
  */
 static inline void	startup(void)
 {
-	if (printf("%s%s%s%s%s%s%s%s%s%s\n",
-"   ________   ________  ________   ________  _",
-"_______  ________  ________  _______   _______ \n",
-"  ╱        ╲ ╱        ╲╱    ╱   ╲ ╱        ╲╱ ",
-"       ╲╱    ╱   ╲╱        ╲╱       ╲ ╱       ╲\n",
-" ╱         ╱_╱       ╱╱         ╱_╱       ╱╱  ",
-"      _╱         ╱         ╱        ╱╱        ╱\n",
-"╱         ╱╱         ╱         ╱╱         ╱-  ",
-"      ╱         ╱        _╱        ╱╱        ╱ \n",
-"╲__╱__╱__╱ ╲________╱╲__╱_____╱ ╲________╱╲___",
+	if (printf("%s%s%s%s%s%s%s%s%s%s\n", \
+"   ________   ________  ________   ________  _", \
+"_______  ________  ________  _______   _______ \n", \
+"  ╱        ╲ ╱        ╲╱    ╱   ╲ ╱        ╲╱ ", \
+"       ╲╱    ╱   ╲╱        ╲╱       ╲ ╱       ╲\n", \
+" ╱         ╱_╱       ╱╱         ╱_╱       ╱╱  ", \
+"      _╱         ╱         ╱        ╱╱        ╱\n", \
+"╱         ╱╱         ╱         ╱╱         ╱-  ", \
+"      ╱         ╱        _╱        ╱╱        ╱ \n", \
+"╲__╱__╱__╱ ╲________╱╲__╱_____╱ ╲________╱╲___", \
 "_____╱╲___╱____╱╲________╱╲________╱╲________╱ \n") \
 < 0)
-		error_exit(NULL, "Startup message print", __FILE__, __LINE__);
+		error_exit(NULL, "Startup message failed");
 }

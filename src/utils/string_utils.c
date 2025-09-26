@@ -6,11 +6,18 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 02:31:30 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/25 03:50:02 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "string_utils.h"
+#include "libft_str.h"
+#include "libft_mem.h"
+#include "libft_utils.h"
+#include "mem_utils.h"
+
+static inline size_t	count_words(char const *s);
+static inline size_t	word_length(char const **s);
 
 /**
  * @brief Converts an signed 64-bit integer to a string.
@@ -47,4 +54,85 @@ size_t	int_to_str(int n, char *buf)
 		++j;
 	}
 	return (i + k);
+}
+
+/**
+ * Allocates memory and returns an array of strings by splitting string `s`
+ * using whitespace characters deliters.
+ *
+ * Last element is a NULL pointer.
+ *
+ * @param s Source string.
+ * @return New array of strings split from the string `s`.
+ */
+char	**str_split(t_minishell *ms, char const *src)
+{
+	char	**strs;
+	size_t	words;
+	size_t	word_len;
+	size_t	i;
+
+	if (!src)
+		return (NULL);
+	words = count_words(src);
+	strs = alloc_pool(ms, sizeof(*strs) * (words + 1));
+	i = 0;
+	while (words--)
+	{
+		word_len = word_length(&src);
+		strs[i] = str_sub(ms, src - word_len, 0, word_len);
+		++i;
+	}
+	strs[i] = NULL;
+	return (strs);
+}
+
+static inline size_t	count_words(char const *src)
+{
+	size_t	count;
+
+	count = 0;
+	while (*src)
+	{
+		while (*src && ft_isspace(*src))
+			++src;
+		while (*src && !ft_isspace(*src))
+			++src;
+		if (*src || !ft_isspace(*(src - 1)))
+			++count;
+	}
+	return (count);
+}
+
+static inline size_t	word_length(char const **src)
+{
+	size_t	len;
+
+	len = 0;
+	while (**src && ft_isspace(**src))
+		++*src;
+	while (**src && !ft_isspace(**src))
+	{
+		++len;
+		++*src;
+	}
+	return (len);
+}
+
+char	*str_sub(\
+t_minishell *ms, char const *src, unsigned int start, size_t len)
+{
+	char	*sub;
+	size_t	i;
+
+	if (!src)
+		return (NULL);
+	i = 0;
+	if (ft_strlen(src) > start)
+		while (src[start + i] && i < len)
+			++i;
+	sub = alloc_pool(ms, (i + 1) * sizeof(char));
+	ft_memcpy(sub, &src[start], i);
+	sub[i] = '\0';
+	return (sub);
 }

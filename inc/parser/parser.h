@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 04:19:41 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 20:17:33 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,7 @@
 # define PARSER_H
 
 # include "defines.h"
+
+void	parse(t_token **tokens);
 
 #endif

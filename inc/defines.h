@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 05:28:41 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/25 04:12:47 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,26 +33,29 @@
 # define SUCCESS				0
 # define CMD					0
 
-# define INT32_LENGTH			11			// byte
-# define INT64_LENGTH			20			// byte
+# define INT32_LENGTH			11
+# define INT64_LENGTH			20
 
-# define MEM_SIZE_SYSTEM		256
-# define MEM_SIZE_POOL			1024
+# define SYSTEM_SIZE			256
+# ifndef POOL_SIZE
+#  define POOL_SIZE				1024
+# endif
 
 # define PROMPT					"\033[0;36m[minishell]\033[0m$ "
 
-typedef enum e_builtin_type	t_builtin;
-typedef enum e_mode			t_mode;
-typedef enum e_type			t_type;
+typedef enum e_builtin_type		t_builtin;
+typedef enum e_mode				t_mode;
+typedef enum e_type				t_type;
+typedef enum e_errors			t_errors;
 
-typedef struct s_token		t_token;
-typedef struct s_cmd		t_cmd;
-typedef struct s_state		t_state;
-typedef struct s_node		t_node;
-typedef struct s_mem_arena	t_mem_arena;
-typedef struct s_minishell	t_minishell;
+typedef struct s_token			t_token;
+typedef struct s_cmd			t_cmd;
+typedef struct s_state			t_state;
+typedef struct s_node			t_node;
+typedef struct s_mem_arena		t_mem_arena;
+typedef struct s_minishell		t_minishell;
 
-typedef int					t_cmd_func(t_cmd, t_state);
+typedef int		t_cmd_func(t_cmd, t_state);
 
 enum e_builtin_type
 {
@@ -77,12 +80,17 @@ enum e_type
 	WORD,
 	QUOTED_WORD,
 	REDIRECTION,
-	OPERATOR
+	PIPE
+};
+
+enum e_errors
+{
+	MS_INIT
 };
 
 struct s_token
 {
-	char		*token;
+	char		*src;
 	t_type		type;
 };
 
@@ -120,8 +128,9 @@ struct s_mem_arena
 
 struct	s_minishell
 {
-	t_mem_arena	mem_system;
-	t_mem_arena	mem_pool;
+	t_mem_arena	system;
+	t_mem_arena	pool;
+	char		*line;
 	t_state		*state;
 	bool		exit;
 };

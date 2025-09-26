@@ -6,8 +6,13 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:15:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 04:19:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 20:17:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+
+void	parse(t_token **tokens)
+{
+	(void)tokens;
+}
