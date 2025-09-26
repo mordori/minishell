@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 20:12:09 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/25 14:38:09 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "libft_str.h"
 #include "main.h"
 
-static inline void	print_error(char *file, int line, char *msg);
+static inline void	print_error(char *msg);
 
 /**
  * @brief	General error function that cleans the program, prints a detailed
@@ -28,11 +28,11 @@ static inline void	print_error(char *file, int line, char *msg);
  * @param ms	Pointer to the minishell.
  * @param msg	Error message.
  */
-void	error_exit(t_minishell *ms, char *msg, char *file, int line)
+void	error_exit(t_minishell *ms, char *msg)
 {
 	if (ms)
 		clean(ms);
-	print_error(file, line, msg);
+	print_error(msg);
 	exit(EXIT_FAILURE);
 }
 
@@ -43,21 +43,14 @@ void	error_exit(t_minishell *ms, char *msg, char *file, int line)
  * @param line	Line where the error occurred.
  * @param msg	Error message.
  */
-static inline void	print_error(char *file, int line, char *msg)
+static inline void	print_error(char *msg)
 {
-	char	str_line[INT32_LENGTH + 1];
-	size_t	len_line;
 	int		bytes;
 
 	bytes = write(STDERR_FILENO, "-----------------------------------\n", 36);
 	bytes = write(STDERR_FILENO, "Error: ", 7);
 	if (msg)
 		bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
-	bytes = write(STDERR_FILENO, "\n", 1);
-	bytes = write(STDERR_FILENO, file, ft_strlen(file));
-	bytes = write(STDERR_FILENO, ", line: ", 8);
-	len_line = int_to_str(line, str_line);
-	bytes = write(STDERR_FILENO, str_line, len_line);
 	bytes = write(STDERR_FILENO, "\n", 1);
 	(void)bytes;
 	perror("ERRNO");

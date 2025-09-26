@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 04:09:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/25 04:15:01 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/26 01:43:02 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "errors.h"
 #include "mem_utils.h"
 
-static inline void	tokenize_src(t_token *token);
+static inline void	tokenize(t_token *token);
 
 t_token	**create_tokens(char *src, t_minishell *ms)
 {
@@ -34,7 +34,7 @@ t_token	**create_tokens(char *src, t_minishell *ms)
 	{
 		tokens[i] = alloc_pool(ms, sizeof(*tokens[i]));
 		tokens[i]->src = srcs[i];
-		tokenize_src(tokens[i]);
+		tokenize(tokens[i]);
 		++i;
 	}
 	i = 0;
@@ -48,7 +48,7 @@ t_token	**create_tokens(char *src, t_minishell *ms)
 	return (tokens);
 }
 
-static inline void	tokenize_src(t_token *token)
+static inline void	tokenize(t_token *token)
 {
 	static const char	*quotes[] = {"\"", "\'"};
 	static const char	*pipe[] = {"|"};

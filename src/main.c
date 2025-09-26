@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/25 04:21:31 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/25 14:38:29 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static inline void	initialize(t_minishell *ms)
 	ms->system = arena_create(SYSTEM_SIZE);
 	ms->pool = arena_create(POOL_SIZE);
 	if (!ms->system.base || !ms->pool.base)
-		error_exit(ms, "Arena creation failed", __FILE__, __LINE__);
+		error_exit(ms, "Arena creation failed");
 }
 
 /**
@@ -116,5 +116,5 @@ static inline void	startup(void)
 "╲__╱__╱__╱ ╲________╱╲__╱_____╱ ╲________╱╲___", \
 "_____╱╲___╱____╱╲________╱╲________╱╲________╱ \n") \
 < 0)
-		error_exit(NULL, "Startup message failed", __FILE__, __LINE__);
+		error_exit(NULL, "Startup message failed");
 }
