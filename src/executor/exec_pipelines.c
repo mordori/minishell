@@ -55,7 +55,7 @@ int	create_pipe(t_node *node, t_state *shell, int *prev_fd)
 	return (SUCCESS);
 }
 
-int	redirections(t_node *node, t_state *shell, int prev_fd)
+int	redirections(t_node *node, int prev_fd)
 {
 	if (node->prev)
 	{
