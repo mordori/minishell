@@ -16,6 +16,5 @@ void	ft_exit(t_cmd *cmd, t_state *state)
 {
 	clean(ms);
 	//clean up additional structs beside ms, but strive to have as many as possible structs on local stack.
-	exit(SUCCESS);
-	//exit terminates the shell or script.
+	exit(EXIT_SUCCESS);
 }

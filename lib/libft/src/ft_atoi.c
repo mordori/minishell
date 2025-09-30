@@ -6,14 +6,12 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 14:49:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/08/25 18:01:24 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/24 18:47:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft_utils.h"
 #include "libft_str.h"
-
-static inline bool	ft_isspace(char c);
 
 /**
  * Converts the initial portion of the string `str` to an integer value.
@@ -126,7 +124,7 @@ uint32_t	ft_atouint32_t_base(const char *str, const char *base)
  * @param c Character to be checked for.
  * @return TRUE if successful, else FALSE.
  */
-static inline bool	ft_isspace(char c)
+bool	ft_isspace(char c)
 {
 	return (c == ' ' || (c >= '\t' && c <= '\r'));
 }

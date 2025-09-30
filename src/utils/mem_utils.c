@@ -1,20 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   mem_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/24 04:11:12 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/25 01:16:18 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/25 00:00:20 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/09/25 14:38:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEXER_H
-# define LEXER_H
+#include "mem_utils.h"
+#include "mem_arena.h"
+#include "errors.h"
 
-# include "defines.h"
+void	*alloc_system(t_minishell *ms, size_t size)
+{
+	void	*ptr;
 
-t_token	**create_tokens(char *src, t_minishell *ms);
+	ptr = arena_alloc(&ms->system, size);
+	if (!ptr)
+		error_exit(ms, "System alloc failed");
+	return (ptr);
+}
 
-#endif
+void	*alloc_pool(t_minishell *ms, size_t size)
+{
+	void	*ptr;
+
+	ptr = arena_alloc(&ms->pool, size);
+	if (!ptr)
+		error_exit(ms, "Pool alloc failed");
+	return (ptr);
+}

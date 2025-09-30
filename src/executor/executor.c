@@ -13,15 +13,20 @@
 #include "executor.h"
 
 //SOME OF THESE PARAS DO DEPEND ON PARSER OUTPUT. so, SUBJECT TO CHANGE.
+//NODE CREATION CAN HAPPEN HERE BASED ON TOKENS for example.
 
-int	executor(t_minishell *ms, t_node *node, t_state *state)
+int	executor(t_node *node, t_minishell *ms)
 {
+	t_state		*state;
+
+	state = ms->state;
 	if (state->mode == SIMPLE)
 		execute_simple(node, state);
 	else if (state->mode == PIPELINE)
 		execute_pipeline(node, state);
 	if (state->exit_status)
 		clean_reset(node, state);
+	//cleaning old node and state?
 	return(state->exit_status);
 }
 
@@ -55,7 +60,7 @@ int	execute_pipeline(t_node *node, t_state *shell)
 	prev_fd = -1;
 	while (node)
 	{
-		shell->exit_status = spawn_and_run(node, shell, count, &prev_fd))
+		shell->exit_status = spawn_and_run(node, shell, count, &prev_fd);
 		if (shell->exit_status)
 			return (shell->exit_status);
 		node = node->next;

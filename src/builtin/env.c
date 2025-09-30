@@ -20,7 +20,7 @@ void	ft_env(t_cmd *cmd, t_state *state)
 	env = state->env;
 	while (env)
 	{
-		printf("%s=%s\n", env->key, env->value);
+		printf("%s=%s\n", env->name, env->value);
 		env = env->next;
 	}
 }

@@ -6,14 +6,20 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/09/24 04:19:50 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/09/25 04:17:08 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:=minishell
 
+POOL_SIZE	?= 1024
+CONF		:=.config
+
+DEFS		:=-D POOL_SIZE=$(POOL_SIZE)
+# TODO: Add OPTS
+OPTS		:=-O3 -march=native -funroll-loops -fno-plt
 CC			:=cc
-CFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code -O3 -march=native -funroll-loops -fno-plt
+CFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code $(DEFS)
 LDFLAGS		:=-flto
 LIBS		:=-lreadline
 
@@ -67,8 +73,9 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
 				 \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
-				mem_arena.c \
 				errors.c \
+				mem_arena.c \
+				mem_utils.c \
 				string_utils.c \
 				)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
@@ -80,19 +87,24 @@ GREEN		:=\033[1;32m
 RED			:=\033[1;31m
 COLOR		:=\033[0m
 
-all: $(LIBFT) $(NAME)
+all: $(LIBFT) config $(NAME)
 
 $(LIBFT):
 	@echo "$(GREEN) [+]$(COLOR) compiling libft.a"
-	@+make -C $(DIR_LIBFT)
+	@make -j4 -C $(DIR_LIBFT)
 
-$(NAME): $(OBJS)
+config:
+	@if [ ! -e "$(CONF)" ] || [ "$$(cat "$(CONF)")" != "$(POOL_SIZE)" ]; then \
+		echo "$(POOL_SIZE)" > "$(CONF)"; \
+	elif [ -e "$(NAME)" ]; then \
+		echo "$(NAME) is already built and configured with POOL_SIZE=$(POOL_SIZE)."; \
+	fi
+
+$(NAME): $(OBJS) $(LIBFT) $(CONF)
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBS) $(LIBFT)
-	@echo "$(YELLOW) [✔] $(NAME) created$(COLOR)"
+	@echo "$(YELLOW) [✔] $(NAME) built POOL_SIZE=$(POOL_SIZE)$(COLOR)"
 
-$(OBJS): $(LIBFT)
-
-$(DIR_OBJ)%.o: $(DIR_SRC)%.c
+$(DIR_OBJ)%.o: $(DIR_SRC)%.c $(LIBFT) $(CONF)
 	@mkdir -p $(dir $@) $(patsubst $(DIR_OBJ)%, $(DIR_DEP)%, $(dir $@))
 	@$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP -MF $(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $@) $(INCS)
 	@echo "$(GREEN) [+]$(COLOR) compiling $@"
@@ -102,13 +114,17 @@ clean:
 		rm -rf $(DIR_OBJ); \
 		echo "$(RED) [-]$(COLOR) removed $(DIR_OBJ)"; \
 	fi
-	@+make -C $(DIR_LIBFT) clean
+	@make -j4 -C $(DIR_LIBFT) clean
 
 fclean: clean
-	@+make -C $(DIR_LIBFT) fclean
+	@make -j4 -C $(DIR_LIBFT) fclean
 	@if [ -d "$(DIR_DEP)" ]; then \
 		rm -rf $(DIR_DEP); \
 		echo "$(RED) [-]$(COLOR) removed $(DIR_DEP)"; \
+	fi
+	@if [ -e "$(CONF)" ]; then \
+		rm -f $(CONF); \
+		echo "$(RED) [-]$(COLOR) removed $(CONF)"; \
 	fi
 	@if [ -e "$(NAME)" ]; then \
 		rm -f $(NAME); \
@@ -117,7 +133,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
-.SECONDARY: $(OBJS) $(DEPS)
+.PHONY: all clean fclean re config
+.SECONDARY: $(OBJS) $(DEPS) $(CONF)
 
 -include $(DEPS)

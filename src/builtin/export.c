@@ -12,7 +12,10 @@
 
 #include "executor.h"
 
-void	ft_export()
+void	ft_export(t_cmd *cmd, t_state *state)
 {
 	//in bash export sets env variables so they are available for child prcesses and extern programas
+	//in pipeline: NEEDS to affect subsequent child processes, but not the parent process.
+	//makes a new env variable accessible.
+	parse_env_var();
 }

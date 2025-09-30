@@ -6,3 +6,4 @@ obj/
 *.d
 libft.a
 minishell
+.config

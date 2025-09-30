@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+// PARSER
 //would need something to parse the *envp argument, 
 //and split to keys and values in a t_env stuct for example.
 //struct would make it clearer.
@@ -26,17 +27,16 @@ void	init_env(t_minishell *ms, char **envp)
 	}
 }
 
-//skeleton draft
+//skeleton draft. AN example.
 void	parse(char *env_var)
 {
 	char		*string;
+	t_env		*env;
 
+	env = ms->state->env; //only as long as state is included in ms ofc.
 	while (env_var[j])
 	{
-		ms->state->env; //if state included in ms. otherwise could take just state, for example.
-		if ()
-			env->key = string;
-		else
-			env->value = string;
+		env->key = ;
+		env->value = ;
 	}
 }
