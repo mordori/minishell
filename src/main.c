@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/25 14:38:29 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/30 23:02:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,21 +63,24 @@ static inline void	run(t_minishell *ms)
 	t_token	**tokens;
 
 	ms->line = readline(PROMPT);
-	while (*ms->line)
+	while (true)
 	{
 		// reg sig handlesre
 		tokens = create_tokens(ms->line, ms);
-		parse(tokens);
-		// expand();
-		// redirect(); HEREDOC
-		// sig handler
-		// execute();
+		if (tokens)
+		{
+			parse(tokens);
+			// expand();
+			// redirect(); HEREDOC
+			// sig handler
+			// execute();
+			if (ms->exit)
+				break ;
+		}
 		if (*ms->line)
 			add_history(ms->line);
-		if (ms->exit)
-			break ;
-		arena_reset(&ms->pool);
 		free(ms->line);
+		arena_reset(&ms->pool);
 		ms->line = readline(PROMPT);
 	}
 }

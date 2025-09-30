@@ -1,21 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mem_utils.h                                        :+:      :+:    :+:   */
+/*   defines.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/25 00:27:28 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/29 04:09:09 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/30 21:46:51 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/09/30 21:58:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MEM_UTILS_H
-# define MEM_UTILS_H
+#include "defines.h"
 
-# include "defines.h"
+const char**	get_redirs()
+{
+	static const char	*redirections[] = {">", ">>", "<", "<<", NULL};
+	return (redirections);
+}
 
-void	*alloc_pool(t_minishell *ms, size_t size);
-void	*alloc_system(t_minishell *ms, size_t size);
+const char**	get_pipe()
+{
+	static const char	*pipe[] = {"|", NULL};
+	return (pipe);
+}
 
-#endif
+const char**	get_quotes()
+{
+	static const char	*quotes[] = {"\"", "\'", NULL};
+	return (quotes);
+}
+

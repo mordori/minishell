@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 04:09:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/26 01:43:02 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/01 01:18:53 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "mem_arena.h"
 #include "errors.h"
 #include "mem_utils.h"
+#include "libft_str.h"
 
 static inline void	tokenize(t_token *token);
 
@@ -25,6 +26,8 @@ t_token	**create_tokens(char *src, t_minishell *ms)
 	int		i;
 
 	srcs = str_split(ms, src);
+	if (!srcs)
+		return (NULL);
 	i = 0;
 	while (srcs[i])
 		++i;
@@ -50,17 +53,33 @@ t_token	**create_tokens(char *src, t_minishell *ms)
 
 static inline void	tokenize(t_token *token)
 {
-	static const char	*quotes[] = {"\"", "\'"};
-	static const char	*pipe[] = {"|"};
-	static const char	*redirections[] = \
-{">", ">>", ">>", "<", "<<", "<<<"};
-
-	if (*token->src == *quotes[0])
-		token->type = QUOTED_WORD;
-	else if (*token->src == *redirections[0])
+	if (cmp_type(get_quotes(), token->src))
+		token->type = ARGUMENT;
+	else if (cmp_type(get_redirs(), token->src))
 		token->type = REDIRECTION;
-	else if (*token->src == *pipe[0])
+	else if (cmp_type(get_pipe(), token->src))
 		token->type = PIPE;
 	else
-		token->type = WORD;
+		token->type = COMMAND;
+}
+
+bool	cmp_type(const char **types, const char *src)
+{
+	while (*types)
+	{
+		if (*src == **types)
+			return (true);
+		++types;
+	}
+	return (false);
+}
+
+bool	cmp_types(const char *src)
+{
+	if (\
+cmp_type(get_quotes(), src) || \
+cmp_type(get_redirs(), src) || \
+cmp_type(get_pipe(), src))
+		return (true);
+	return (false);
 }

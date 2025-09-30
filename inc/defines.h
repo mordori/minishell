@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/25 04:12:47 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/30 21:53:49 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,15 +77,10 @@ enum e_mode
 
 enum e_type
 {
-	WORD,
-	QUOTED_WORD,
+	COMMAND,
+	ARGUMENT,
 	REDIRECTION,
 	PIPE
-};
-
-enum e_errors
-{
-	MS_INIT
 };
 
 struct s_token
@@ -134,5 +129,9 @@ struct	s_minishell
 	t_state		*state;
 	bool		exit;
 };
+
+const char**	get_redirs();
+const char**	get_pipe();
+const char**	get_quotes();
 
 #endif
