@@ -14,6 +14,7 @@
 # define EXECUTOR_H
 
 # include "defines.h"
+# include <fcntl.h>
 # include <unistd.h>
 
 //executor.c
@@ -29,14 +30,9 @@ int		exec_extern(t_cmd *cmd);
 int		create_pipes(t_state *shell);
 int		spawn_and_run(t_state *shell, t_cmd *cmd);
 
-//cd.c
-void	cd(t_cmd *cmd, t_state *shell_state);
-
-//echo.c
-int		echo(t_state *shell, t_cmd *cmd);
-
-//pwd.c
-void	pwd(t_cmd *cmd, t_state *shell_state);
+//redirections.c
+int		redirect_input
+int		redirect_output
 
 //executor_utils.c
 bool	is_builtin(t_cmd *command);
