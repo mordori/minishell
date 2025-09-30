@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/30 21:53:49 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/01 02:39:55 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef enum e_mode				t_mode;
 typedef enum e_type				t_type;
 typedef enum e_errors			t_errors;
 
+typedef struct s_env			t_env;
 typedef struct s_token			t_token;
 typedef struct s_cmd			t_cmd;
 typedef struct s_state			t_state;
@@ -83,6 +84,14 @@ enum e_type
 	PIPE
 };
 
+struct s_env
+{
+	int		total_len;
+	char	*key;
+	char	*value;
+	t_env	*next;
+};
+
 struct s_token
 {
 	char		*src;
@@ -101,17 +110,16 @@ struct s_state
 {
 	t_mode		mode;
 	int			child_count; //can be parsed from the number of | characters
-	pid_t		*pids;
+	pid_t		pids[30587]; //could just be dynamically allocated instead of ulimit -u limit on Maximum child process number.
 	int			exit_status;
-	char		**env_var;
-	int			open_fds[3];
+	char		**envp;
 };
 
 struct s_cmd
 {
 	t_builtin	builtin;
 	char		*cmd;
-	char		**args;
+	char		**argv;
 };
 
 struct s_mem_arena

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/30 23:02:30 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/01 02:38:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "mem_utils.h"
 
 static inline void	startup(void);
-static inline void	initialize(t_minishell *ms);
+static inline void	initialize(t_minishell *ms, char **envp);
 static inline void	run(t_minishell *ms);
 
 /**
@@ -28,12 +28,12 @@ static inline void	run(t_minishell *ms);
  * @author		Mika Yli-Pentti		https://github.com/mordori
  * @author		Janne Valkama		https://github.com/cubicajupiter
  */
-int	main(void)
+int	main(int ac, char **av, char **envp)
 {
 	t_minishell	ms;
 
 	startup();
-	initialize(&ms);
+	initialize(&ms, envp);
 	run(&ms);
 	clean(&ms);
 	return (EXIT_SUCCESS);
@@ -43,14 +43,15 @@ int	main(void)
  * @brief	Zero-initializes the minishell and creates memory arenas.
  *
  * @param	minishell Pointer to the minishell.
+ * @param	envp Pointer for intake of OS environment variables.
  */
-static inline void	initialize(t_minishell *ms)
+static inline void	initialize(t_minishell *ms, char **envp)
 {
 	ft_memset(ms, 0, sizeof(*ms));
 	ms->system = arena_create(SYSTEM_SIZE);
 	ms->pool = arena_create(POOL_SIZE);
 	if (!ms->system.base || !ms->pool.base)
-		error_exit(ms, "Arena creation failed");
+		error_exit(ms, "arena creation failed");
 }
 
 /**
@@ -119,5 +120,5 @@ static inline void	startup(void)
 "╲__╱__╱__╱ ╲________╱╲__╱_____╱ ╲________╱╲___", \
 "_____╱╲___╱____╱╲________╱╲________╱╲________╱ \n") \
 < 0)
-		error_exit(NULL, "Startup message failed");
+		error_exit(NULL, "startup message failed");
 }

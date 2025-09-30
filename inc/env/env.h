@@ -1,16 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_simple.c                                      :+:      :+:    :+:   */
+/*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/12 15:54:39 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/09/12 16:46:25 by jvalkama         ###   ########.fr       */
+/*   Created: 2025/09/30 12:17:25 by jvalkama          #+#    #+#             */
+/*   Updated: 2025/09/30 12:29:07 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "defines.h"
-#include "executor.h"
+#ifndef ENV_H
+# define ENV_H
 
+# include "defines.h"
 
+#endif
