@@ -6,18 +6,18 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:12 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/09/15 17:34:40 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/09/25 14:36:05 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#include "builtin.h"
 
 /*
 	* bash takes multiple arguments into echo and joins them with a space 
 	* it can also take variables of different types (WIP)
 	* puts a newline instead of space after last arg
 */
-int	echo(t_state *shell, t_cmd *cmd)
+int	ft_echo(t_cmd *cmd, t_state *state)
 {
 	char		*string;
 	bool		in_between;
@@ -30,7 +30,7 @@ int	echo(t_state *shell, t_cmd *cmd)
 		if (in_between)
 			write(1, ' ', 1);
 		string = cmd->args[i];
-		ft_printf("%s", string);
+		printf("%s", string);
 		if (!in_between)
 			in_between = true;
 		i++;

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/25 14:38:29 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/30 12:29:06 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ static inline void	run(t_minishell *ms);
  * @author		Mika Yli-Pentti		https://github.com/mordori
  * @author		Janne Valkama		https://github.com/cubicajupiter
  */
-int	main(void)
+int	main(int ac, char **av, char **envp)
 {
 	t_minishell	ms;
 
 	startup();
-	initialize(&ms);
+	initialize(&ms, envp);
 	run(&ms);
 	clean(&ms);
 	return (EXIT_SUCCESS);
@@ -43,8 +43,9 @@ int	main(void)
  * @brief	Zero-initializes the minishell and creates memory arenas.
  *
  * @param	minishell Pointer to the minishell.
+ * @param	envp Pointer for intake of OS environment variables.
  */
-static inline void	initialize(t_minishell *ms)
+static inline void	initialize(t_minishell *ms, char **envp)
 {
 	ft_memset(ms, 0, sizeof(*ms));
 	ms->system = arena_create(SYSTEM_SIZE);

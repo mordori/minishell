@@ -1,19 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unset.c                                            :+:      :+:    :+:   */
+/*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/15 17:23:57 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/09/25 14:34:29 by jvalkama         ###   ########.fr       */
+/*   Created: 2025/09/30 12:17:25 by jvalkama          #+#    #+#             */
+/*   Updated: 2025/09/30 12:29:07 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#ifndef ENV_H
+# define ENV_H
 
-void	ft_unset(t_cmd *cmd, t_state *state)
-{	
-	// unset in bash removes shell variables and functions from current env
+# include "defines.h"
 
-}
+#endif
