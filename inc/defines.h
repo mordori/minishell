@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/25 04:12:47 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/30 12:24:52 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,12 @@ enum e_errors
 	MS_INIT
 };
 
-struct s_env //helppo hallita, mutta execve haluaakin char **envp.
+struct s_env
 {
-	char		*name;
-	char		*value;
-	t_env		*next;
+	int		total_len;
+	char	*key;
+	char	*value;
+	t_env	*next;
 };
 
 struct s_token
@@ -116,7 +117,7 @@ struct s_state
 	int			child_count; //can be parsed from the number of | characters
 	pid_t		pids[30587]; //could just be dynamically allocated instead of ulimit -u limit on Maximum child process number. 
 	int			exit_status;
-	t_env		*env; //tai **envp yksinkertaisesti, sit malloc sitä uudestaan kun tulee uutta kontsaa sisää.
+	char		**envp;
 };
 
 struct s_cmd

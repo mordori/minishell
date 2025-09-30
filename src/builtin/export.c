@@ -19,3 +19,25 @@ void	ft_export(t_cmd *cmd, t_state *state)
 	//makes a new env variable accessible.
 	parse_env_var();
 }
+	//EXPORT WITH ARGS:
+	//export name=value
+//		export	->	declare -x name="value"
+//
+//		export name
+//		-> name
+//
+//		export name=
+//		-> name=""
+//
+//		export name=value1 value2
+//		-> name="value1"
+//
+//		export name="value1 value2"
+//		-> name="value1 value2"
+
+
+	// EXPORT WITHOUT ARGS: 
+	// lists in alphabetical order like: declare -x HOME="/path/"
+	// export accepts variable names starting with _ or alphabet (_ape or ape) but not number. 
+	// Number can be in middle but not first character.
+	// variable names in smaller case come AFTER those in upper case, still in alphabetical order.
