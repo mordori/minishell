@@ -12,8 +12,6 @@
 
 #include "builtin.h"
 
-/* this is what it would look like with t_env *env linked list;
-	* but char **envp might be better since execve needs it as **envp
 void	ft_env(t_cmd *cmd, t_state *state)
 {
 	t_env		*env;
@@ -22,13 +20,12 @@ void	ft_env(t_cmd *cmd, t_state *state)
 	env = state->env;
 	while (env)
 	{
-		printf("%s=%s\n", env->name, env->value);
+		printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
 }
-*/
 
-
+/* alternative with no linked list
 void	ft_env(t_cmd *cmd, t_state *state)
 {
 	char	**env_vars;
@@ -46,3 +43,4 @@ void	ft_env(t_cmd *cmd, t_state *state)
 		i++;
 	}
 }
+*/

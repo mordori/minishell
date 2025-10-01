@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:25:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/09/25 14:32:13 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/01 15:32:41 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	ft_export(t_cmd *cmd, t_state *state)
 //
 //		export name=value1 value2
 //		-> name="value1"
+//		   value2
 //
 //		export name="value1 value2"
 //		-> name="value1 value2"

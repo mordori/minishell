@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.h                                              :+:      :+:    :+:   */
+/*   env_utils.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/30 12:17:25 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/01 15:37:27 by jvalkama         ###   ########.fr       */
+/*   Created: 2025/10/01 14:29:00 by jvalkama          #+#    #+#             */
+/*   Updated: 2025/10/01 15:36:39 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ENV_H
-# define ENV_H
+#ifndef ENV_UTILS_H
+# define ENV_UTILS_H
 
 # include <stdlib.h>
 # include "defines.h"
-# include "libft.h"
-# include "env_utils.h"
 # include "mem_utils.h"
+
+t_env	*ft_envnode_new(char *key, char *value);
+void	ft_envadd_back(t_env **env_head, t_env *new_node);
+char	*ft_keydup(char *key_src, char *key_end);
 
 #endif
