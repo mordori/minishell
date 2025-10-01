@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/30 12:24:52 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/01 02:52:27 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,7 @@ enum e_mode
 enum e_type
 {
 	WORD,
-	QUOTED_WORD,
-	REDIRECTION,
-	PIPE
-};
-
-enum e_errors
-{
-	MS_INIT
+	OPERATOR
 };
 
 struct s_env
@@ -115,7 +108,7 @@ struct s_state
 {
 	t_mode		mode;
 	int			child_count; //can be parsed from the number of | characters
-	pid_t		pids[30587]; //could just be dynamically allocated instead of ulimit -u limit on Maximum child process number. 
+	pid_t		pids[30587]; //could just be dynamically allocated instead of ulimit -u limit on Maximum child process number.
 	int			exit_status;
 	char		**envp;
 };
@@ -142,5 +135,9 @@ struct	s_minishell
 	t_state		*state;
 	bool		exit;
 };
+
+const char**	get_redirs();
+const char**	get_pipe();
+const char**	get_quotes();
 
 #endif

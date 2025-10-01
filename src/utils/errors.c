@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/25 14:38:09 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/01 03:11:33 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,30 @@ void	error_exit(t_minishell *ms, char *msg)
 	exit(EXIT_FAILURE);
 }
 
+void	error_input(t_minishell *ms, char *msg)
+{
+	int	bytes;
+
+	bytes = write(STDERR_FILENO, "minishell: input error. ", 24);
+	if (msg)
+		bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
+	bytes = write(STDERR_FILENO, "\n", 1);
+	(void)bytes;
+	(void)ms;
+}
+
+void	error_syntax(t_minishell *ms, char *msg)
+{
+	int	bytes;
+
+	bytes = write(STDERR_FILENO, "minishell: syntax error. ", 25);
+	if (msg)
+		bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
+	bytes = write(STDERR_FILENO, "\n", 1);
+	(void)bytes;
+	(void)ms;
+}
+
 /**
  * @brief	Prints a detailed error message.
  *
@@ -45,10 +69,10 @@ void	error_exit(t_minishell *ms, char *msg)
  */
 static inline void	print_error(char *msg)
 {
-	int		bytes;
+	int	bytes;
 
 	bytes = write(STDERR_FILENO, "-----------------------------------\n", 36);
-	bytes = write(STDERR_FILENO, "Error: ", 7);
+	bytes = write(STDERR_FILENO, "minishell: fatal error. ", 24);
 	if (msg)
 		bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
 	bytes = write(STDERR_FILENO, "\n", 1);

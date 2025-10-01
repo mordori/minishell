@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/30 12:29:06 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/01 03:05:26 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "mem_utils.h"
 
 static inline void	startup(void);
-static inline void	initialize(t_minishell *ms);
+static inline void	initialize(t_minishell *ms, char **envp);
 static inline void	run(t_minishell *ms);
 
 /**
@@ -32,6 +32,8 @@ int	main(int ac, char **av, char **envp)
 {
 	t_minishell	ms;
 
+	(void)ac;
+	(void)av;
 	startup();
 	initialize(&ms, envp);
 	run(&ms);
@@ -47,11 +49,12 @@ int	main(int ac, char **av, char **envp)
  */
 static inline void	initialize(t_minishell *ms, char **envp)
 {
+	(void)envp;
 	ft_memset(ms, 0, sizeof(*ms));
 	ms->system = arena_create(SYSTEM_SIZE);
 	ms->pool = arena_create(POOL_SIZE);
 	if (!ms->system.base || !ms->pool.base)
-		error_exit(ms, "Arena creation failed");
+		error_exit(ms, "arena creation failed");
 }
 
 /**
@@ -64,21 +67,24 @@ static inline void	run(t_minishell *ms)
 	t_token	**tokens;
 
 	ms->line = readline(PROMPT);
-	while (*ms->line)
+	while (true)
 	{
 		// reg sig handlesre
 		tokens = create_tokens(ms->line, ms);
-		parse(tokens);
-		// expand();
-		// redirect(); HEREDOC
-		// sig handler
-		// execute();
+		if (tokens)
+		{
+			parse(tokens);
+			// expand();
+			// redirect(); HEREDOC
+			// sig handler
+			// execute();
+			if (ms->exit)
+				break ;
+		}
 		if (*ms->line)
 			add_history(ms->line);
-		if (ms->exit)
-			break ;
-		arena_reset(&ms->pool);
 		free(ms->line);
+		arena_reset(&ms->pool);
 		ms->line = readline(PROMPT);
 	}
 }
@@ -117,5 +123,5 @@ static inline void	startup(void)
 "╲__╱__╱__╱ ╲________╱╲__╱_____╱ ╲________╱╲___", \
 "_____╱╲___╱____╱╲________╱╲________╱╲________╱ \n") \
 < 0)
-		error_exit(NULL, "Startup message failed");
+		error_exit(NULL, "startup message failed");
 }

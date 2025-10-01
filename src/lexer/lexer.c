@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 04:09:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/26 01:43:02 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/01 04:19:37 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ t_token	**create_tokens(char *src, t_minishell *ms)
 	int		i;
 
 	srcs = str_split(ms, src);
+	if (!srcs)
+		return (NULL);
 	i = 0;
 	while (srcs[i])
 		++i;
@@ -37,30 +39,38 @@ t_token	**create_tokens(char *src, t_minishell *ms)
 		tokenize(tokens[i]);
 		++i;
 	}
-	i = 0;
-	// Debug
-	while (tokens[i])
-	{
-		printf("%s ", tokens[i]->src);
-		printf("%d\n", tokens[i]->type);
-		++i;
-	}
 	return (tokens);
 }
 
 static inline void	tokenize(t_token *token)
 {
-	static const char	*quotes[] = {"\"", "\'"};
-	static const char	*pipe[] = {"|"};
-	static const char	*redirections[] = \
-{">", ">>", ">>", "<", "<<", "<<<"};
-
-	if (*token->src == *quotes[0])
-		token->type = QUOTED_WORD;
-	else if (*token->src == *redirections[0])
-		token->type = REDIRECTION;
-	else if (*token->src == *pipe[0])
-		token->type = PIPE;
+	if (is_operator(token->src))
+		token->type = OPERATOR;
 	else
 		token->type = WORD;
+}
+
+bool	cmp_strs(const char **types, const char *src)
+{
+	while (*types)
+	{
+		if (*src == **types)
+			return (true);
+		++types;
+	}
+	return (false);
+}
+
+bool	is_operator(const char *src)
+{
+	if (cmp_strs(get_redirs(), src) || cmp_strs(get_pipe(), src))
+		return (true);
+	return (false);
+}
+
+bool	is_quote(const char *src)
+{
+	if (cmp_strs(get_quotes(), src))
+		return (true);
+	return (false);
 }

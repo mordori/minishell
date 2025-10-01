@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/09/25 04:17:08 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/09/30 21:53:15 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,6 +73,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
 				 \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
+				defines.c \
 				errors.c \
 				mem_arena.c \
 				mem_utils.c \
@@ -96,8 +97,6 @@ $(LIBFT):
 config:
 	@if [ ! -e "$(CONF)" ] || [ "$$(cat "$(CONF)")" != "$(POOL_SIZE)" ]; then \
 		echo "$(POOL_SIZE)" > "$(CONF)"; \
-	elif [ -e "$(NAME)" ]; then \
-		echo "$(NAME) is already built and configured with POOL_SIZE=$(POOL_SIZE)."; \
 	fi
 
 $(NAME): $(OBJS) $(LIBFT) $(CONF)
