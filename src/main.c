@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/01 02:38:04 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/01 03:05:26 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int	main(int ac, char **av, char **envp)
 {
 	t_minishell	ms;
 
+	(void)ac;
+	(void)av;
 	startup();
 	initialize(&ms, envp);
 	run(&ms);
@@ -47,6 +49,7 @@ int	main(int ac, char **av, char **envp)
  */
 static inline void	initialize(t_minishell *ms, char **envp)
 {
+	(void)envp;
 	ft_memset(ms, 0, sizeof(*ms));
 	ms->system = arena_create(SYSTEM_SIZE);
 	ms->pool = arena_create(POOL_SIZE);

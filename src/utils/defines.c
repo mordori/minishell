@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 21:46:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/30 21:58:07 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/01 03:31:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 const char**	get_redirs()
 {
-	static const char	*redirections[] = {">", ">>", "<", "<<", NULL};
+	static const char	*redirections[] = {">", ">>", "<", "<<", "<<<", NULL};
 	return (redirections);
 }
 

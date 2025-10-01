@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/01 01:19:56 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/01 04:17:11 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 static inline int		count_words(t_minishell *ms, char const *s);
 static inline size_t	word_length(char const **s);
-static inline bool		is_quote_closed(t_minishell *ms, char const **src, char c);
+static inline void		is_quote_closed(t_minishell *ms, char const **src, char c, int *count);
 
 /**
  * @brief Converts an signed 64-bit integer to a string.
@@ -92,57 +92,70 @@ char	**str_split(t_minishell *ms, char const *src)
 	return (strs);
 }
 
+static inline void	march_operator(char const **src, int *count)
+{
+	++*src;
+	if (**src && \
+((*(*src - 1) == '>' && **src == '>') || (*(*src - 1) == '<' && **src == '<')))
+		++*src;
+	++*count;
+}
+
 static inline int	count_words(t_minishell *ms, char const *src)
 {
-	size_t	count;
+	int	count;
 
 	count = 0;
 	while (*src)
 	{
 		while (*src && ft_isspace(*src))
 			++src;
-		if (cmp_type(get_redirs(), src) || (cmp_type(get_pipe(), src)))
+		if (is_operator(src))
 		{
-			++count;
-			++src;
-			if (*src && \
-((*(src - 1) == '>' && *src == '>') || (*(src - 1) == '<' && *src == '<')))
-				++src;
-			if (*src && *(src - 1) == '<' && *src == '<')
-				++src;
+			march_operator(&src, &count);
 			continue ;
 		}
 		else if (*src == '\'')
-		{
-			if (!is_quote_closed(ms, &src, '\''))
-				return (ERROR);
-		}
+			is_quote_closed(ms, &src, '\'', &count);
 		else if (*src == '\"')
-		{
-			if (!is_quote_closed(ms, &src, '\"'))
-				return (ERROR);
-		}
+			is_quote_closed(ms, &src, '\"', &count);
 		else
-			while (*src && !ft_isspace(*src) && !cmp_types(src))
+			while (*src && !ft_isspace(*src) && !is_operator(src) && !is_quote(src))
 				++src;
+		if (count == ERROR)
+			return (ERROR);
 		if (*src || !ft_isspace(*(src - 1)))
 			++count;
 	}
 	return (count);
 }
 
-static inline bool	is_quote_closed(t_minishell *ms, char const **src, char c)
+static inline void	is_quote_closed(t_minishell *ms, char const **src, char c, int *count)
 {
 	++*src;
 	while (**src && **src != c)
 		++*src;
 	if (**src != c)
 	{
-		error_input(ms, "unclosed quotes.");
-		return (false);
+		error_input(ms, "Unclosed quotes.");
+		*count = ERROR;
+		return ;
 	}
 	++*src;
-	return (true);
+}
+
+static inline void	add_src_len(char const **src, size_t *len)
+{
+	++*len;
+	++*src;
+}
+
+static inline void	march_quote(char const **src, const char c, size_t *len)
+{
+	add_src_len(src, len);
+	while (*src && **src != c)
+		add_src_len(src, len);
+	add_src_len(src, len);
 }
 
 static inline size_t	word_length(char const **src)
@@ -152,52 +165,20 @@ static inline size_t	word_length(char const **src)
 	len = 0;
 	while (**src && ft_isspace(**src))
 		++*src;
-	if (cmp_type(get_redirs(), *src) || (cmp_type(get_pipe(), *src)))
+	if (is_operator(*src))
 	{
-		++len;
-		++*src;
+		add_src_len(src, &len);
 		if (*src && \
 ((*(*src - 1) == '>' && **src == '>') || (*(*src - 1) == '<' && **src == '<')))
-		{
-			++len;
-			++*src;
-		}
-		if (*src && *(*src - 1) == '<' && **src == '<')
-		{
-			++len;
-			++*src;
-		}
+			add_src_len(src, &len);
 	}
 	else if (**src == '\'')
-	{
-		++*src;
-		while (*src && **src != '\'')
-		{
-			++len;
-			++*src;
-		}
-		len += 2;
-		++*src;
-	}
+		march_quote(src, '\'', &len);
 	else if (**src == '\"')
-	{
-		++*src;
-		while (*src && **src != '\"')
-		{
-			++len;
-			++*src;
-		}
-		len += 2;
-		++*src;
-	}
+		march_quote(src, '\"', &len);
 	else
-	{
-		while (**src && !ft_isspace(**src) && !cmp_types(*src))
-		{
-			++len;
-			++*src;
-		}
-	}
+		while (**src && !ft_isspace(**src) && !is_operator(*src) && !is_quote(*src))
+			add_src_len(src, &len);
 	return (len);
 }
 

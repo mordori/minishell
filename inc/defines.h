@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/01 02:39:55 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/01 02:52:27 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,8 @@ enum e_mode
 
 enum e_type
 {
-	COMMAND,
-	ARGUMENT,
-	REDIRECTION,
-	PIPE
+	WORD,
+	OPERATOR
 };
 
 struct s_env
