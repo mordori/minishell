@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 22:05:32 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 02:46:00 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/09/29 04:09:03 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 
 # include "defines.h"
 
-t_mem_arena	arena_create(size_t capacity);
 void		*arena_alloc(t_mem_arena *arena, size_t size);
-void		arena_reset(t_mem_arena *arena);
+t_mem_arena	arena_create(size_t capacity);
 void		arena_destroy(t_mem_arena *arena);
+void		arena_reset(t_mem_arena *arena);
 
 #endif
