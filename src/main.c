@@ -6,17 +6,17 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/01 03:05:26 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/02 02:33:35 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
-#include "parser.h"
+#include "arena_utils.h"
+#include "arena.h"
 #include "errors.h"
 #include "libft_mem.h"
-#include "mem_arena.h"
 #include "lexer.h"
-#include "mem_utils.h"
+#include "parser.h"
 
 static inline void	startup(void);
 static inline void	initialize(t_minishell *ms, char **envp);
@@ -64,16 +64,18 @@ static inline void	initialize(t_minishell *ms, char **envp)
  */
 static inline void	run(t_minishell *ms)
 {
-	t_token	**tokens;
+	t_token		**tokens;
+	t_command	*command;
 
 	ms->line = readline(PROMPT);
-	while (true)
+	while (*ms->line)
 	{
 		// reg sig handlesre
+		command = alloc_pool(ms, sizeof(*command));
 		tokens = create_tokens(ms->line, ms);
 		if (tokens)
 		{
-			parse(tokens);
+			command = parse(ms, tokens);
 			// expand();
 			// redirect(); HEREDOC
 			// sig handler

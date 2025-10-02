@@ -1,21 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mem_utils.h                                        :+:      :+:    :+:   */
+/*   arena_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/25 00:27:28 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/29 04:09:09 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/25 00:00:20 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/10/02 03:24:48 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MEM_UTILS_H
-# define MEM_UTILS_H
+#include "arena_utils.h"
+#include "arena.h"
+#include "errors.h"
 
-# include "defines.h"
+void	*alloc_system(t_minishell *ms, size_t size)
+{
+	void	*ptr;
 
-void	*alloc_pool(t_minishell *ms, size_t size);
-void	*alloc_system(t_minishell *ms, size_t size);
+	ptr = arena_alloc(&ms->system, size);
+	if (!ptr)
+		error_exit(ms, "system memory depleted");
+	return (ptr);
+}
 
-#endif
+void	*alloc_pool(t_minishell *ms, size_t size)
+{
+	void	*ptr;
+
+	ptr = arena_alloc(&ms->pool, size);
+	if (!ptr)
+		error_exit(ms, "pool memory depleted");
+	return (ptr);
+}

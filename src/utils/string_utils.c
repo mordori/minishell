@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/01 04:17:11 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/02 03:25:25 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 #include "libft_str.h"
 #include "libft_mem.h"
 #include "libft_utils.h"
-#include "mem_utils.h"
+#include "arena_utils.h"
 #include "errors.h"
 #include "lexer.h"
 
-static inline int		count_words(t_minishell *ms, char const *s);
+static inline int		count_words(char const *s);
 static inline size_t	word_length(char const **s);
-static inline void		is_quote_closed(t_minishell *ms, char const **src, char c, int *count);
+static inline void		is_quote_closed(char const **src, char c, int *count);
 
 /**
  * @brief Converts an signed 64-bit integer to a string.
@@ -77,7 +77,7 @@ char	**str_split(t_minishell *ms, char const *src)
 
 	if (!src)
 		return (NULL);
-	words = count_words(ms, src);
+	words = count_words(src);
 	if (words == ERROR)
 		return (NULL);
 	strs = alloc_pool(ms, sizeof(*strs) * (words + 1));
@@ -94,14 +94,14 @@ char	**str_split(t_minishell *ms, char const *src)
 
 static inline void	march_operator(char const **src, int *count)
 {
-	++*src;
+	++(*src);
 	if (**src && \
 ((*(*src - 1) == '>' && **src == '>') || (*(*src - 1) == '<' && **src == '<')))
-		++*src;
+		++(*src);
 	++*count;
 }
 
-static inline int	count_words(t_minishell *ms, char const *src)
+static inline int	count_words(char const *src)
 {
 	int	count;
 
@@ -116,9 +116,9 @@ static inline int	count_words(t_minishell *ms, char const *src)
 			continue ;
 		}
 		else if (*src == '\'')
-			is_quote_closed(ms, &src, '\'', &count);
+			is_quote_closed(&src, '\'', &count);
 		else if (*src == '\"')
-			is_quote_closed(ms, &src, '\"', &count);
+			is_quote_closed(&src, '\"', &count);
 		else
 			while (*src && !ft_isspace(*src) && !is_operator(src) && !is_quote(src))
 				++src;
@@ -130,24 +130,24 @@ static inline int	count_words(t_minishell *ms, char const *src)
 	return (count);
 }
 
-static inline void	is_quote_closed(t_minishell *ms, char const **src, char c, int *count)
+static inline void	is_quote_closed(char const **src, char c, int *count)
 {
-	++*src;
+	++(*src);
 	while (**src && **src != c)
-		++*src;
+		++(*src);
 	if (**src != c)
 	{
-		error_input(ms, "Unclosed quotes.");
+		error_input("unclosed quotes");
 		*count = ERROR;
 		return ;
 	}
-	++*src;
+	++(*src);
 }
 
 static inline void	add_src_len(char const **src, size_t *len)
 {
-	++*len;
-	++*src;
+	++(*len);
+	++(*src);
 }
 
 static inline void	march_quote(char const **src, const char c, size_t *len)
@@ -164,7 +164,7 @@ static inline size_t	word_length(char const **src)
 
 	len = 0;
 	while (**src && ft_isspace(**src))
-		++*src;
+		++(*src);
 	if (is_operator(*src))
 	{
 		add_src_len(src, &len);

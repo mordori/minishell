@@ -6,22 +6,16 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 21:46:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/01 03:31:30 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/02 03:36:19 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "defines.h"
 
-const char**	get_redirs()
+const char**	get_redirections()
 {
-	static const char	*redirections[] = {">", ">>", "<", "<<", "<<<", NULL};
+	static const char	*redirections[] = {">", ">>", "<", "<<", NULL};
 	return (redirections);
-}
-
-const char**	get_pipe()
-{
-	static const char	*pipe[] = {"|", NULL};
-	return (pipe);
 }
 
 const char**	get_quotes()

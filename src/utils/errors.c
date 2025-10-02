@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/01 03:11:33 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/02 03:25:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,28 +36,27 @@ void	error_exit(t_minishell *ms, char *msg)
 	exit(EXIT_FAILURE);
 }
 
-void	error_input(t_minishell *ms, char *msg)
+void	error_input(char *msg)
 {
 	int	bytes;
 
-	bytes = write(STDERR_FILENO, "minishell: input error. ", 24);
+	bytes = write(STDERR_FILENO, "minishell: input error, ", 24);
 	if (msg)
 		bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
 	bytes = write(STDERR_FILENO, "\n", 1);
 	(void)bytes;
-	(void)ms;
 }
 
-void	error_syntax(t_minishell *ms, char *msg)
+void	error_syntax(char *msg)
 {
 	int	bytes;
 
-	bytes = write(STDERR_FILENO, "minishell: syntax error. ", 25);
+	bytes = write(\
+STDERR_FILENO, "minishell: syntax error near unxpected token `", 46);
 	if (msg)
 		bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
-	bytes = write(STDERR_FILENO, "\n", 1);
+	bytes = write(STDERR_FILENO, "\'\n", 2);
 	(void)bytes;
-	(void)ms;
 }
 
 /**
@@ -72,7 +71,7 @@ static inline void	print_error(char *msg)
 	int	bytes;
 
 	bytes = write(STDERR_FILENO, "-----------------------------------\n", 36);
-	bytes = write(STDERR_FILENO, "minishell: fatal error. ", 24);
+	bytes = write(STDERR_FILENO, "minishell: fatal error, ", 24);
 	if (msg)
 		bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
 	bytes = write(STDERR_FILENO, "\n", 1);

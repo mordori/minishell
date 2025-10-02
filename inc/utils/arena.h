@@ -1,35 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mem_utils.c                                        :+:      :+:    :+:   */
+/*   arena.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/25 00:00:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/25 14:38:43 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/17 22:05:32 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/10/02 01:29:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mem_utils.h"
-#include "mem_arena.h"
-#include "errors.h"
+#ifndef ARENA_H
+# define ARENA_H
 
-void	*alloc_system(t_minishell *ms, size_t size)
-{
-	void	*ptr;
+# include <stdlib.h>
 
-	ptr = arena_alloc(&ms->system, size);
-	if (!ptr)
-		error_exit(ms, "System alloc failed");
-	return (ptr);
-}
+# include "defines.h"
 
-void	*alloc_pool(t_minishell *ms, size_t size)
-{
-	void	*ptr;
+void	*arena_alloc(t_arena *arena, size_t size);
+t_arena	arena_create(size_t capacity);
+void	arena_destroy(t_arena *arena);
+void	arena_reset(t_arena *arena);
 
-	ptr = arena_alloc(&ms->pool, size);
-	if (!ptr)
-		error_exit(ms, "Pool alloc failed");
-	return (ptr);
-}
+#endif

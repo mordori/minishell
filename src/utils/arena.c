@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mem_arena.c                                        :+:      :+:    :+:   */
+/*   arena.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 22:05:05 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 16:04:09 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/02 01:30:44 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mem_arena.h"
+#include "arena.h"
 #include "libft_mem.h"
 
 /**
@@ -21,9 +21,9 @@
  *
  * @return	Created memory arena or NULL if creation fails.
  */
-t_mem_arena	arena_create(size_t capacity)
+t_arena	arena_create(size_t capacity)
 {
-	t_mem_arena	arena;
+	t_arena	arena;
 
 	arena.base = ft_calloc(sizeof(char), capacity);
 	arena.capacity = capacity;
@@ -39,7 +39,7 @@ t_mem_arena	arena_create(size_t capacity)
  *
  * @return	Pointer to the block of memory that was reserved.
  */
-void	*arena_alloc(t_mem_arena *arena, size_t size)
+void	*arena_alloc(t_arena *arena, size_t size)
 {
 	void	*ptr;
 
@@ -58,7 +58,7 @@ void	*arena_alloc(t_mem_arena *arena, size_t size)
  *
  * @param	arena Pointer to the arena.
  */
-void	arena_reset(t_mem_arena *arena)
+void	arena_reset(t_arena *arena)
 {
 	ft_memset(arena->base, 0, arena->capacity);
 	arena->head = 0;
@@ -69,7 +69,7 @@ void	arena_reset(t_mem_arena *arena)
  *
  * @param	arena Pointer to the arena.
  */
-void	arena_destroy(t_mem_arena *arena)
+void	arena_destroy(t_arena *arena)
 {
 	if (!arena)
 		return ;

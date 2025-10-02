@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/09/30 21:53:15 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/02 02:29:36 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,10 +73,11 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
 				 \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
+				arena_utils.c \
+				arena_list.c \
+				arena.c \
 				defines.c \
 				errors.c \
-				mem_arena.c \
-				mem_utils.c \
 				string_utils.c \
 				)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))

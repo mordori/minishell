@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/01 02:52:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/02 03:40:14 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,9 @@ typedef struct s_token			t_token;
 typedef struct s_cmd			t_cmd;
 typedef struct s_state			t_state;
 typedef struct s_node			t_node;
-typedef struct s_mem_arena		t_mem_arena;
+typedef struct s_arena			t_arena;
 typedef struct s_minishell		t_minishell;
+typedef struct s_command		t_command;
 
 typedef int		t_cmd_func(t_cmd, t_state);
 
@@ -79,7 +80,9 @@ enum e_mode
 enum e_type
 {
 	WORD,
-	OPERATOR
+	REDIRECTION,
+	PIPE,
+	NEW_LINE
 };
 
 struct s_env
@@ -94,6 +97,7 @@ struct s_token
 {
 	char		*src;
 	t_type		type;
+	size_t		pos;
 };
 
 struct s_node
@@ -120,7 +124,7 @@ struct s_cmd
 	char		**argv;
 };
 
-struct s_mem_arena
+struct s_arena
 {
 	char		*base;
 	size_t		capacity;
@@ -129,15 +133,22 @@ struct s_mem_arena
 
 struct	s_minishell
 {
-	t_mem_arena	system;
-	t_mem_arena	pool;
+	t_arena		system;
+	t_arena		pool;
 	char		*line;
 	t_state		*state;
 	bool		exit;
 };
 
-const char**	get_redirs();
-const char**	get_pipe();
+struct s_command
+{
+	t_mode		mode;
+	t_command	*next;
+	char		**args;
+	int			argc;
+};
+
+const char**	get_redirections();
 const char**	get_quotes();
 
 #endif

@@ -1,35 +1,60 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew_bonus.c                                  :+:      :+:    :+:   */
+/*   arena_list.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/30 14:27:32 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/02 01:23:34 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/10/02 01:27:29 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/10/02 01:43:29 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
+#include "arena_list.h"
+#include "arena_utils.h"
 #include "libft_list.h"
 
-/**
- * Allocates memory for a new list node, initialized with `content` parameter.
- *
- * `next` is initialized to NULL.
- *
- * @param content The content to store in the new node.
- * @return Pointer to the new node.
- */
-t_list	*ft_lstnew(void *content)
+t_list	*lstnew(t_minishell *ms, void *content)
 {
 	t_list	*new;
 
-	new = malloc(sizeof(t_list));
-	if (!new)
-		return (NULL);
+	new = alloc_pool(ms, sizeof(*new));
 	new->content = content;
-	new->next = NULL;
 	return (new);
 }
+
+bool	lstadd_back(t_list **lst, t_list *new)
+{
+	t_list	*temp;
+
+	if (!lst)
+		return (false);
+	if (!*lst)
+	{
+		*lst = new;
+		return (true);
+	}
+	temp = *lst;
+	while (temp->next)
+		temp = temp->next;
+	temp->next = new;
+	return (true);
+}
+
+int	lstsize(t_list *lst)
+{
+	int	len;
+
+	if (!lst)
+		return (false);
+	len = 0;
+	while (lst)
+	{
+		++len;
+		lst = lst->next;
+	}
+	return (len);
+}
+
