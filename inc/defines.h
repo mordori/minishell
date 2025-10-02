@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/01 15:57:49 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/01 16:05:56 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ struct s_state
 	int			child_count; //can be parsed from the number of | characters
 	pid_t		pids[30587]; //could just be dynamically allocated instead of ulimit -u limit on Maximum child process number.
 	int			exit_status;
-	t_env		**env;
+	t_env		*env;
 	char		**envp;
 };
 

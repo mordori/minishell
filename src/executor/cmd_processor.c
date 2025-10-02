@@ -21,7 +21,7 @@ void	run_node(t_cmd *cmd, t_state *state)
 	if (cmd->builtin)
 		error_code = exec_builtin(cmd, state);
 	else
-		error_code = exec_extern(cmd); //execve should clean up everything automatically
+		error_code = exec_extern(cmd, state); //execve should clean up everything automatically
 	if (error_code)		//IF WE AVOID WRITES INTO MEMORY ENTIRELY, MAYBE NO NEED TO CLEAN IN CHILD (except if parent wrote in meantime)
 	{
 		print_error("Pipeline command execution error.");
@@ -38,13 +38,15 @@ int	exec_builtin(t_cmd *cmd, t_state *state)
 	return (dis_tab[cmd->builtin_cmd](cmd, state));
 }
 
-int	exec_extern(t_cmd *cmd)
+int	exec_extern(t_cmd *cmd, t_state *state)
 {
 	char		*command;
 	char		**args;
+	char		**envp;
 
-	command = get_path(cmd->cmd, get_env("PATH"));
-	args = cmd->args + 1;
-	execve(command, args); //execve should automatically clean up all memory, even heap
+	command = cmd->cmd; //get_path(cmd->cmd, get_env("PATH"));
+	args = cmd->argv + 1;
+	envp = state->envp;
+	execve(command, args, envp); //execve should automatically clean up all memory, even heap
 	return (errno); //return to run_node if execve failed
 }

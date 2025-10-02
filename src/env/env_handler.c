@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 12:14:16 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/01 16:00:00 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:57:38 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,29 @@
 
 int	envp_to_envll(char **envp, t_state *state)
 {
-	char	*key;
-	char	*value;
-	char	*delimiter;
 	t_env	*env;
 	int		i;
 
 	env = NULL;
 	while (envp[i])
 	{
-		delimiter = ft_strchr(envp[i]);
-		key = ft_keydup(envp[i], delimiter);
-		value = str_dup(delimiter + 1);
-		ft_envadd_back(&env, ft_envnode_new(key, value));
+		var_to_node(envp[i], env);
 		i++;
 	}
 	state->env = &env;
 	return (SUCCESS);
+}
+
+void	var_to_node(char *var, t_env *env)
+{
+	char	*key;
+	char	*value;
+	char	*delimiter;
+
+	delimiter = ft_strchr(var);
+	key = ft_keydup(var, delimiter);
+	value = str_dup(delimiter + 1);
+	ft_envadd_back(&env, ft_envnode_new(key, value));
 }
 
 char	**envll_to_envp(t_env *env)
