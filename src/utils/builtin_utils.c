@@ -6,19 +6,34 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 12:44:17 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/01 15:25:11 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/02 19:25:05 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin_utils.h"
 
-bool	is_builtin(t_cmd *command) //the parameter/member format depends on parser output
+bool	is_builtin(t_cmd *cmd) //the parameter/member format depends on parser output
 {
-	return (command->builtin_cmd == ECHO
-		|| command->builtin_cmd == CD
-		|| command->builtin_cmd == PWD
-		|| command->builtin_cmd == EXPORT
-		|| command->builtin_cmd == UNSET
-		|| command->builtin_cmd == ENV
-		|| command->builtin_cmd == EXIT);
+	return (cmd->builtin == ECHO
+		|| cmd->builtin == CD
+		|| cmd->builtin == PWD
+		|| cmd->builtin == EXPORT
+		|| cmd->builtin == UNSET
+		|| cmd->builtin == ENV
+		|| cmd->builtin == EXIT);
+}
+
+// might as well be moved to str_utils2.c once that exists
+bool	is_pluschar(char *var, char delimiter)
+{
+	bool	is_pluschar;
+
+	is_pluschar = false;
+	while (var[i] && var[i] != delimiter)
+	{
+		if (var[i] == '+')
+			is_pluschar = true;
+		i++;
+	}
+	return (is_pluschar);
 }

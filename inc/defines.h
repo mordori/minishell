@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/01 16:05:56 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/02 19:27:09 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ struct s_env
 	char	*key;
 	char	*value;
 	t_env	*next;
+	t_env	*prev;
 };
 
 struct s_token

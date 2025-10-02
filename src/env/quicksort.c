@@ -12,53 +12,59 @@
 
 #include "env.h"
 
-static int	partition(char **envp, int low, int high);
-static void	swap(char **a, char **b);
-static int	ft_strcmp(const char *s1, const char *s2);
+static t_env	*partition(t_env *low, t_env *high);
+static void	swap(t_env *a, t_env *b);
 
-void	quicksort(char **envp, int low, int high)
+void	quicksort(t_env *low, t_env *high)
 {
-	size_t		i;
-	size_t		pivot;
+	t_env		*pivot;
 
-	i = 0;
-	pivot = partition(envp, low, high);
-	if (len <= 1)
-		return ;
-	while (i < len)
+	if (low != NULL && high != NULL && low != high && low != high->next)
 	{
-		if (ft_strcmp(envp[i], envp[len - 1]) < 0)
-			swap(envp + i, envp + pivot++);
-		i++;
+		pivot = partition(low, high);
+		quicksort(low, pivot->prev);
+		quicksort(pivot->next, high);
 	}
 }
 
-static int	partition(char **envp, int low, int high)
+static t_env	*partition(t_env *low, t_env *high)
 {
-//FIXME: keep going based on GeeksForGeeks guide!!!!!!	
-	//BUT IT MIGHT HAVE TO BE ADAPTED FOR LINKED LIST.
-	//OR THEN, parse envp for printing purposes after quicksort. (maybe easier)
-}
+	char		*pivot_val;
+	t_env		*i;
+	t_env		*current;
 
-static void	swap(char **a, char **b)
-{
-	const char		*temp;
-
-	temp = *a;
-	*a = *b;
-	*b = temp;
-}
-
-static int	ft_strcmp(const char *s1, const char *s2)
-{
-	size_t		i;
-
-	i = 0;
-	while (s1[i] && s2[i])
+	pivot_val = high->key;
+	i = low->prev;
+	current = low;
+	while (current != high)
 	{
-		if (s1[i] != s2[i])
-			return ((unsigned char) s1[i] - (unsigned char) s2[i]);
-		i++;
+		if (ft_strcmp(current->key, pivot_val) <= 0)
+		{
+			if (i == NULL)
+				i = low;
+			else
+				i = i->next;
+			swap(i, current);
+		}	
+		current = current->next;
 	}
-	return (0);
+	if (i == NULL)
+		i = low;
+	else
+		i = i->next;
+	swap(i, high);
+	return (i);
+}
+
+static void	swap(t_env *a, t_env *b)
+{
+	const char		*temp_key;
+	const char		*temp_val;
+
+	temp_key = a->key;
+	temp_val = a->value;
+	a->key = b->key;
+	a->value = b->value;
+	b->key = temp_key;
+	b->value = temp_value;
 }

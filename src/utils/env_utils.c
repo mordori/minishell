@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:24:14 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/01 15:26:26 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/02 16:51:14 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_env	*ft_envnode_new(char *key, char *value)
 	node->key = content;
 	node->value = value;
 	node->next = NULL;
+	node->prev = NULL;
 	return (node);
 }
 
@@ -34,7 +35,8 @@ void	ft_envadd_back(t_env **env_head, t_env *new_node)
 		last = *env_head;
 		while (last->next)
 			last = last->next;
-		last->next = newitem;
+		last->next = new_node;
+		new_node->prev = last;
 	}
 }
 

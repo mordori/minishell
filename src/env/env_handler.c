@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 12:14:16 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/01 18:57:38 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/02 19:25:00 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	envp_to_envll(char **envp, t_state *state)
 	env = NULL;
 	while (envp[i])
 	{
-		var_to_node(envp[i], env);
+		var_to_node(envp[i], env, false);
 		i++;
 	}
 	state->env = &env;
@@ -41,10 +41,13 @@ void	var_to_node(char *var, t_env *env)
 	char	*value;
 	char	*delimiter;
 
-	delimiter = ft_strchr(var);
+	delimiter = ft_strchr(var, '=');
 	key = ft_keydup(var, delimiter);
 	value = str_dup(delimiter + 1);
-	ft_envadd_back(&env, ft_envnode_new(key, value));
+	if (!value)
+		ft_envadd_back(&env, ft_envnode_new(key, ""));
+	else
+		ft_envadd_back(&env, ft_envnode_new(key, value));
 }
 
 char	**envll_to_envp(t_env *env)
@@ -55,7 +58,7 @@ char	**envll_to_envp(t_env *env)
 	unsigned int	i;
 
 	i = 0;
-	var_count = count_variables(env) 
+	var_count = count_variables(env)
 	envp_copy = alloc_pool((var_count + 1) * sizeof(void *));
 	while (i < var_count)
 	{
