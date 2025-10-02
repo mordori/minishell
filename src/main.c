@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/02 02:33:35 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/02 19:33:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,9 @@ static inline void	run(t_minishell *ms)
 		tokens = create_tokens(ms->line, ms);
 		if (tokens)
 		{
-			command = parse(ms, tokens);
-			// expand();
-			// redirect(); HEREDOC
+			command = parse_tokens(ms, tokens);
+			expand_variables(&command);
+			handle_redirections(&command);
 			// sig handler
 			// execute();
 			if (ms->exit)

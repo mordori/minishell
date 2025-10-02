@@ -6,20 +6,20 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/02 02:29:36 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/02 21:01:14 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:=minishell
 
-POOL_SIZE	?= 1024
+POOL_SIZE	?= 1048576
 CONF		:=.config
 
+WARNS		:=-Wall -Wextra -Werror -Wunreachable-code
 DEFS		:=-D POOL_SIZE=$(POOL_SIZE)
-# TODO: Add OPTS
 OPTS		:=-O3 -march=native -funroll-loops -fno-plt
 CC			:=cc
-CFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code $(DEFS)
+CFLAGS		:=$(WARNS) $(DEFS) $(OPTS)
 LDFLAGS		:=-flto
 LIBS		:=-lreadline
 
@@ -102,7 +102,11 @@ config:
 
 $(NAME): $(OBJS) $(LIBFT) $(CONF)
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBS) $(LIBFT)
-	@echo "$(YELLOW) [✔] $(NAME) built POOL_SIZE=$(POOL_SIZE)$(COLOR)"
+	@if [ $$(($(POOL_SIZE) / 1024 / 1024)) -lt 1 ]; then \
+		echo "$(YELLOW) [✔] $(NAME) built with $(POOL_SIZE) KB memory$(COLOR)"; \
+	else \
+		echo "$(YELLOW) [✔] $(NAME) built with $$(($(POOL_SIZE) / 1024 / 1024)) MB memory$(COLOR)"; \
+	fi
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c $(LIBFT) $(CONF)
 	@mkdir -p $(dir $@) $(patsubst $(DIR_OBJ)%, $(DIR_DEP)%, $(dir $@))

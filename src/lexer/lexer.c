@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 04:09:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/02 03:40:36 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/02 16:52:22 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static inline void	tokenize(t_token *token)
 {
 	if (is_redirection(token->src))
 		token->type = REDIRECTION;
-	if (is_pipe(token->src))
+	else if (is_pipe(token->src))
 		token->type = PIPE;
 	else
 		token->type = WORD;
@@ -71,7 +71,7 @@ bool	cmp_strs(const char **types, const char *src)
 
 bool	is_operator(const char *src)
 {
-	if (is_redirection(src)|| is_pipe(src))
+	if (is_redirection(src) || is_pipe(src))
 		return (true);
 	return (false);
 }

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/02 03:40:14 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/02 20:43:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <stddef.h>
 # include <limits.h>
 # include <errno.h>
+
+# include "libft_list.h"
 
 # define ERROR_INVALID_EXIT		255
 # define ERROR_S_TERMINATED		130
@@ -38,15 +40,16 @@
 
 # define SYSTEM_SIZE			256
 # ifndef POOL_SIZE
-#  define POOL_SIZE				1024
+#  define POOL_SIZE				1048576			// 1 MB
 # endif
 
 # define PROMPT					"\033[0;36m[minishell]\033[0m$ "
 
 typedef enum e_builtin_type		t_builtin;
 typedef enum e_mode				t_mode;
-typedef enum e_type				t_type;
+typedef enum e_token_type		t_token_type;
 typedef enum e_errors			t_errors;
+typedef enum e_redir_type		t_redir_type;
 
 typedef struct s_env			t_env;
 typedef struct s_token			t_token;
@@ -56,6 +59,7 @@ typedef struct s_node			t_node;
 typedef struct s_arena			t_arena;
 typedef struct s_minishell		t_minishell;
 typedef struct s_command		t_command;
+typedef struct s_redir			t_redir;
 
 typedef int		t_cmd_func(t_cmd, t_state);
 
@@ -77,7 +81,7 @@ enum e_mode
 	PIPELINE
 };
 
-enum e_type
+enum e_token_type
 {
 	WORD,
 	REDIRECTION,
@@ -85,19 +89,36 @@ enum e_type
 	NEW_LINE
 };
 
+enum e_redir_type
+{
+	UNDEFINED,
+	IN,
+	OUT,
+	OUT_APPEND,
+	HEREDOC
+};
+
+struct s_redir
+{
+	t_redir_type	type;
+	char			*filename;
+	t_redir			*next;
+};
+
+
 struct s_env
 {
-	int		total_len;
-	char	*key;
-	char	*value;
-	t_env	*next;
+	int			total_len;
+	char		*key;
+	char		*value;
+	t_env		*next;
 };
 
 struct s_token
 {
-	char		*src;
-	t_type		type;
-	size_t		pos;
+	char			*src;
+	t_token_type	type;
+	size_t			pos;
 };
 
 struct s_node
@@ -146,7 +167,16 @@ struct s_command
 	t_command	*next;
 	char		**args;
 	int			argc;
+	t_list		*redirs;
 };
+// struct s_command
+// {
+// 	t_mode		mode;
+// 	t_command	*next;
+// 	char		**args;
+// 	int			argc;
+// 	t_redir		*redirs;
+// };
 
 const char**	get_redirections();
 const char**	get_quotes();
