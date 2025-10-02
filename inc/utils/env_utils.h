@@ -1,27 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   env_utils.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/15 17:07:03 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/02 19:25:06 by jvalkama         ###   ########.fr       */
+/*   Created: 2025/10/01 14:29:00 by jvalkama          #+#    #+#             */
+/*   Updated: 2025/10/01 16:06:01 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtin.h"
+#ifndef ENV_UTILS_H
+# define ENV_UTILS_H
 
-void	ft_env(t_cmd *cmd, t_state *state)
-{
-	t_env		*env;
+# include <stdlib.h>
+# include "defines.h"
+# include "mem_utils.h"
 
-	(void) cmd;
-	env = state->env;
-	while (env)
-	{
-		if (env->value != NULL)
-			printf("%s=%s\n", env->key, env->value);
-		env = env->next;
-	}
-}
+t_env	*ft_envnode_new(char *key, char *value);
+void	ft_envadd_back(t_env **env_head, t_env *new_node);
+char	*ft_keydup(char *key_src, char *key_end);
+
+#endif
