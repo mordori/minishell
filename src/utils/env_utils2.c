@@ -1,27 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   env_utils2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/15 17:07:03 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/02 19:25:06 by jvalkama         ###   ########.fr       */
+/*   Created: 2025/10/02 16:44:46 by jvalkama          #+#    #+#             */
+/*   Updated: 2025/10/02 19:25:04 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtin.h"
-
-void	ft_env(t_cmd *cmd, t_state *state)
+t_env	**find_key(t_state *state, char *key)
 {
-	t_env		*env;
+	t_env	*env;
 
-	(void) cmd;
 	env = state->env;
 	while (env)
 	{
-		if (env->value != NULL)
-			printf("%s=%s\n", env->key, env->value);
+		if (ft_strcmp(env->value, key) == 0)
+			return (&env);
 		env = env->next;
 	}
+	return (NULL);
 }

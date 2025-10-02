@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/01 02:52:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/02 19:27:09 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,10 @@ enum e_type
 
 struct s_env
 {
-	int		total_len;
 	char	*key;
 	char	*value;
 	t_env	*next;
+	t_env	*prev;
 };
 
 struct s_token
@@ -110,6 +110,7 @@ struct s_state
 	int			child_count; //can be parsed from the number of | characters
 	pid_t		pids[30587]; //could just be dynamically allocated instead of ulimit -u limit on Maximum child process number.
 	int			exit_status;
+	t_env		*env;
 	char		**envp;
 };
 

@@ -14,6 +14,7 @@
 # define BUILTIN_H
 
 # include "defines.h"
+# include "libft_list.h"
 # include <stdio.h>
 # include <stdlib.h>
 
@@ -25,5 +26,8 @@ int		echo(t_state *shell, t_cmd *cmd);
 
 //pwd.c
 void	pwd(t_cmd *cmd, t_state *shell_state);
+
+//export.c
+void	ft_export(t_cmd *cmd, t_state *state);
 
 #endif
