@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/02 21:08:13 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/03 04:43:26 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,10 @@
 
 # define SYSTEM_SIZE			256
 # ifndef POOL_SIZE
-#  define POOL_SIZE				1048576			// 1 MB
+#  define POOL_SIZE				1048576			// 1 MiB
 # endif
+
+# define RWRWRW					0666
 
 # define PROMPT					"\033[0;36m[minishell]\033[0m$ "
 
@@ -53,9 +55,9 @@ typedef enum e_redir_type		t_redir_type;
 
 typedef struct s_env			t_env;
 typedef struct s_token			t_token;
+typedef struct s_node			t_node;
 typedef struct s_cmd			t_cmd;
 typedef struct s_state			t_state;
-typedef struct s_node			t_node;
 typedef struct s_arena			t_arena;
 typedef struct s_minishell		t_minishell;
 typedef struct s_command		t_command;
@@ -84,7 +86,7 @@ enum e_mode
 enum e_token_type
 {
 	WORD,
-	REDIRECTION,
+	REDIR,
 	PIPE,
 	NEW_LINE
 };
@@ -121,9 +123,20 @@ struct s_token
 	size_t			pos;
 };
 
+struct s_cmd
+{
+	t_builtin	builtin;
+	char		*cmd;
+	int			argc;
+	char		**args;
+	int			in;
+	int			out;
+	t_list		*redirs;
+};
+
 struct s_node
 {
-	t_cmd		*cmd;
+	t_cmd		cmd;
 	t_node		*next;
 	t_node		*prev;
 	int			pipe_fds[2];
@@ -139,13 +152,6 @@ struct s_state
 	char		**envp;
 };
 
-struct s_cmd
-{
-	t_builtin	builtin;
-	char		*cmd;
-	char		**argv;
-};
-
 struct s_arena
 {
 	char		*base;
@@ -159,7 +165,7 @@ struct	s_minishell
 	t_arena		pool;
 	char		*line;
 	t_state		*state;
-	bool		exit;
+	t_node		*node;
 };
 
 struct s_command
@@ -169,15 +175,9 @@ struct s_command
 	char		**args;
 	int			argc;
 	t_list		*redirs;
+	int			in;
+	int			out;
 };
-// struct s_command
-// {
-// 	t_mode		mode;
-// 	t_command	*next;
-// 	char		**args;
-// 	int			argc;
-// 	t_redir		*redirs;
-// };
 
 const char**	get_redirections();
 const char**	get_quotes();

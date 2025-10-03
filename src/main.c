@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/02 21:09:30 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/03 06:00:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,14 @@
 #include "libft_mem.h"
 #include "lexer.h"
 #include "parser.h"
+#include "redirection.h"
+#include "expansion.h"
+// #include "executor.h"
 
 static inline void	startup(void);
 static inline void	initialize(t_minishell *ms, char **envp);
 static inline void	run(t_minishell *ms);
+void	close_fds(t_minishell *ms);
 
 /**
  * @brief	Entry point to the program.
@@ -65,29 +69,62 @@ static inline void	initialize(t_minishell *ms, char **envp)
 static inline void	run(t_minishell *ms)
 {
 	t_token		**tokens;
-	t_command	*command;
 
 	ms->line = readline(PROMPT);
-	while (*ms->line)
+	while (true)
 	{
-		// reg sig handlesre
-		command = alloc_pool(ms, sizeof(*command));
+		if (!*ms->line)
+			break ;
 		tokens = create_tokens(ms->line, ms);
 		if (tokens)
 		{
-			command = parse_tokens(ms, tokens);
-			expand_variables(&command);
-			handle_redirections(&command);
-			// sig handler
-			// execute();
-			if (ms->exit)
-				break ;
+			ms->node = alloc_pool(ms, sizeof(*ms->node));
+			if (parse_tokens(ms, tokens))
+			{
+				expand_variables(ms);
+				redirect_io(ms);
+
+				// TESTING
+				// -------------------------------------------------------------
+
+				// while (ms->node)
+				// {
+				// 	printf("\n:args:\n");
+				// 	int i = 0;
+				// 	while (i < ms->node->cmd.argc)
+				// 		printf("%s\n", ms->node->cmd.args[i++]);
+				// 	printf("\n:redirs:\n");
+				// 	while (ms->node->cmd.redirs)
+				// 	{
+				// 		printf("%s\n", ((t_redir *)ms->node->cmd.redirs->content)->filename);
+				// 		ms->node->cmd.redirs = ms->node->cmd.redirs->next;
+				// 	}
+				// 	ms->node = ms->node->next;
+				// }
+
+				// -------------------------------------------------------------
+
+				//executor(ms);
+				close_fds(ms);
+			}
 		}
 		if (*ms->line)
 			add_history(ms->line);
 		free(ms->line);
 		arena_reset(&ms->pool);
 		ms->line = readline(PROMPT);
+	}
+}
+
+void	close_fds(t_minishell *ms)
+{
+	while (ms->node)
+	{
+		if (ms->node->cmd.in > STDOUT_FILENO)
+			close(ms->node->cmd.in);
+		if (ms->node->cmd.out > STDOUT_FILENO)
+			close(ms->node->cmd.out);
+		ms->node = ms->node->next;
 	}
 }
 
@@ -98,6 +135,7 @@ void	clean(t_minishell *ms)
 {
 	if (!ms)
 		return ;
+	close_fds(ms);
 	arena_destroy(&ms->pool);
 	arena_destroy(&ms->system);
 	rl_clear_history();

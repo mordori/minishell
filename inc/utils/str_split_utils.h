@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   string_utils.h                                     :+:      :+:    :+:   */
+/*   str_split_utils.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/23 21:34:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/25 03:03:18 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/10/03 01:11:45 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/10/03 01:12:54 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRING_UTILS_H
-# define STRING_UTILS_H
+#ifndef STR_SPLIT_UTILS_H
+# define STR_SPLIT_UTILS_H
 
 # include "defines.h"
 
-size_t	int_to_str(int n, char *buf);
-char	**str_split(t_minishell *ms, char const *src);
-char	*str_sub(\
-t_minishell *ms, char const *src, unsigned int start, size_t len);
+void	march_operator(char const **src, int *count);
+void	is_quote_closed(t_minishell *ms, char const **src, char c, int *count);
+void	add_src_len(char const **src, size_t *len);
+void	march_quote(char const **src, const char c, size_t *len);
 
 #endif

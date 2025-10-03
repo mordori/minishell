@@ -1,27 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   errors.h                                           :+:      :+:    :+:   */
+/*   str_split.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/23 20:32:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 04:17:09 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/10/03 01:07:29 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/10/03 01:08:01 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ERRORS_H
-# define ERRORS_H
-
-# include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>
+#ifndef STR_SPLIT_H
+# define STR_SPLIT_H
 
 # include "defines.h"
 
-void	error_exit(t_minishell *ms, char *msg);
-void	warning_input(t_minishell *ms, char *msg);
-void	warning_syntax(t_minishell *ms, char *token);
-void	warning_file(t_minishell *ms, char *filename);
+char	**str_split(t_minishell *ms, char const *src);
 
 #endif

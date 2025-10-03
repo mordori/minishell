@@ -6,12 +6,11 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/02 20:31:08 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/03 04:16:54 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "errors.h"
-#include "string_utils.h"
 #include "libft_str.h"
 #include "main.h"
 
@@ -40,7 +39,7 @@ void	warning_input(t_minishell *ms, char *msg)
 {
 	int	bytes;
 
-	bytes = write(STDERR_FILENO, "minishell: input error, ", 24);
+	bytes = write(STDERR_FILENO, "minishell: input error: ", 24);
 	if (msg && bytes > 0)
 		bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
 	if (bytes > 0)
@@ -49,19 +48,31 @@ void	warning_input(t_minishell *ms, char *msg)
 		error_exit(ms, "warning write failed");
 }
 
-void	*warning_syntax(t_minishell *ms, char *msg)
+void	warning_syntax(t_minishell *ms, char *token)
 {
 	int	bytes;
 
 	bytes = write(\
 STDERR_FILENO, "minishell: syntax error near unxpected token `", 46);
-	if (msg && bytes > 0)
-		bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
+	if (token && bytes > 0)
+		bytes = write(STDERR_FILENO, token, ft_strlen(token));
 	if (bytes > 0)
 	bytes = write(STDERR_FILENO, "\'\n", 2);
 	if (bytes == ERROR)
 		error_exit(ms, "warning write failed");
-	return (NULL);
+}
+
+void	warning_file(t_minishell *ms, char *filename)
+{
+	int	bytes;
+
+	bytes = write(STDERR_FILENO, "minishell: ", 11);
+	if (filename && bytes > 0)
+		bytes = write(STDERR_FILENO, filename, ft_strlen(filename));
+	if (bytes > 0)
+		bytes = write(STDERR_FILENO, ": No such file or directory\n", 28);
+	if (bytes == ERROR)
+		error_exit(ms, "warning write failed");
 }
 
 /**

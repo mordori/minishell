@@ -6,16 +6,17 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 04:09:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/02 16:52:22 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/03 01:46:05 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include "lexer_utils.h"
 #include "arena_utils.h"
 #include "arena.h"
 #include "errors.h"
-#include "string_utils.h"
-#include "libft_str.h"
+#include "str_utils.h"
+#include "str_split.h"
 
 static inline void	tokenize(t_token *token);
 
@@ -51,48 +52,9 @@ t_token	**create_tokens(char *src, t_minishell *ms)
 static inline void	tokenize(t_token *token)
 {
 	if (is_redirection(token->src))
-		token->type = REDIRECTION;
+		token->type = REDIR;
 	else if (is_pipe(token->src))
 		token->type = PIPE;
 	else
 		token->type = WORD;
-}
-
-bool	cmp_strs(const char **types, const char *src)
-{
-	while (*types)
-	{
-		if (*src == **types)
-			return (true);
-		++types;
-	}
-	return (false);
-}
-
-bool	is_operator(const char *src)
-{
-	if (is_redirection(src) || is_pipe(src))
-		return (true);
-	return (false);
-}
-
-bool	is_redirection(const char *src)
-{
-	if (cmp_strs(get_redirections(), src))
-		return (true);
-	return (false);
-}
-
-bool	is_pipe(const char *src)
-{
-	if (!ft_strcmp(src, "|"))
-		return (true);
-	return (false);
-}
-
-bool	is_quote(const char *src)
-{
-	if (cmp_strs(get_quotes(), src))
-		return (true);
-	return (false);
 }

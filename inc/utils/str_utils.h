@@ -1,27 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   errors.h                                           :+:      :+:    :+:   */
+/*   str_utils.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/23 20:32:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 04:17:09 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/23 21:34:49 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/10/03 01:15:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ERRORS_H
-# define ERRORS_H
-
-# include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>
+#ifndef STR_UTILS_H
+# define STR_UTILS_H
 
 # include "defines.h"
 
-void	error_exit(t_minishell *ms, char *msg);
-void	warning_input(t_minishell *ms, char *msg);
-void	warning_syntax(t_minishell *ms, char *token);
-void	warning_file(t_minishell *ms, char *filename);
+char	*str_sub(\
+t_minishell *ms, char const *src, unsigned int start, size_t len);
 
 #endif

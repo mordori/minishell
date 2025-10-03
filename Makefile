@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/02 21:01:14 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/03 04:11:36 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,11 +65,14 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EXE), \
 				 \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LEX), \
+				lexer_utils.c \
 				lexer.c \
 				 \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
+				expansion.c \
 				parser.c \
+				redirection.c \
 				 \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
@@ -78,7 +81,9 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				arena.c \
 				defines.c \
 				errors.c \
-				string_utils.c \
+				str_utils.c \
+				str_split.c \
+				str_split_utils.c \
 				)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
@@ -103,9 +108,9 @@ config:
 $(NAME): $(OBJS) $(LIBFT) $(CONF)
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBS) $(LIBFT)
 	@if [ $$(($(POOL_SIZE) / 1024 / 1024)) -lt 1 ]; then \
-		echo "$(YELLOW) [✔] $(NAME) built with $(POOL_SIZE) KB memory$(COLOR)"; \
+		echo "$(YELLOW) [✔] $(NAME) built with $(POOL_SIZE) KiB memory$(COLOR)"; \
 	else \
-		echo "$(YELLOW) [✔] $(NAME) built with $$(($(POOL_SIZE) / 1024 / 1024)) MB memory$(COLOR)"; \
+		echo "$(YELLOW) [✔] $(NAME) built with $$(($(POOL_SIZE) / 1024 / 1024)) MiB memory$(COLOR)"; \
 	fi
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c $(LIBFT) $(CONF)
