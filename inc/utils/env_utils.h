@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:29:00 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/01 16:06:01 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/03 17:48:33 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <stdlib.h>
 # include "defines.h"
-# include "mem_utils.h"
+# include "arena_utils.h"
 
 t_env	*ft_envnode_new(char *key, char *value);
 void	ft_envadd_back(t_env **env_head, t_env *new_node);

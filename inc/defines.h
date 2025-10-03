@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 04:43:26 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/03 18:20:57 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ typedef struct s_cmd			t_cmd;
 typedef struct s_state			t_state;
 typedef struct s_arena			t_arena;
 typedef struct s_minishell		t_minishell;
-typedef struct s_command		t_command;
 typedef struct s_redir			t_redir;
 
 typedef int		t_cmd_func(t_cmd, t_state);
@@ -106,7 +105,6 @@ struct s_redir
 	char			*filename;
 	t_redir			*next;
 };
-
 
 struct s_env
 {
@@ -166,17 +164,6 @@ struct	s_minishell
 	char		*line;
 	t_state		*state;
 	t_node		*node;
-};
-
-struct s_command
-{
-	t_mode		mode;
-	t_command	*next;
-	char		**args;
-	int			argc;
-	t_list		*redirs;
-	int			in;
-	int			out;
 };
 
 const char**	get_redirections();
