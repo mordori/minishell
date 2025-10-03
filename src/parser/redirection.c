@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 06:58:39 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/03 07:10:55 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static inline bool	set_in(t_minishell *ms, t_node *node, char *filename)
 	flags = O_RDONLY;
 	if (node->cmd.in > STDOUT_FILENO)
 		close(node->cmd.in);
-	node->cmd.in = open(filename, flags, RWRWRW);
+	node->cmd.in = open(filename, flags, 0);
 	if (node->cmd.in == ERROR)
 	{
 		warning_file(ms, filename);
