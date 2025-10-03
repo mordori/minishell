@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/03 06:37:10 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/03 06:45:35 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -107,7 +107,7 @@ config:
 
 $(NAME): $(OBJS) $(LIBFT) $(CONF)
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBS) $(LIBFT)
-	@if [ $$(($(POOL_SIZE) / 1024 / 1024)) -lt 1 ]; then \
+	@if [ $$(($(POOL_SIZE)/1024/1024)) -lt 1 ]; then \
 		echo "$(YELLOW) [✔] $(NAME) built with $(POOL_SIZE) KiB memory$(COLOR)"; \
 	else \
 		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(POOL_SIZE)/1024/1024" | bc) MiB memory$(COLOR)"; \

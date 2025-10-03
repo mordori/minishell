@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 06:00:38 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/03 06:45:48 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,20 +87,20 @@ static inline void	run(t_minishell *ms)
 				// TESTING
 				// -------------------------------------------------------------
 
-				// while (ms->node)
-				// {
-				// 	printf("\n:args:\n");
-				// 	int i = 0;
-				// 	while (i < ms->node->cmd.argc)
-				// 		printf("%s\n", ms->node->cmd.args[i++]);
-				// 	printf("\n:redirs:\n");
-				// 	while (ms->node->cmd.redirs)
-				// 	{
-				// 		printf("%s\n", ((t_redir *)ms->node->cmd.redirs->content)->filename);
-				// 		ms->node->cmd.redirs = ms->node->cmd.redirs->next;
-				// 	}
-				// 	ms->node = ms->node->next;
-				// }
+				while (ms->node)
+				{
+					printf("\n:args:\n");
+					int i = 0;
+					while (i < ms->node->cmd.argc)
+						printf("%s\n", ms->node->cmd.args[i++]);
+					printf("\n:redirs:\n");
+					while (ms->node->cmd.redirs)
+					{
+						printf("%s\n", ((t_redir *)ms->node->cmd.redirs->content)->filename);
+						ms->node->cmd.redirs = ms->node->cmd.redirs->next;
+					}
+					ms->node = ms->node->next;
+				}
 
 				// -------------------------------------------------------------
 

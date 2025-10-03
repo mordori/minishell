@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 05:01:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/03 06:58:39 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ void	redirect_io(t_minishell *ms)
 	while (node)
 	{
 		head = node->cmd.redirs;
-		node->cmd.out = 0;
-		node->cmd.in = 1;
+		node->cmd.in = STDIN_FILENO;
+		node->cmd.out = STDOUT_FILENO;
 		while (head)
 		{
 			r = (t_redir *)head->content;
@@ -39,10 +39,6 @@ void	redirect_io(t_minishell *ms)
 				set_out(ms, node, r);
 			head = head->next;
 		}
-		if (node->cmd.out == 0)
-			node->cmd.out = STDOUT_FILENO;
-		if (node->cmd.in == 1)
-			node->cmd.in = STDIN_FILENO;
 		node = node->next;
 	}
 }
@@ -52,13 +48,11 @@ static inline bool	set_in(t_minishell *ms, t_node *node, char *filename)
 	int	flags;
 
 	flags = O_RDONLY;
-	if (node->cmd.in != 1)
+	if (node->cmd.in > STDOUT_FILENO)
 		close(node->cmd.in);
 	node->cmd.in = open(filename, flags, RWRWRW);
 	if (node->cmd.in == ERROR)
 	{
-		if (node->cmd.out != 0)
-			close(node->cmd.out);
 		warning_file(ms, filename);
 		return (false);
 	}
@@ -74,13 +68,9 @@ static inline void	set_out(t_minishell *ms, t_node *node, t_redir *r)
 		flags |= O_APPEND;
 	if (r->type == OUT && !node->cmd.args)
 		flags |= O_TRUNC;
-	if (node->cmd.out != 0)
+	if (node->cmd.out > STDOUT_FILENO)
 		close(node->cmd.out);
 	node->cmd.out = open(r->filename, flags, RWRWRW);
-	if (node->cmd.out == ERROR)
-	{
-		if (node->cmd.in != 1)
-			close(node->cmd.in);
+	if (node->cmd.out != ERROR)
 		error_exit(ms, "opening file failed");
-	}
 }

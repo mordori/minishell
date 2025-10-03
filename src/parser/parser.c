@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:15:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 05:21:57 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/03 07:01:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "arena_utils.h"
 
 static inline bool	is_valid_syntax(t_token **tokens);
-static inline void	set_node(t_minishell *ms, t_list *args, t_node *head);
+static inline void	set_node(t_minishell *ms, t_list **args, t_node **head);
 static inline void	set_args(t_minishell *ms, t_list *args, t_node *head);
 static inline void	add_redir(\
 t_minishell *ms, t_node *head, t_token **tokens);
@@ -39,7 +39,7 @@ bool	parse_tokens(t_minishell *ms, t_token **tokens)
 			return (false);
 		}
 		if (t->type == PIPE)
-			set_node(ms, args, head);
+			set_node(ms, &args, &head);
 		if (t->type == WORD && t->pos > 0 && (*(tokens- 1))->type == REDIR)
 			add_redir(ms, head, tokens);
 		else if (t->type == WORD)
@@ -72,12 +72,12 @@ static inline bool	is_valid_syntax(t_token **tokens)
 	return (true);
 }
 
-static inline void	set_node(t_minishell *ms, t_list *args, t_node *head)
+static inline void	set_node(t_minishell *ms, t_list **args, t_node **head)
 {
-	set_args(ms, args, head);
-	head->next = alloc_pool(ms, sizeof(*head->next));
-	head = head->next;
-	args = NULL;
+	set_args(ms, *args, *head);
+	(*head)->next = alloc_pool(ms, sizeof(*(*head)->next));
+	*head = (*head)->next;
+	*args = NULL;
 }
 
 static inline void	set_args(t_minishell *ms, t_list *args, t_node *head)
