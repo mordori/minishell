@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:53:19 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 16:58:26 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/04 04:46:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,5 @@
 # include <readline/history.h>
 
 # include "defines.h"
-
-void	clean(t_minishell *ms);
 
 #endif

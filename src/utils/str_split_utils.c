@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:10:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 01:35:56 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/04 02:38:08 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	add_src_len(char const **src, size_t *len)
 	++(*src);
 }
 
-void	march_quote(char const **src, const char c, size_t *len)
+void	march_quoted_word(char const **src, const char c, size_t *len)
 {
 	add_src_len(src, len);
 	while (*src && **src != c)

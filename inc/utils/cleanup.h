@@ -1,22 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   str_utils.h                                        :+:      :+:    :+:   */
+/*   cleanup.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/23 21:34:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 22:29:55 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/10/03 22:27:44 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/10/03 22:32:19 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STR_UTILS_H
-# define STR_UTILS_H
+#ifndef CLEANUP_H
+# define CLEANUP_H
+
+# include <unistd.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 # include "defines.h"
 
-char	*str_sub(\
-t_minishell *ms, char const *src, unsigned int start, size_t len);
-char	*str_join(t_minishell *ms, char const *s1, char const *s2);
+void	clean(t_minishell *ms);
+void	close_fds(t_minishell *ms);
 
 #endif

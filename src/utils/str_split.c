@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:06:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 01:43:29 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/04 02:39:01 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,9 @@ static inline size_t	word_length(char const **src)
 			add_src_len(src, &len);
 	}
 	else if (**src == '\'')
-		march_quote(src, '\'', &len);
+		march_quoted_word(src, '\'', &len);
 	else if (**src == '\"')
-		march_quote(src, '\"', &len);
+		march_quoted_word(src, '\"', &len);
 	else
 		while (\
 **src && !ft_isspace(**src) && !is_operator(*src) && !is_quote(*src))

@@ -6,17 +6,17 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/03 06:45:35 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/03 23:46:34 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:=minishell
 
-POOL_SIZE	?= 1048576
+MEMORY		?= 1048576
 CONF		:=.config
 
 WARNS		:=-Wall -Wextra -Werror -Wunreachable-code
-DEFS		:=-D POOL_SIZE=$(POOL_SIZE)
+DEFS		:=-D MEMORY=$(MEMORY)
 OPTS		:=-O3 -march=native -funroll-loops -fno-plt
 CC			:=cc
 CFLAGS		:=$(WARNS) $(DEFS) $(OPTS)
@@ -53,8 +53,7 @@ INCS		:=$(addprefix -I, \
 				)
 
 SRCS		:=$(addprefix $(DIR_SRC), \
-				main.c \
-				)
+				main.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_BUILT), \
 				 \
 				)
@@ -66,19 +65,16 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EXE), \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LEX), \
 				lexer_utils.c \
-				lexer.c \
-				 \
-				)
+				lexer.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
 				expansion.c \
 				parser.c \
-				redirection.c \
-				 \
-				)
+				io.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				arena_utils.c \
 				arena_list.c \
 				arena.c \
+				cleanup.c \
 				defines.c \
 				errors.c \
 				str_utils.c \
@@ -101,16 +97,21 @@ $(LIBFT):
 	@make -j4 -C $(DIR_LIBFT)
 
 config:
-	@if [ ! -e "$(CONF)" ] || [ "$$(cat "$(CONF)")" != "$(POOL_SIZE)" ]; then \
-		echo "$(POOL_SIZE)" > "$(CONF)"; \
+	@if [ ! -e "$(CONF)" ] || [ "$$(cat "$(CONF)")" != "$(MEMORY)" ]; then \
+		echo "$(MEMORY)" > "$(CONF)"; \
 	fi
 
 $(NAME): $(OBJS) $(LIBFT) $(CONF)
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBS) $(LIBFT)
-	@if [ $$(($(POOL_SIZE)/1024/1024)) -lt 1 ]; then \
-		echo "$(YELLOW) [✔] $(NAME) built with $(POOL_SIZE) KiB memory$(COLOR)"; \
+	@if [ $$(($(MEMORY))) -lt 1024 ]; then \
+		echo "$(RED) [✔] $(NAME) built with invalid amount of memory (1 KiB is minimum)$(RED)"; \
+	elif [ $$(($(MEMORY)/1024/1024)) -lt 1 ]; then \
+		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024" | bc) KiB memory$(COLOR)"; \
 	else \
-		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(POOL_SIZE)/1024/1024" | bc) MiB memory$(COLOR)"; \
+		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024/1024" | bc) MiB memory$(COLOR)"; \
+	fi
+	@if [ $$(($(MEMORY))) -gt 1023 ]; then \
+		echo "$(GREEN) [/] usage: ./$(NAME)$(COLOR)"; \
 	fi
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c $(LIBFT) $(CONF)

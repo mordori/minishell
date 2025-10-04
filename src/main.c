@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 16:46:25 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/04 04:10:53 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,17 @@
 #include "libft_mem.h"
 #include "lexer.h"
 #include "parser.h"
-#include "redirection.h"
+#include "io.h"
 #include "expansion.h"
+#include "cleanup.h"
+#include "libft_str.h"
+#include "str_utils.h"
 // #include "executor.h"
 
 static inline void	startup(void);
 static inline void	initialize(t_minishell *ms, char **envp);
 static inline void	run(t_minishell *ms);
-void	close_fds(t_minishell *ms);
+static inline char	*get_prompt(t_minishell *ms);
 
 /**
  * @brief	Entry point to the program.
@@ -32,12 +35,15 @@ void	close_fds(t_minishell *ms);
  * @author		Mika Yli-Pentti		https://github.com/mordori
  * @author		Janne Valkama		https://github.com/cubicajupiter
  */
-int	main(int ac, char **av, char **envp)
+int	main(int argc, char *argv[], char **envp)
 {
 	t_minishell	ms;
 
-	(void)ac;
-	(void)av;
+	(void)argv;
+	if (argc > 1)
+		error_exit(NULL, "too many arguments");
+	if (MEMORY < 1024)
+		error_exit(NULL, "not enough memory (1024 KiB minimum)");
 	startup();
 	initialize(&ms, envp);
 	run(&ms);
@@ -53,10 +59,10 @@ int	main(int ac, char **av, char **envp)
  */
 static inline void	initialize(t_minishell *ms, char **envp)
 {
-	(void)envp;
 	ft_memset(ms, 0, sizeof(*ms));
-	ms->system = arena_create(SYSTEM_SIZE);
-	ms->pool = arena_create(POOL_SIZE);
+	ms->state.envp = envp;
+	ms->system = arena_create(SYSTEM_MEMORY);
+	ms->pool = arena_create(MEMORY);
 	if (!ms->system.base || !ms->pool.base)
 		error_exit(ms, "arena creation failed");
 }
@@ -68,81 +74,41 @@ static inline void	initialize(t_minishell *ms, char **envp)
  */
 static inline void	run(t_minishell *ms)
 {
-	t_token		**tokens;
+	t_token	**tokens;
 
-	ms->line = readline(PROMPT);
 	while (true)
 	{
-		if (!*ms->line)
-			break ;
-		tokens = create_tokens(ms->line, ms);
-		if (tokens)
-		{
-			ms->node = alloc_pool(ms, sizeof(*ms->node));
-			if (parse_tokens(ms, tokens))
-			{
-				expand_variables(ms);
-				redirect_io(ms);
-
-				// TESTING
-				// NOTE: LEAVES FDS OPEN AS IT LOSES THE LIST TAIL
-				// -------------------------------------------------------------
-
-				// while (ms->node)
-				// {
-				// 	printf("\n:args:\n");
-				// 	int i = 0;
-				// 	while (i < ms->node->cmd.argc)
-				// 		printf("%s\n", ms->node->cmd.args[i++]);
-				// 	printf("\n:redirs:\n");
-				// 	while (ms->node->cmd.redirs)
-				// 	{
-				// 		printf("%s\n", ((t_redir *)ms->node->cmd.redirs->content)->filename);
-				// 		ms->node->cmd.redirs = ms->node->cmd.redirs->next;
-				// 	}
-				// 	ms->node = ms->node->next;
-				// }
-
-				// -------------------------------------------------------------
-
-				//executor(ms);
-				close_fds(ms);
-			}
-		}
-		if (*ms->line)
-			add_history(ms->line);
 		free(ms->line);
 		arena_reset(&ms->pool);
-		ms->line = readline(PROMPT);
+		ms->line = readline(get_prompt(ms));
+		if (*ms->line)
+			add_history(ms->line);
+		if (!*ms->line) // for debugging leaks - remove later
+			break ;
+		ms->node = alloc_pool(ms, sizeof(*ms->node));
+		tokens = create_tokens(ms->line, ms);
+		if (!tokens || !parse_tokens(ms, tokens))
+			continue ;
+		expand_variables(ms);
+		set_io(ms);
+		//executor(ms);
+		close_fds(ms);
 	}
 }
 
-void	close_fds(t_minishell *ms)
+static inline char	*get_prompt(t_minishell *ms)
 {
-	while (ms->node)
-	{
-		if (ms->node->cmd.in > STDOUT_FILENO)
-			close(ms->node->cmd.in);
-		if (ms->node->cmd.out > STDOUT_FILENO)
-			close(ms->node->cmd.out);
-		ms->node = ms->node->next;
-	}
-}
+	static char	cwd[PATH_MAX];
+	char		*prompt;
 
-/**
- * @brief	Destroys created memory arenas from minishell.
- */
-void	clean(t_minishell *ms)
-{
-	if (!ms)
-		return ;
-	close_fds(ms);
-	arena_destroy(&ms->pool);
-	arena_destroy(&ms->system);
-	rl_clear_history();
-	if (ms->line)
-		free(ms->line);
-	ms->line = NULL;
+	prompt = getcwd(cwd, sizeof(cwd));
+	if (!prompt)
+		error_exit(ms, "getcwd failed");
+	prompt = ft_strchr(prompt + 1, '/');
+	prompt = ft_strchr(prompt + 1, '/');
+	prompt = str_join(ms, "\033[38;5;90mminishell\033[0m:\033[38;5;39m~/", prompt + 1);
+	prompt = str_join(ms, prompt, "\033[0m$ ");
+	return (prompt);
 }
 
 /**

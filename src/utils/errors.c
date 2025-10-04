@@ -6,13 +6,13 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 04:16:54 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/03 22:30:55 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "errors.h"
 #include "libft_str.h"
-#include "main.h"
+#include "cleanup.h"
 
 static inline void	print_error(char *msg);
 

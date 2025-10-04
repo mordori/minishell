@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 18:20:57 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/04 04:48:33 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,18 @@
 # define INT32_LENGTH			11
 # define INT64_LENGTH			20
 
-# define SYSTEM_SIZE			256
-# ifndef POOL_SIZE
-#  define POOL_SIZE				1048576			// 1 MiB
+# define SYSTEM_MEMORY			256
+# ifndef MEMORY
+#  define MEMORY				1048576
+# endif
+
+# ifndef PATH_MAX
+#  define PATH_MAX				4096
 # endif
 
 # define RWRWRW					0666
 
-# define PROMPT					"\033[0;36m[minishell]\033[0m$ "
+# define PROMPT					"> "
 
 typedef enum e_builtin_type		t_builtin;
 typedef enum e_mode				t_mode;
@@ -162,7 +166,7 @@ struct	s_minishell
 	t_arena		system;
 	t_arena		pool;
 	char		*line;
-	t_state		*state;
+	t_state		state;
 	t_node		*node;
 };
 

@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirection.c                                      :+:      :+:    :+:   */
+/*   io.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 18:06:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/04 02:35:14 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "redirection.h"
+#include "io.h"
 #include "errors.h"
 #include "arena_list.h"
 #include "libft_str.h"
@@ -19,7 +19,7 @@ static inline bool	set_in(t_minishell *ms, t_node *node, char *filename);
 static inline void	set_out(t_minishell *ms, t_node *node, t_redir *r);
 static inline void	set_heredoc(t_minishell *ms, t_node *node, char *eof);
 
-void	redirect_io(t_minishell *ms)
+void	set_io(t_minishell *ms)
 {
 	t_redir	*r;
 	t_node	*node;
@@ -47,24 +47,30 @@ void	redirect_io(t_minishell *ms)
 	}
 }
 
-// Need to set fd
 static inline void	set_heredoc(t_minishell *ms, t_node *node, char *eof)
 {
-	int		fd;
+	int		pipefd[2];
 	char	*line;
+	int		bytes;
 
-	(void)ms;
-	fd = 322;
-	line = readline("> ");
+	if (pipe(pipefd) == ERROR)
+		error_exit(ms, "pipe creation failed");
+	line = readline(PROMPT);
 	while (ft_strcmp(line, eof))
 	{
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
+		bytes = write(pipefd[1], line, ft_strlen(line));
+		if (bytes != ERROR)
+			bytes = write(pipefd[1], "\n", 1);
+		if (bytes == ERROR)
+			break ;
 		free(line);
-		line = readline("> ");
+		line = readline(PROMPT);
 	}
 	free(line);
-	node->cmd.in = fd;
+	close(pipefd[1]);
+	node->cmd.in = pipefd[0];
+	if (bytes == ERROR)
+		error_exit(ms, "write failed");
 }
 
 static inline bool	set_in(t_minishell *ms, t_node *node, char *filename)
