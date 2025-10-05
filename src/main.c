@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/04 04:10:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/05 21:56:24 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ int	main(int argc, char *argv[], char **envp)
 	(void)argv;
 	if (argc > 1)
 		error_exit(NULL, "too many arguments");
-	if (MEMORY < 1024)
-		error_exit(NULL, "not enough memory (1024 KiB minimum)");
 	startup();
 	initialize(&ms, envp);
 	run(&ms);
@@ -60,11 +58,11 @@ int	main(int argc, char *argv[], char **envp)
 static inline void	initialize(t_minishell *ms, char **envp)
 {
 	ft_memset(ms, 0, sizeof(*ms));
-	ms->state.envp = envp;
-	ms->system = arena_create(SYSTEM_MEMORY);
-	ms->pool = arena_create(MEMORY);
+	ms->system = arena_create(ms, SYSTEM_MEMORY);
+	ms->pool = arena_create(ms, MEMORY);
 	if (!ms->system.base || !ms->pool.base)
 		error_exit(ms, "arena creation failed");
+	ms->state.envp = dup_envp_system(ms, envp);
 }
 
 /**
@@ -78,8 +76,8 @@ static inline void	run(t_minishell *ms)
 
 	while (true)
 	{
-		free(ms->line);
 		arena_reset(&ms->pool);
+		free(ms->line);
 		ms->line = readline(get_prompt(ms));
 		if (*ms->line)
 			add_history(ms->line);
@@ -90,7 +88,7 @@ static inline void	run(t_minishell *ms)
 		if (!tokens || !parse_tokens(ms, tokens))
 			continue ;
 		expand_variables(ms);
-		set_io(ms);
+		setup_io(ms);
 		//executor(ms);
 		close_fds(ms);
 	}

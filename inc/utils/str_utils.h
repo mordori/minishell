@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 22:29:55 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/05 21:56:21 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 # include "defines.h"
 
 char	*str_sub(\
-t_minishell *ms, char const *src, unsigned int start, size_t len);
-char	*str_join(t_minishell *ms, char const *s1, char const *s2);
+t_minishell *ms, const char *src, unsigned int start, size_t len);
+char	*str_join(t_minishell *ms, const char *s1, const char *s2);
+char	**dup_envp_system(t_minishell *ms, char **envp);
 
 #endif

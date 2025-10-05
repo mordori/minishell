@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/03 23:46:34 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/05 21:55:09 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,21 +65,21 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EXE), \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LEX), \
 				lexer_utils.c \
-				lexer.c)
+				lexer.c \
+				str_split_utils.c \
+				str_split.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
 				expansion.c \
 				parser.c \
 				io.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
-				arena_utils.c \
 				arena_list.c \
+				arena_utils.c \
 				arena.c \
 				cleanup.c \
 				defines.c \
 				errors.c \
 				str_utils.c \
-				str_split.c \
-				str_split_utils.c \
 				)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
@@ -104,13 +104,17 @@ config:
 $(NAME): $(OBJS) $(LIBFT) $(CONF)
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBS) $(LIBFT)
 	@if [ $$(($(MEMORY))) -lt 1024 ]; then \
-		echo "$(RED) [✔] $(NAME) built with invalid amount of memory (1 KiB is minimum)$(RED)"; \
+		echo "$(YELLOW) [✔] $(NAME) built with invalid amount of memory (1 KiB is minimum)$(COLOR)"; \
+		echo "$(RED) [/] the program will throw an error if run$(COLOR)"; \
+	elif [ $$(($(MEMORY) & ($(MEMORY) - 1))) -ne 0 ]; then \
+		echo "$(YELLOW) [✔] $(NAME) built with non power of two amount of memory$(COLOR)"; \
+		echo "$(RED) [/] the program will throw an error if run$(COLOR)"; \
 	elif [ $$(($(MEMORY)/1024/1024)) -lt 1 ]; then \
 		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024" | bc) KiB memory$(COLOR)"; \
 	else \
 		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024/1024" | bc) MiB memory$(COLOR)"; \
 	fi
-	@if [ $$(($(MEMORY))) -gt 1023 ]; then \
+	@if [ $$(($(MEMORY))) -gt 1023 ] && [ $$(($(MEMORY) & ($(MEMORY) - 1))) -eq 0 ]; then \
 		echo "$(GREEN) [/] usage: ./$(NAME)$(COLOR)"; \
 	fi
 

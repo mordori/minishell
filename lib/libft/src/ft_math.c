@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:14:46 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/07/29 19:40:03 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/05 18:13:11 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,24 @@ int	ft_imin(int a, int b)
 	if (a > b)
 		return (b);
 	return (a);
+}
+
+size_t	ft_pow(size_t n, size_t e)
+{
+	size_t	i;
+	size_t	result;
+
+	result = 1;
+	i = 0;
+	while (i < e)
+	{
+		result *= n;
+		++i;
+	}
+	return (result);
+}
+
+bool	ft_is_pot(size_t n)
+{
+	return (n != 0 && ((n & (n - 1)) == 0));
 }

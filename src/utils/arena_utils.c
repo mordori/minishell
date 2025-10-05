@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 00:00:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/02 21:10:34 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/05 20:51:44 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	*alloc_system(t_minishell *ms, size_t size)
 
 	ptr = arena_alloc(&ms->system, size);
 	if (!ptr)
-		error_exit(ms, "system memory depleted");
+		warning_system(ms);
 	return (ptr);
 }
 

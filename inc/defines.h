@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/04 04:48:33 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/05 22:32:15 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,12 @@
 # define INT32_LENGTH			11
 # define INT64_LENGTH			20
 
-# define SYSTEM_MEMORY			256
+# define SYSTEM_MEMORY			524288UL
+# ifndef MEM_UNIT
+#  define MEM_UNIT				1024UL
+# endif
 # ifndef MEMORY
-#  define MEMORY				1048576
+#  define MEMORY				1048576UL
 # endif
 
 # ifndef PATH_MAX

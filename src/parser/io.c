@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/04 02:35:14 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/05 19:57:05 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 #include "arena_list.h"
 #include "libft_str.h"
 
-static inline bool	set_in(t_minishell *ms, t_node *node, char *filename);
-static inline void	set_out(t_minishell *ms, t_node *node, t_redir *r);
-static inline void	set_heredoc(t_minishell *ms, t_node *node, char *eof);
+static inline bool	set_in_file(t_minishell *ms, t_node *node, char *filename);
+static inline bool	set_out_file(t_minishell *ms, t_node *node, t_redir *r);
+static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof);
 
-void	set_io(t_minishell *ms)
+void	setup_io(t_minishell *ms)
 {
 	t_redir	*r;
 	t_node	*node;
@@ -35,19 +35,20 @@ void	set_io(t_minishell *ms)
 		{
 			r = (t_redir *)head->content;
 			if (r->type == IN)
-				if (!set_in(ms, node, r->filename))
+				if (!set_in_file(ms, node, r->filename))
 					break ;
 			if (r->type == HEREDOC)
-				set_heredoc(ms, node, r->filename);
+				set_in_heredoc(ms, node, r->filename);
 			if (r->type == OUT || r->type == OUT_APPEND)
-				set_out(ms, node, r);
+				if (!set_out_file(ms, node, r))
+					break ;
 			head = head->next;
 		}
 		node = node->next;
 	}
 }
 
-static inline void	set_heredoc(t_minishell *ms, t_node *node, char *eof)
+static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 {
 	int		pipefd[2];
 	char	*line;
@@ -73,7 +74,7 @@ static inline void	set_heredoc(t_minishell *ms, t_node *node, char *eof)
 		error_exit(ms, "write failed");
 }
 
-static inline bool	set_in(t_minishell *ms, t_node *node, char *filename)
+static inline bool	set_in_file(t_minishell *ms, t_node *node, char *filename)
 {
 	int	flags;
 
@@ -89,7 +90,7 @@ static inline bool	set_in(t_minishell *ms, t_node *node, char *filename)
 	return (true);
 }
 
-static inline void	set_out(t_minishell *ms, t_node *node, t_redir *r)
+static inline bool	set_out_file(t_minishell *ms, t_node *node, t_redir *r)
 {
 	int	flags;
 
@@ -102,5 +103,9 @@ static inline void	set_out(t_minishell *ms, t_node *node, t_redir *r)
 		close(node->cmd.out);
 	node->cmd.out = open(r->filename, flags, RWRWRW);
 	if (node->cmd.out == ERROR)
-		error_exit(ms, "opening file failed");
+	{
+		warning_file(ms, r->filename);
+		return (false);
+	}
+	return (true);
 }

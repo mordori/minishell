@@ -6,12 +6,14 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 22:05:05 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/02 21:11:07 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/05 18:44:19 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "arena.h"
+#include "errors.h"
 #include "libft_mem.h"
+#include "libft_math.h"
 
 /**
  * @brief	Allocates and zero-initializes memory for the arena and initializes
@@ -21,10 +23,14 @@
  *
  * @return	Created memory arena or NULL if creation fails.
  */
-t_arena	arena_create(size_t capacity)
+t_arena	arena_create(t_minishell *ms, size_t capacity)
 {
 	t_arena	arena;
 
+	if (capacity < MEM_UNIT)
+		error_exit(ms, "arena capacity is less than 1 KiB");
+	if (!ft_is_pot(capacity))
+		error_exit(ms, "arena capacity is not a power of 2");
 	arena.base = ft_calloc(sizeof(char), capacity);
 	arena.capacity = capacity;
 	arena.head = 0;
@@ -60,7 +66,26 @@ void	*arena_alloc(t_arena *arena, size_t size)
  */
 void	arena_reset(t_arena *arena)
 {
-	ft_memset(arena->base, 0, arena->capacity);
+	size_t	i;
+	size_t	bit;
+	size_t	e;
+	size_t	mem;
+
+	mem = arena->capacity;
+	bit = 0;
+	while (((mem >> 1) & 1) == 0)
+	{
+		++bit;
+		mem >>= 1;
+	}
+	arena->base[0] = 0;
+	e = 0;
+	while (e < bit)
+	{
+		i = 1UL << e;
+		ft_memcpy(&arena->base[i], arena->base, i);
+		++e;
+	}
 	arena->head = 0;
 }
 

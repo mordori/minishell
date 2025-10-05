@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 22:30:55 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/05 21:16:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	warning_input(t_minishell *ms, char *msg)
 	if (bytes > 0)
 		bytes = write(STDERR_FILENO, "\n", 1);
 	if (bytes == ERROR)
-		error_exit(ms, "warning write failed");
+		error_exit(ms, "write failed");
 }
 
 void	warning_syntax(t_minishell *ms, char *token)
@@ -59,7 +59,7 @@ STDERR_FILENO, "minishell: syntax error near unxpected token `", 46);
 	if (bytes > 0)
 	bytes = write(STDERR_FILENO, "\'\n", 2);
 	if (bytes == ERROR)
-		error_exit(ms, "warning write failed");
+		error_exit(ms, "write failed");
 }
 
 void	warning_file(t_minishell *ms, char *filename)
@@ -67,12 +67,23 @@ void	warning_file(t_minishell *ms, char *filename)
 	int	bytes;
 
 	bytes = write(STDERR_FILENO, "minishell: ", 11);
-	if (filename && bytes > 0)
-		bytes = write(STDERR_FILENO, filename, ft_strlen(filename));
-	if (bytes > 0)
-		bytes = write(STDERR_FILENO, ": No such file or directory\n", 28);
+	if (bytes != ERROR && errno)
+	{
+		perror(filename);
+		errno = 0;
+	}
 	if (bytes == ERROR)
-		error_exit(ms, "warning write failed");
+		error_exit(ms, "write failed");
+}
+
+void	warning_system(t_minishell *ms)
+{
+	int	bytes;
+
+	bytes = write(\
+STDERR_FILENO, "minishell: system memory capacity reached: variable was not recorded\n", 70);
+	if (bytes == ERROR)
+		error_exit(ms, "write failed");
 }
 
 /**
@@ -86,12 +97,17 @@ static inline void	print_error(char *msg)
 {
 	int	bytes;
 
-	bytes = write(STDERR_FILENO, "-----------------------------------\n", 36);
-	bytes = write(STDERR_FILENO, "minishell: fatal error: ", 24);
-	if (msg)
-		bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
-	bytes = write(STDERR_FILENO, "\n", 1);
-	(void)bytes;
-	perror("ERRNO");
-	errno = 0;
+	if (errno)
+	{
+		perror("minishell");
+		errno = 0;
+	}
+	else
+	{
+		bytes = write(STDERR_FILENO, "minishell: fatal error: ", 24);
+		if (bytes != ERROR && msg)
+			bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
+		if (bytes != ERROR)
+			bytes = write(STDERR_FILENO, "\n", 1);
+	}
 }
