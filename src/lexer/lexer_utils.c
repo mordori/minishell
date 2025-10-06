@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 00:57:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 21:02:38 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/07 02:17:24 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,23 +43,5 @@ bool	is_pipe(const char *src)
 {
 	if (!ft_strncmp(src, "|", 1))
 		return (true);
-	return (false);
-}
-
-bool	is_unclosed_quote(t_minishell *ms, const char **src)
-{
-	char	*closing_quote;
-
-	if (cmp_strs(get_quotes(), *src))
-	{
-		closing_quote = ft_strchr(*src + 1, **src);
-		if (closing_quote)
-			*src = closing_quote;
-		else
-		{
-			warning_input(ms, "unclosed quotes");
-			return (true);
-		}
-	}
 	return (false);
 }

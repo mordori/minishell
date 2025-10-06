@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:06:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 21:09:07 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/07 02:49:15 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,14 @@ static inline int	count_words(t_minishell *ms, char const *src)
 			march_operator(&src, &count);
 			continue ;
 		}
-		else if (cmp_strs(get_quotes(), src) && is_quote_closed(ms, &src, *src))
-			count = ERROR;
-		else
-			while (*src && !ft_isspace(*src) && !is_operator(src))
-			{
-				if (is_unclosed_quote(ms, &src))
-					count = ERROR;
-				++src;
-			}
-		if (count == ERROR)
-			return (ERROR);
+		while (*src)
+		{
+			if (ft_isspace(*src) || is_operator(src))
+				break ;
+			if (is_unclosed_quote(ms, &src))
+				return (ERROR);
+			++src;
+		}
 		if (*src || !ft_isspace(*(src - 1)))
 			++count;
 	}
@@ -86,11 +83,16 @@ static inline size_t	word_length(char const **src)
 		if (*src && \
 ((*(*src - 1) == '>' && **src == '>') || (*(*src - 1) == '<' && **src == '<')))
 			add_src_len(src, &len);
+		return (len);
 	}
-	else if (cmp_strs(get_quotes(), *src))
-		march_quoted_word(src, **src, &len);
-	else
-		while (**src && !ft_isspace(**src) && !is_operator(*src))
+	while (**src)
+	{
+		if (ft_isspace(**src) || is_operator(*src))
+			break;
+		if (cmp_strs(get_quotes(), *src))
+			march_quoted_word(src, **src, &len);
+		else
 			add_src_len(src, &len);
+	}
 	return (len);
 }

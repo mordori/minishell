@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 04:11:12 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 21:07:55 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/07 02:49:29 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ bool	is_pipe(const char *src);
 bool	is_unclosed_quote(t_minishell *ms, const char **src);
 char	**str_split(t_minishell *ms, char const *src);
 void	march_operator(char const **src, int *count);
-bool	is_quote_closed(t_minishell *ms, char const **src, char c);
 void	add_src_len(char const **src, size_t *len);
 void	march_quoted_word(char const **src, const char c, size_t *len);
 
