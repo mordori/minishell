@@ -6,14 +6,14 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 01:27:29 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/02 01:43:29 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 05:58:00 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
 #include "arena_list.h"
-#include "arena_utils.h"
+#include "arena.h"
 #include "libft_list.h"
 
 t_list	*lstnew(t_minishell *ms, void *content)

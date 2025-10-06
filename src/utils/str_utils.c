@@ -6,14 +6,14 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/05 21:56:10 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 05:58:14 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "str_utils.h"
 #include "libft_str.h"
 #include "libft_mem.h"
-#include "arena_utils.h"
+#include "libft_utils.h"
 #include "arena.h"
 
 char	*str_dup(t_minishell *ms, const char *s)
@@ -84,4 +84,26 @@ char	**dup_envp_system(t_minishell *ms, char **envp)
 	}
 	dup[i] = NULL;
 	return (dup);
+}
+
+char	*int_to_str(t_minishell *ms, int n)
+{
+	char		*str;
+	size_t		digits;
+	int64_t		num;
+
+	num = n;
+	if (n < 0)
+		num = -(int64_t)num;
+	digits = ft_countdigits(num, 10) + (n < 0);
+	str = alloc_pool(ms, digits + 1);
+	str[digits] = '\0';
+	while (digits--)
+	{
+		str[digits] = '0' + num % 10;
+		num /= 10;
+	}
+	if ((n < 0))
+		str[0] = '-';
+	return (str);
 }

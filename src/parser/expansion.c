@@ -6,13 +6,17 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/04 04:44:37 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 05:54:31 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "expansion.h"
+#include "parser.h"
+#include "libft_str.h"
+#include "libft_mem.h"
+#include "str_utils.h"
+#include "arena_list.h"
 
-static inline char		**expand_args(char **args);
+static inline char		**expand_args(t_minishell *ms, char **args);
 static inline t_list	*expand_redirs(t_list *redirs);
 
 void	expand_variables(t_minishell *ms)
@@ -22,22 +26,65 @@ void	expand_variables(t_minishell *ms)
 	head = ms->node;
 	while(head)
 	{
-		head->cmd.args = expand_args(head->cmd.args);
+		head->cmd.args = expand_args(ms, head->cmd.args);
 		head->cmd.redirs = expand_redirs(head->cmd.redirs);
 		head = head->next;
 	}
 }
 
-static inline char	**expand_args(char **raw_args)
+static inline char	**expand_args(t_minishell *ms, char **raw_args)
 {
-	char	**args;
+	char	**result;
+	char	*start;
+	t_list	*args;
 
-	args = raw_args;
+	result = raw_args;
 	while (raw_args)
 	{
+		start = ft_strchr(*raw_args, '$');
+		if (!start || **raw_args == '\'') //NO EXPANSION
+		{
+			lstadd_back(&args, ft_lstnew(*raw_args));
+			continue ;
+		}
+		// WORD UNTIL $
+		if (start != *raw_args && *(start - 1) == '\"') //NO WORD SPLITTING
+		{
+			;
+		}
+		while (start && ++start)
+		{
+			if (*start == '?') //PRINT LAST ESCAPE CODE
+			{
+				;
+			}
+			if (*start == '$') //PRINT SHELL PID
+			{
+				lstadd_back(&args, ft_lstnew(int_to_str(ms, getpid())));
+			}
+			if (*start == '\"' || *start == '\'') //LOCALIZATION AND ANSI-C QUOTING - NOT HANDLED
+			{
+				;
+			}
+			else //TRY TO FIND VAR AND EXPAND
+			{
+				// size_t	i;
+				// t_env	*env;
+
+				// i = 0;
+				// while (start[i] && start[i] != '$')
+				// 	++i;
+				// env = find_key(ms->state, str_sub(ms, start, 0, i));
+				// if (env)
+				// 	lstadd_back(&args, ft_lstnew(env->value));
+			}
+			if (!*start)
+				break ;
+			start = ft_strchr(start, '$');
+		}
 		++raw_args;
 	}
-	return (args);
+	return (result);
 }
 
 static inline t_list	*expand_redirs(t_list *raw_redirs)

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:15:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 07:01:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 05:57:53 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "errors.h"
 #include "libft_str.h"
 #include "arena_list.h"
-#include "arena_utils.h"
+#include "arena.h"
 
 static inline bool	is_valid_syntax(t_token **tokens);
 static inline void	set_node(t_minishell *ms, t_list **args, t_node **head);

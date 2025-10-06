@@ -6,16 +6,14 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:06:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/04 02:39:01 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 05:57:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "str_split.h"
-#include "str_split_utils.h"
+#include "lexer.h"
 #include "str_utils.h"
-#include "arena_utils.h"
+#include "arena.h"
 #include "libft_utils.h"
-#include "lexer_utils.h"
 
 static inline int		count_words(t_minishell *ms, char const *s);
 static inline size_t	word_length(char const **s);

@@ -6,11 +6,11 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 00:57:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 01:41:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 05:52:32 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer_utils.h"
+#include "lexer.h"
 #include "libft_str.h"
 
 bool	cmp_strs(const char **types, const char *src)

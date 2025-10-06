@@ -6,19 +6,16 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/05 21:56:24 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 05:57:27 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
-#include "arena_utils.h"
 #include "arena.h"
 #include "errors.h"
 #include "libft_mem.h"
 #include "lexer.h"
 #include "parser.h"
-#include "io.h"
-#include "expansion.h"
 #include "cleanup.h"
 #include "libft_str.h"
 #include "str_utils.h"
@@ -27,7 +24,7 @@
 static inline void	startup(void);
 static inline void	initialize(t_minishell *ms, char **envp);
 static inline void	run(t_minishell *ms);
-static inline char	*get_prompt(t_minishell *ms);
+static inline void	get_prompt(t_minishell *ms, t_prompt *p);
 
 /**
  * @brief	Entry point to the program.
@@ -40,9 +37,11 @@ int	main(int argc, char *argv[], char **envp)
 	t_minishell	ms;
 
 	(void)argv;
+	startup();
+	if (MEMORY < 0)
+		error_exit(NULL, "defined memory amount is negative");
 	if (argc > 1)
 		error_exit(NULL, "too many arguments");
-	startup();
 	initialize(&ms, envp);
 	run(&ms);
 	clean(&ms);
@@ -63,6 +62,7 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	if (!ms->system.base || !ms->pool.base)
 		error_exit(ms, "arena creation failed");
 	ms->state.envp = dup_envp_system(ms, envp);
+	printf("%s\n", ms->state.envp[3]);
 }
 
 /**
@@ -72,41 +72,76 @@ static inline void	initialize(t_minishell *ms, char **envp)
  */
 static inline void	run(t_minishell *ms)
 {
-	t_token	**tokens;
+	t_token		**tokens;
+	t_prompt	p;
 
 	while (true)
 	{
 		arena_reset(&ms->pool);
 		free(ms->line);
-		ms->line = readline(get_prompt(ms));
+		get_prompt(ms, &p);
+		ms->line = readline(p.prompt);
+		if (!ms->line)
+			break ;
 		if (*ms->line)
 			add_history(ms->line);
-		if (!*ms->line) // for debugging leaks - remove later
-			break ;
 		ms->node = alloc_pool(ms, sizeof(*ms->node));
 		tokens = create_tokens(ms->line, ms);
 		if (!tokens || !parse_tokens(ms, tokens))
 			continue ;
-		expand_variables(ms);
+		//expand_variables(ms);
 		setup_io(ms);
-		//executor(ms);
+		// if (ms->node->cmd.args)
+		// 	executor(ms);
 		close_fds(ms);
+		int ads = chdir("..");
+		(void)ads;
 	}
 }
 
-static inline char	*get_prompt(t_minishell *ms)
+// TODO: set wrapper for getenv
+static inline void	get_prompt(t_minishell *ms, t_prompt *p)
 {
-	static char	cwd[PATH_MAX];
-	char		*prompt;
-
-	prompt = getcwd(cwd, sizeof(cwd));
-	if (!prompt)
+	p->fd = open("/etc/hostname", O_RDONLY);
+	if (p->fd == ERROR)
+		error_exit(ms, "open failed");
+	p->len = read(p->fd, p->hostname, HOSTNAME_MAX);
+	close(p->fd);
+	if (p->len == ERROR)
+		error_exit(ms, "read failed");
+	p->hostname[p->len - 1] = 0;
+	p->path = getcwd(p->cwd, sizeof(p->cwd));
+	if (!p->path)
 		error_exit(ms, "getcwd failed");
-	prompt = ft_strchr(prompt + 1, '/');
-	prompt = ft_strchr(prompt + 1, '/');
-	prompt = str_join(ms, "\033[38;5;90mminishell\033[0m:\033[38;5;39m~/", prompt + 1);
-	prompt = str_join(ms, prompt, "\033[0m$ ");
-	return (prompt);
+	p->home = "/";
+	if (!ft_strncmp(p->path, getenv("HOME"), ft_strlen(getenv("HOME"))))
+	{
+		p->path += ft_strlen(getenv("HOME"));
+		p->home = "~";
+	}
+	else if (!ft_strncmp(p->path, "/home", 5))
+	{
+		p->path = "";
+		p->home = "/home";
+	}
+	else
+		p->path = "";
+	p->prompt = \
+str_join(ms, \
+str_join(ms, \
+str_join(ms, \
+str_join(ms, \
+str_join(ms, \
+str_join(ms, \
+str_join(ms, \
+"\033[38;5;90m", \
+getenv("LOGNAME")), \
+"@"), \
+p->hostname), \
+"\033[0m:\033[38;5;39m"), \
+p->home), \
+p->path), \
+"\033[0m$ ");
 }
 
 /**

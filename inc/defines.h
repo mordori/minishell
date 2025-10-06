@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/05 22:32:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 04:43:09 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,10 @@
 #  define PATH_MAX				4096
 # endif
 
+# ifndef HOSTNAME_MAX
+#  define HOSTNAME_MAX			64
+# endif
+
 # define RWRWRW					0666
 
 # define PROMPT					"> "
@@ -68,6 +72,7 @@ typedef struct s_state			t_state;
 typedef struct s_arena			t_arena;
 typedef struct s_minishell		t_minishell;
 typedef struct s_redir			t_redir;
+typedef struct s_prompt			t_prompt;
 
 typedef int		t_cmd_func(t_cmd, t_state);
 
@@ -172,6 +177,18 @@ struct	s_minishell
 	t_state		state;
 	t_node		*node;
 };
+
+struct s_prompt
+{
+	char		cwd[PATH_MAX];
+	char		*prompt;
+	char		*path;
+	char		*home;
+	char		hostname[HOSTNAME_MAX];
+	int			len;
+	int			fd;
+};
+
 
 const char**	get_redirections();
 const char**	get_quotes();

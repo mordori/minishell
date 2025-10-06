@@ -6,13 +6,13 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/05 21:55:09 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/06 03:07:06 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:=minishell
 
-MEMORY		?= 1048576
+MEMORY		?=1048576
 CONF		:=.config
 
 WARNS		:=-Wall -Wextra -Werror -Wunreachable-code
@@ -57,7 +57,7 @@ SRCS		:=$(addprefix $(DIR_SRC), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_BUILT), \
 				 \
 				)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIRDIR_ENV_EXE), \
+SRCS		+=$(addprefix $(DIR_SRC)$(DIR_ENV), \
 				 \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EXE), \
@@ -111,8 +111,10 @@ $(NAME): $(OBJS) $(LIBFT) $(CONF)
 		echo "$(RED) [/] the program will throw an error if run$(COLOR)"; \
 	elif [ $$(($(MEMORY)/1024/1024)) -lt 1 ]; then \
 		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024" | bc) KiB memory$(COLOR)"; \
-	else \
+	elif [ $$(($(MEMORY)/1024/1024)) -lt 1000 ]; then \
 		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024/1024" | bc) MiB memory$(COLOR)"; \
+	else \
+		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024/1024/1024" | bc) GiB memory$(COLOR)"; \
 	fi
 	@if [ $$(($(MEMORY))) -gt 1023 ] && [ $$(($(MEMORY) & ($(MEMORY) - 1))) -eq 0 ]; then \
 		echo "$(GREEN) [/] usage: ./$(NAME)$(COLOR)"; \

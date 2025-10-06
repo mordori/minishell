@@ -6,17 +6,14 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 04:09:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 01:46:05 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 05:57:34 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
-#include "lexer_utils.h"
-#include "arena_utils.h"
 #include "arena.h"
 #include "errors.h"
 #include "str_utils.h"
-#include "str_split.h"
 
 static inline void	tokenize(t_token *token);
 

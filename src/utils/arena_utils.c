@@ -6,11 +6,10 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 00:00:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/05 20:51:44 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 05:58:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "arena_utils.h"
 #include "arena.h"
 #include "errors.h"
 

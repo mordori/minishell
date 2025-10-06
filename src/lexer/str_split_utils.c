@@ -6,11 +6,11 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:10:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/04 02:38:08 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 05:52:53 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "str_split_utils.h"
+#include "lexer.h"
 #include "errors.h"
 
 void	march_operator(char const **src, int *count)
