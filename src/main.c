@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 21:25:11 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 21:30:13 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,7 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	if (!ms->system.base || !ms->pool.base)
 		error_exit(ms, "arena creation failed");
 	ms->state.envp = dup_envp_system(ms, envp);
-	init_nodes();
-	printf("%s\n", ms->state.envp[3]);
+	//init_nodes();
 }
 
 /**
@@ -99,13 +98,13 @@ static inline void	run(t_minishell *ms)
 			printf("[%d]ARGS\n--------\n", i);
 			while (tokens[1] && ms->node->cmd.args && *ms->node->cmd.args)
 			{
-				printf("%s\n", *ms->node->cmd.args);
+				printf(" %s\n", *ms->node->cmd.args);
 				ms->node->cmd.args++;
 			}
 			printf("[%d]REDIRS\n--------\n", i);
 			while (tokens[1] && ms->node->cmd.redirs)
 			{
-				printf("%s\n", ((t_redir *)ms->node->cmd.redirs->content)->filename);
+				printf(" %s\n", ((t_redir *)ms->node->cmd.redirs->content)->filename);
 				ms->node->cmd.redirs = ms->node->cmd.redirs->next;
 			}
 			printf("\n");
