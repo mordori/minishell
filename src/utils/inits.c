@@ -1,27 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   inits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/12 16:45:03 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/01 16:17:21 by jvalkama         ###   ########.fr       */
+/*   Created: 2025/10/06 17:12:50 by jvalkama          #+#    #+#             */
+/*   Updated: 2025/10/06 17:26:24 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtin.h"
-
-void	pwd(t_cmd *cmd, t_state *shell_state)
+void	init_nodes(t_minishell *ms);
 {
-	char	*pwd;
-
-	pwd = getcwd(NULL, 0);
-	if (!pwd)
-	{
-		shell_state->exit_status = ERROR_BUILTIN; //return errno or a bash-style/custom code?
-		return ;
-	}
-	printf("%s\n", pwd);
-	free(pwd);
+	//FIX: this is important to do soon.
+	//initialize first node
+	//see if you can generalize the envll setup functions for this, or otherwise adapt them
 }

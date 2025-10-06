@@ -12,8 +12,34 @@
 
 #include "executor.h"
 
-void	ft_unset(t_cmd *cmd, t_state *state)
+void	unset(t_cmd *cmd, t_state *state)
 {	
-	// unset in bash removes shell variables and functions from current env
+	char	*arg;
+	int		i;
 
+	i = 1;
+	while (argv[i])
+	{
+		arg = cmd->argv[i];
+		while (state->env)
+		{
+			if (ft_strcmp(arg, state->env->key) == 0)
+				remove_node(state->env);
+			state->env = state->env->next;
+		}
+		i++;
+	}
+}
+
+void	remove_node(t_env *env)
+{
+	t_env	*prior;
+	t_env	*latter;
+	
+	prior = env->prev;
+	latter = env->next;
+	if (prior)
+		prior->next = latter;
+	if (latter)
+		latter->prev = prior;
 }

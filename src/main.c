@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 05:57:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 17:26:26 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	if (!ms->system.base || !ms->pool.base)
 		error_exit(ms, "arena creation failed");
 	ms->state.envp = dup_envp_system(ms, envp);
+	init_nodes();
 	printf("%s\n", ms->state.envp[3]);
 }
 

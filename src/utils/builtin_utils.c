@@ -6,13 +6,13 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 12:44:17 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/02 19:25:05 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/06 17:26:41 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin_utils.h"
 
-bool	is_builtin(t_cmd *cmd) //the parameter/member format depends on parser output
+bool	is_builtin(t_cmd *cmd)
 {
 	return (cmd->builtin == ECHO
 		|| cmd->builtin == CD
