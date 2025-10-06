@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 04:09:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 08:30:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 20:09:08 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ t_token	**create_tokens(char *src, t_minishell *ms)
 	tokens[i]->src = "newline";
 	tokens[i]->pos = i;
 	tokens[i]->type = NEW_LINE;
+	i = 0;
 	return (tokens);
 }
 

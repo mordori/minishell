@@ -6,11 +6,12 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 00:57:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 05:52:32 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 21:02:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include "errors.h"
 #include "libft_str.h"
 
 bool	cmp_strs(const char **types, const char *src)
@@ -45,9 +46,20 @@ bool	is_pipe(const char *src)
 	return (false);
 }
 
-bool	is_quote(const char *src)
+bool	is_unclosed_quote(t_minishell *ms, const char **src)
 {
-	if (cmp_strs(get_quotes(), src))
-		return (true);
+	char	*closing_quote;
+
+	if (cmp_strs(get_quotes(), *src))
+	{
+		closing_quote = ft_strchr(*src + 1, **src);
+		if (closing_quote)
+			*src = closing_quote;
+		else
+		{
+			warning_input(ms, "unclosed quotes");
+			return (true);
+		}
+	}
 	return (false);
 }

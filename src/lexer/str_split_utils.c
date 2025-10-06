@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:10:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 05:52:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 21:07:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	march_operator(char const **src, int *count)
 	++(*count);
 }
 
-void	is_quote_closed(t_minishell *ms, char const **src, char c, int *count)
+bool	is_quote_closed(t_minishell *ms, char const **src, char c)
 {
 	++(*src);
 	while (**src && **src != c)
@@ -30,10 +30,10 @@ void	is_quote_closed(t_minishell *ms, char const **src, char c, int *count)
 	if (**src != c)
 	{
 		warning_input(ms, "unclosed quotes");
-		*count = ERROR;
-		return ;
+		return (true);
 	}
 	++(*src);
+	return (false);
 }
 
 void	add_src_len(char const **src, size_t *len)

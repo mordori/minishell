@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 08:00:42 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 21:22:34 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	if (!ms->system.base || !ms->pool.base)
 		error_exit(ms, "arena creation failed");
 	ms->state.envp = dup_envp_system(ms, envp);
-	printf("%s\n", ms->state.envp[3]);
 }
 
 /**
@@ -91,11 +90,29 @@ static inline void	run(t_minishell *ms)
 			continue ;
 		//expand_variables(ms);
 		setup_io(ms);
+		printf("\n");
+		int i = 0;
+		while (ms->node)
+		{
+			printf("[%d]ARGS\n--------\n", i);
+			while (tokens[1] && ms->node->cmd.args && *ms->node->cmd.args)
+			{
+				printf("%s\n", *ms->node->cmd.args);
+				ms->node->cmd.args++;
+			}
+			printf("[%d]REDIRS\n--------\n", i);
+			while (tokens[1] && ms->node->cmd.redirs)
+			{
+				printf("%s\n", ((t_redir *)ms->node->cmd.redirs->content)->filename);
+				ms->node->cmd.redirs = ms->node->cmd.redirs->next;
+			}
+			printf("\n");
+			ms->node = ms->node->next;
+			++i;
+		}
 		// if (ms->node->cmd.args)
 		// 	executor(ms);
 		close_fds(ms);
-		int ads = chdir("..");
-		(void)ads;
 	}
 }
 
@@ -110,6 +127,8 @@ static inline void	get_prompt(t_minishell *ms, t_prompt *p)
 	if (p->len < 1)
 		error_exit(ms, "read failed");
 	p->hostname[p->len - 1] = 0;
+	if (ft_strchr(p->hostname, '.') - p->hostname > 0)
+		p->hostname[ft_strchr(p->hostname, '.') - p->hostname] = 0;
 	p->path = getcwd(p->cwd, sizeof(p->cwd));
 	if (!p->path)
 		error_exit(ms, "getcwd failed");

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/06 03:06:22 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 16:07:19 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	executor(t_minishell *ms)
 {
 	t_state		*state;
 
-	state = ms->state;
+	state = &ms->state;
 	if (state->mode == SIMPLE)
 		execute_simple(ms->node, state);
 	else if (state->mode == PIPELINE)

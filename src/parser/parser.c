@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:15:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 08:37:46 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 20:18:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,6 @@ bool	parse_tokens(t_minishell *ms, t_token **tokens)
 	head = ms->node;
 	args = NULL;
 	prev = NULL;
-	t_token **tok = tokens;
-int i = 0;
-while (*tok) {
-    printf("[%d] type=%d src=%s pos=%ld\n", i, (*tok)->type, (*tok)->src, (*tok)->pos);
-    ++tok;
-    ++i;
-}
 	while (*tokens)
 	{
 		t = *tokens;
@@ -85,34 +78,24 @@ static inline void	set_node(t_minishell *ms, t_list **args, t_node **head)
 	*args = NULL;
 }
 
-// static inline void	set_args(t_minishell *ms, t_list *args, t_node *head)
-// {
-// 	if (!args)
-// 		return ;
-// 	head->cmd.argc = lstsize(args);
-// 	head->cmd.args = alloc_pool(ms, sizeof(*head->cmd.args) * (head->cmd.argc + 1));
-// 	while (args)
-// 	{
-// 		*head->cmd.args++ = args->content;
-// 		args = args->next;
-// 	}
-// 	head->cmd.args -= head->cmd.argc;
-// }
-
-static inline void set_args(t_minishell *ms, t_list *args, t_node *head)
+static inline void	set_args(t_minishell *ms, t_list *args, t_node *head)
 {
-    if (!args)
-        return;
-    head->cmd.argc = lstsize(args);
-    head->cmd.args = alloc_pool(ms, sizeof(*head->cmd.args) * (head->cmd.argc + 1));
+	t_list	*temp;
+	int		i;
 
-    t_list *tmp = args;
-    for (int i = 0; i < head->cmd.argc; ++i)
-    {
-        head->cmd.args[i] = tmp->content;
-        tmp = tmp->next;
-    }
-    head->cmd.args[head->cmd.argc] = NULL;
+	if (!args)
+		return ;
+	head->cmd.argc = lstsize(args);
+	head->cmd.args = alloc_pool(ms, sizeof(*head->cmd.args) * (head->cmd.argc + 1));
+	temp = args;
+	i = 0;
+	while (i < head->cmd.argc)
+	{
+		head->cmd.args[i] = temp->content;
+		temp = temp->next;
+		++i;
+	}
+	head->cmd.args[head->cmd.argc] = NULL;
 }
 
 static inline void	add_redir(\

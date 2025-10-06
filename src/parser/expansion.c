@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 05:54:31 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 16:34:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,22 @@ static inline char	**expand_args(t_minishell *ms, char **raw_args)
 	}
 	return (result);
 }
+
+
+// READ HEREDOC IN TOO
+
+/**
+ * *[expansion][~/Projects/minishell]$ cd ~
+[~]$ mkdir playground
+[~]$ cd playground
+[~/playground]$ mkdir new
+[~/playground]$ cd new
+[~/playground/new]$ rm ../new
+rm: cannot remove '../new': Is a directory
+[~/playground/new]$ rm -rf ../new
+[~/playground/new]$ pwd
+/home/myli-pen/playground/new
+ */
 
 static inline t_list	*expand_redirs(t_list *raw_redirs)
 {
