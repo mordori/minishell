@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 04:09:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 05:57:34 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 08:30:15 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ t_token	**create_tokens(char *src, t_minishell *ms)
 	i = 0;
 	while (srcs[i])
 	{
-		tokens[i] = alloc_pool(ms, sizeof(*tokens[i]));
+		tokens[i] = alloc_pool(ms, sizeof(t_token));
 		tokens[i]->src = srcs[i];
 		tokens[i]->pos = i;
 		tokenize(tokens[i]);
 		++i;
 	}
-	tokens[i] = alloc_pool(ms, sizeof(*tokens[i]));
+	tokens[i] = alloc_pool(ms, sizeof(t_token));
 	tokens[i]->src = "newline";
 	tokens[i]->pos = i;
 	tokens[i]->type = NEW_LINE;

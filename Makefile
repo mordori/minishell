@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/06 03:07:06 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/06 08:16:55 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ WARNS		:=-Wall -Wextra -Werror -Wunreachable-code
 DEFS		:=-D MEMORY=$(MEMORY)
 OPTS		:=-O3 -march=native -funroll-loops -fno-plt
 CC			:=cc
-CFLAGS		:=$(WARNS) $(DEFS) $(OPTS)
+CFLAGS		:= $(DEFS) $(OPTS) -g
 LDFLAGS		:=-flto
 LIBS		:=-lreadline
 

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 05:57:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 08:00:42 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ static inline void	run(t_minishell *ms)
 
 	while (true)
 	{
-		arena_reset(&ms->pool);
 		free(ms->line);
 		get_prompt(ms, &p);
 		ms->line = readline(p.prompt);
@@ -85,6 +84,7 @@ static inline void	run(t_minishell *ms)
 			break ;
 		if (*ms->line)
 			add_history(ms->line);
+		arena_reset(&ms->pool);
 		ms->node = alloc_pool(ms, sizeof(*ms->node));
 		tokens = create_tokens(ms->line, ms);
 		if (!tokens || !parse_tokens(ms, tokens))
@@ -107,7 +107,7 @@ static inline void	get_prompt(t_minishell *ms, t_prompt *p)
 		error_exit(ms, "open failed");
 	p->len = read(p->fd, p->hostname, HOSTNAME_MAX);
 	close(p->fd);
-	if (p->len == ERROR)
+	if (p->len < 1)
 		error_exit(ms, "read failed");
 	p->hostname[p->len - 1] = 0;
 	p->path = getcwd(p->cwd, sizeof(p->cwd));
@@ -116,7 +116,7 @@ static inline void	get_prompt(t_minishell *ms, t_prompt *p)
 	p->home = "/";
 	if (!ft_strncmp(p->path, getenv("HOME"), ft_strlen(getenv("HOME"))))
 	{
-		p->path += ft_strlen(getenv("HOME"));
+		p->path = p->cwd + ft_strlen(getenv("HOME"));
 		p->home = "~";
 	}
 	else if (!ft_strncmp(p->path, "/home", 5))
@@ -126,22 +126,19 @@ static inline void	get_prompt(t_minishell *ms, t_prompt *p)
 	}
 	else
 		p->path = "";
-	p->prompt = \
-str_join(ms, \
-str_join(ms, \
-str_join(ms, \
-str_join(ms, \
-str_join(ms, \
-str_join(ms, \
-str_join(ms, \
-"\033[38;5;90m", \
-getenv("LOGNAME")), \
-"@"), \
-p->hostname), \
-"\033[0m:\033[38;5;39m"), \
-p->home), \
-p->path), \
-"\033[0m$ ");
+	p->prompt = str_join(ms, "\001\033[38;5;90m\002", getenv("LOGNAME"));
+	if (p->prompt)
+	p->prompt = str_join(ms, p->prompt, "@");
+	if (p->prompt)
+		p->prompt = str_join(ms, p->prompt, p->hostname);
+	if (p->prompt)
+		p->prompt = str_join(ms, p->prompt, "\001\033[0m:\033[38;5;39m\002");
+	if (p->prompt)
+		p->prompt = str_join(ms, p->prompt, p->home);
+	if (p->prompt)
+		p->prompt = str_join(ms, p->prompt, p->path);
+	if (p->prompt)
+		p->prompt = str_join(ms, p->prompt, "\001\033[0m\002$ ");
 }
 
 /**
