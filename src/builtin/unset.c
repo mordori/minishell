@@ -14,6 +14,28 @@
 
 void	ft_unset(t_cmd *cmd, t_state *state)
 {	
-	// unset in bash removes shell variables and functions from current env
+	char	*arg;
+	int		i;
 
+	i = 1;
+	while (argv[i])
+	{
+		arg = cmd->argv[i];
+		while (state->env)
+		{
+			if (ft_strcmp(arg, state->env->key) == 0)
+				remove_value(state->env);
+			state->env = state->env->next;
+		}
+		i++;
+	}
 }
+
+void	remove_value(t_env *env)
+{
+	
+}
+
+//export apina=banaani
+//unset apina
+//		--> -

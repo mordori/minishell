@@ -48,6 +48,8 @@ char	*ft_keydup(char *key_src, char *key_end)
 
 	i = 0;
 	len = 0;
+	if (!key_end)
+		return (key_src);
 	while (key_src[len] != *key_end)
 		len++;
 	key = alloc_pool((len + 1) * sizeof(char));

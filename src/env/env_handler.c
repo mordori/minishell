@@ -22,8 +22,8 @@
 
 int	envp_to_envll(char **envp, t_state *state)
 {
-	t_env	*env;
-	int		i;
+	t_env		*env;
+	int			i;
 
 	env = NULL;
 	while (envp[i])

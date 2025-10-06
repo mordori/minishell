@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-t_env	**find_key(t_state *state, char *key)
+t_env	**envll_findkey(t_state *state, char *key)
 {
 	t_env	*env;
 
@@ -23,3 +23,41 @@ t_env	**find_key(t_state *state, char *key)
 	}
 	return (NULL);
 }
+
+bool	is_valid_key(const char *key, char *delimiter)
+{
+	bool	is_valid;
+	char	c;
+	int		i;
+
+	is_valid = true;
+	if (key[0] == '\0')
+		is_valid = false;
+	if (ft_isdigit(key[0]))
+		is_valid = false;
+	i = 0;
+	while (key[i] && is_valid)
+	{
+		if (!is_valid_ascii(key[i]))
+		{
+			if (key[i] == '+' && key[i + 1] == '\0' && delimiter)
+				break ;
+			is_valid = false;
+		}
+		i++;
+	}
+	return (is_valid);
+}
+
+static bool	is_valid_char(const char c)
+{
+	return (ft_isalnum(c) || c == '_' || c == '=');
+}
+
+bool	replace_value(t_env **var, char *value)
+{
+	(*var)->value = value;
+	return (true);
+}
+
+//with mika: ap$ina=kapina  -->  apina="kapina"
