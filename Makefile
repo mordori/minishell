@@ -6,20 +6,20 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/09/30 21:53:15 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/06 03:07:06 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:=minishell
 
-POOL_SIZE	?= 1024
+MEMORY		?=1048576
 CONF		:=.config
 
-DEFS		:=-D POOL_SIZE=$(POOL_SIZE)
-# TODO: Add OPTS
+WARNS		:=-Wall -Wextra -Werror -Wunreachable-code
+DEFS		:=-D MEMORY=$(MEMORY)
 OPTS		:=-O3 -march=native -funroll-loops -fno-plt
 CC			:=cc
-CFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code $(DEFS)
+CFLAGS		:=$(WARNS) $(DEFS) $(OPTS)
 LDFLAGS		:=-flto
 LIBS		:=-lreadline
 
@@ -53,31 +53,33 @@ INCS		:=$(addprefix -I, \
 				)
 
 SRCS		:=$(addprefix $(DIR_SRC), \
-				main.c \
-				)
+				main.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_BUILT), \
 				 \
 				)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIRDIR_ENV_EXE), \
+SRCS		+=$(addprefix $(DIR_SRC)$(DIR_ENV), \
 				 \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EXE), \
 				 \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LEX), \
+				lexer_utils.c \
 				lexer.c \
-				 \
-				)
+				str_split_utils.c \
+				str_split.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
+				expansion.c \
 				parser.c \
-				 \
-				)
+				io.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
+				arena_list.c \
+				arena_utils.c \
+				arena.c \
+				cleanup.c \
 				defines.c \
 				errors.c \
-				mem_arena.c \
-				mem_utils.c \
-				string_utils.c \
+				str_utils.c \
 				)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
@@ -95,13 +97,28 @@ $(LIBFT):
 	@make -j4 -C $(DIR_LIBFT)
 
 config:
-	@if [ ! -e "$(CONF)" ] || [ "$$(cat "$(CONF)")" != "$(POOL_SIZE)" ]; then \
-		echo "$(POOL_SIZE)" > "$(CONF)"; \
+	@if [ ! -e "$(CONF)" ] || [ "$$(cat "$(CONF)")" != "$(MEMORY)" ]; then \
+		echo "$(MEMORY)" > "$(CONF)"; \
 	fi
 
 $(NAME): $(OBJS) $(LIBFT) $(CONF)
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBS) $(LIBFT)
-	@echo "$(YELLOW) [✔] $(NAME) built POOL_SIZE=$(POOL_SIZE)$(COLOR)"
+	@if [ $$(($(MEMORY))) -lt 1024 ]; then \
+		echo "$(YELLOW) [✔] $(NAME) built with invalid amount of memory (1 KiB is minimum)$(COLOR)"; \
+		echo "$(RED) [/] the program will throw an error if run$(COLOR)"; \
+	elif [ $$(($(MEMORY) & ($(MEMORY) - 1))) -ne 0 ]; then \
+		echo "$(YELLOW) [✔] $(NAME) built with non power of two amount of memory$(COLOR)"; \
+		echo "$(RED) [/] the program will throw an error if run$(COLOR)"; \
+	elif [ $$(($(MEMORY)/1024/1024)) -lt 1 ]; then \
+		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024" | bc) KiB memory$(COLOR)"; \
+	elif [ $$(($(MEMORY)/1024/1024)) -lt 1000 ]; then \
+		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024/1024" | bc) MiB memory$(COLOR)"; \
+	else \
+		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024/1024/1024" | bc) GiB memory$(COLOR)"; \
+	fi
+	@if [ $$(($(MEMORY))) -gt 1023 ] && [ $$(($(MEMORY) & ($(MEMORY) - 1))) -eq 0 ]; then \
+		echo "$(GREEN) [/] usage: ./$(NAME)$(COLOR)"; \
+	fi
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c $(LIBFT) $(CONF)
 	@mkdir -p $(dir $@) $(patsubst $(DIR_OBJ)%, $(DIR_DEP)%, $(dir $@))

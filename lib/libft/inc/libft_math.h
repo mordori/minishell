@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 01:11:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/07/31 02:31:24 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/05 18:13:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,7 @@ t_vec4	vec4_n(float n);
 t_vec4	vec4_add(t_vec4 a, t_vec4 b);
 t_vec4	vec4_sub(t_vec4 a, t_vec4 b);
 t_vec4	vec4_scale(t_vec4 v, float s);
+size_t	ft_pow(size_t n, size_t e);
+bool	ft_is_pot(size_t n);
 
 #endif

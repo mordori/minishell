@@ -1,20 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.h                                           :+:      :+:    :+:   */
+/*   arena_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/24 20:17:33 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/25 00:00:20 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/10/06 05:58:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSER_H
-# define PARSER_H
+#include "arena.h"
+#include "errors.h"
 
-# include "defines.h"
+void	*alloc_system(t_minishell *ms, size_t size)
+{
+	void	*ptr;
 
-void	parse(t_token **tokens);
+	ptr = arena_alloc(&ms->system, size);
+	if (!ptr)
+		warning_system(ms);
+	return (ptr);
+}
 
-#endif
+void	*alloc_pool(t_minishell *ms, size_t size)
+{
+	void	*ptr;
+
+	ptr = arena_alloc(&ms->pool, size);
+	if (!ptr)
+		error_exit(ms, "pool memory depleted");
+	return (ptr);
+}
