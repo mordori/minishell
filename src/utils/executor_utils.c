@@ -26,3 +26,15 @@ void	wait_pids(t_cmd *cmd, t_shell *shell)
 		i++;
 	}
 }
+
+// parrsin dont know whther cmd is a valid one, it just tokenizes and so on.
+// so, here a bunch of stuff needs to be done:
+
+void	command_verification()
+{
+	//FIX: This is important to do soon:
+	// 1. Check if command is BUILTIN, and designate it in cmd->builtin.
+	// 2. Verify command exists, and fetch/parse the full path to the command
+	// 		3. insert full path in cmd->cmd
+	//
+}

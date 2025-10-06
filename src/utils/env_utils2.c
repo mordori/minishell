@@ -60,7 +60,7 @@ bool	replace_value(t_env **var, char *value)
 	return (true);
 }
 
-int	warning_identifier()
+void	warning_identifier(void)
 {
-
+	warning_input();
 }
