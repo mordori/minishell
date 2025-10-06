@@ -15,18 +15,19 @@
 //SOME OF THESE PARAS DO DEPEND ON PARSER OUTPUT. so, SUBJECT TO CHANGE.
 //NODE CREATION CAN HAPPEN HERE BASED ON TOKENS for example.
 
-int	executor(t_node *node, t_minishell *ms)
+int	executor(t_minishell *ms)
 {
 	t_state		*state;
+	t_node		*node;
 
 	state = ms->state;
+	node = ms->node;
 	if (state->mode == SIMPLE)
 		execute_simple(node, state);
 	else if (state->mode == PIPELINE)
 		execute_pipeline(node, state);
 	if (state->exit_status)
 		clean_reset(node, state);
-	//cleaning old node and state?
 	return(state->exit_status);
 }
 

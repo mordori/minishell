@@ -12,7 +12,7 @@
 
 #include "builtin.h"
 
-void	ft_pwd(t_cmd *cmd, t_state *shell_state)
+void	pwd(t_cmd *cmd, t_state *shell_state)
 {
 	char	*pwd;
 

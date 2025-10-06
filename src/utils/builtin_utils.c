@@ -12,7 +12,7 @@
 
 #include "builtin_utils.h"
 
-bool	is_builtin(t_cmd *cmd) //the parameter/member format depends on parser output
+bool	is_builtin(t_cmd *cmd)
 {
 	return (cmd->builtin == ECHO
 		|| cmd->builtin == CD

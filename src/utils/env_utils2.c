@@ -38,7 +38,7 @@ bool	is_valid_key(const char *key, char *delimiter)
 	i = 0;
 	while (key[i] && is_valid)
 	{
-		if (!is_valid_ascii(key[i]))
+		if (!is_valid_identifier(key[i]))
 		{
 			if (key[i] == '+' && key[i + 1] == '\0' && delimiter)
 				break ;
@@ -49,7 +49,7 @@ bool	is_valid_key(const char *key, char *delimiter)
 	return (is_valid);
 }
 
-static bool	is_valid_char(const char c)
+static bool	is_valid_identifier(const char c)
 {
 	return (ft_isalnum(c) || c == '_' || c == '=');
 }
@@ -60,4 +60,7 @@ bool	replace_value(t_env **var, char *value)
 	return (true);
 }
 
-//with mika: ap$ina=kapina  -->  apina="kapina"
+int	warning_identifier()
+{
+
+}

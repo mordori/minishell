@@ -51,7 +51,7 @@ int	redirect_output(char *file, bool is_append)
 }
 
 
-//FIX: implement a temp file system
+//FIX: implement a temp file system. RUN HEREDOCS IN CHILD PROCESS FOR CTRL+C (EXIT) TO WORK RIGHT.
 //NOTE: creating a temp file might be useful.
 // heredocs also fork into child processes.
 // fork() a child process,

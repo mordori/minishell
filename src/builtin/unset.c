@@ -12,7 +12,7 @@
 
 #include "executor.h"
 
-void	ft_unset(t_cmd *cmd, t_state *state)
+void	unset(t_cmd *cmd, t_state *state)
 {	
 	char	*arg;
 	int		i;
@@ -24,18 +24,22 @@ void	ft_unset(t_cmd *cmd, t_state *state)
 		while (state->env)
 		{
 			if (ft_strcmp(arg, state->env->key) == 0)
-				remove_value(state->env);
+				remove_node(state->env);
 			state->env = state->env->next;
 		}
 		i++;
 	}
 }
 
-void	remove_value(t_env *env)
+void	remove_node(t_env *env)
 {
+	t_env	*prior;
+	t_env	*latter;
 	
+	prior = env->prev;
+	latter = env->next;
+	if (prior)
+		prior->next = latter;
+	if (latter)
+		latter->prev = prior;
 }
-
-//export apina=banaani
-//unset apina
-//		--> -

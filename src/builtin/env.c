@@ -12,7 +12,7 @@
 
 #include "builtin.h"
 
-void	ft_env(t_cmd *cmd, t_state *state)
+void	env(t_cmd *cmd, t_state *state)
 {
 	t_env		*env;
 

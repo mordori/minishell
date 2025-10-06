@@ -13,7 +13,7 @@
 #include "builtin.h"
 
 //still VERIFY ARG SYNTAX
-void	ft_cd(t_cmd *cmd, t_state *state)
+void	cd(t_cmd *cmd, t_state *state)
 {
 	char	*path;
 

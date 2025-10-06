@@ -15,7 +15,7 @@
 static void	display_exporting_vars(t_state *state);
 static void	put_var_into_env(t_state *state);
 
-void	ft_export(t_cmd *cmd, t_state *state)
+void	export(t_cmd *cmd, t_state *state)
 {
 	if (!cmd->argv[1])
 		display_exporting_vars(state);
@@ -54,7 +54,7 @@ static void	put_var_into_env(t_state *state, t_cmd *cmd)
 	{
 		parse_export(cmd->argv[i], &key, &value, &delimiter);
 		if (!is_valid_key(key, delimiter))
-			clean_error(); //ask mika
+			return (warning_identifier()); //ask mika
 		if (!delimiter)
 			ft_envadd_back(state->env, ft_envnode_new(key, NULL));
 		is_handled = handle_special_cases(state, cmd->argv[i], key, value);
