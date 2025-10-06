@@ -15,7 +15,7 @@
 static void	display_exporting_vars(t_state *state);
 static void	put_var_into_env(t_state *state);
 
-void	ft_export(t_cmd *cmd, t_state *state)
+void	export(t_cmd *cmd, t_state *state)
 {
 	if (!cmd->argv[1])
 		display_exporting_vars(state);
@@ -52,9 +52,11 @@ static void	put_var_into_env(t_state *state, t_cmd *cmd)
 	i = 1;
 	while (cmd->argv[i])
 	{
-		parse(cmd->argv[i], &key, &value, &delimiter);
+		parse_export(cmd->argv[i], &key, &value, &delimiter);
+		if (!is_valid_key(key, delimiter))
+			return (warning_identifier()); //ask mika
 		if (!delimiter)
-			ft_envadd_back(state->env, ft_envnode_new(cmd->argv[i], NULL));
+			ft_envadd_back(state->env, ft_envnode_new(key, NULL));
 		is_handled = handle_special_cases(state, cmd->argv[i], key, value);
 		if (is_handled)
 		{
@@ -67,12 +69,12 @@ static void	put_var_into_env(t_state *state, t_cmd *cmd)
 	state->envp = envll_to_envp(state->env);
 }
 
-static void	parse(char *var, char **key, char **value, char **delimiter)
+static int	parse_export(char *var, char **key, char **value, char **delimiter)
 {
 	*delimiter = ft_strchr(var, '=');
-	if (!delimiter)
-		return ;
 	*key = ft_keydup(var, delimiter);
+	if (!delimiter)
+		return (0);
 	*value = str_dup(delimiter + 1);
 }
 
@@ -80,7 +82,7 @@ static bool	handle_specials(t_state *state, char *var, char *key, char *value)
 {
 	bool	is_additive;
 	char	*combin_val;
-	t_env	**existing_var;
+	t_env	**existing_key;
 
 	if (!value)
 	{
@@ -88,22 +90,17 @@ static bool	handle_specials(t_state *state, char *var, char *key, char *value)
 		return (true);
 	}
 	is_additive = is_pluschar(var, '=');
-	existing_var = find_key(state, key);
-	if (existing_var)
+	existing_key = envll_findkey(state, key); //NOTE: during testing, make sure this can directly modify value in place
+	if (existing_key)
 	{
 		if (is_additive)
 		{
-			combin_val = str_join(existing_var->value, value);
-			(*existing_var)->value = combin_var;
+			combin_val = str_join(existing_key->value, value);
+			(*existing_key)->value = combin_var;
 			return (true);
 		}
-			update_value(); //FIXME: just replace old value at correct place
-			return (true); //shouldnt return if update_value does nothing ofc
-	}
-	if (is_additive)
-	{
-		ft_envadd_back(state->env, ft_envnode_new(key, value));
-		return (true);
+		if (replace_value(existing_key, value))
+			return (true);
 	}
 	return (false);
 }

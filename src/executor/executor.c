@@ -6,51 +6,53 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/06 16:07:19 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/06 21:27:18 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-//SOME OF THESE PARAS DO DEPEND ON PARSER OUTPUT. so, SUBJECT TO CHANGE.
-//NODE CREATION CAN HAPPEN HERE BASED ON TOKENS for example.
+//NOTE: NODE CREATION HAPPENS IN INIT_NODES() WHICH IS CALLED IN MAIN.
+//FIX: define init_nodes() in inits.c
 
 int	executor(t_minishell *ms)
 {
 	t_state		*state;
 
 	state = &ms->state;
+	command_verification(ms); //FIX: define command_verification() in executor_utils.c
 	if (state->mode == SIMPLE)
-		execute_simple(ms->node, state);
+		execute_simple(ms);
 	else if (state->mode == PIPELINE)
-		execute_pipeline(ms->node, state);
+		execute_pipeline(ms);
 	if (state->exit_status)
-		clean_reset(ms->node, state);
-	//cleaning old node and state?
+		clean_reset(ms);
 	return(state->exit_status);
 }
 
-int	execute_simple(t_node *node, t_state *shell)
+//NOTE: ms is needed at least by the builtin export, if it triggers 'invalid identificator' -error
+
+int	execute_simple(t_minishell *ms)
 {
 	pid_t		child_pid;
 	int			status;
 
 	if (is_builtin(cmd->cmd))
-		exec_builtin(cmd, shell);
+		exec_builtin(cmd, state);
 	else
 	{
-		if (fork_child(&child_pid, shell))
+		if (fork_child(&child_pid, state))
 			return (ERROR_FORKING);
 		if (child_pid == 0)
-			exec_extern(cmd, shell);
+			exec_extern(cmd, state);
 		waitpid(child_pid, &status, 0);
 		if (WIFEXITED(status))
-			shell->exit_status = WEXITSTATUS(status);
+			state->exit_status = WEXITSTATUS(status);
 	}
-	return (shell->exit_status);
+	return (state->exit_status);
 }
 
-int	execute_pipeline(t_node *node, t_state *shell)
+int	execute_pipeline(t_minishell *ms)
 {
 	bool		is_builtin;
 	int			prev_fd;
@@ -60,12 +62,12 @@ int	execute_pipeline(t_node *node, t_state *shell)
 	prev_fd = -1;
 	while (node)
 	{
-		shell->exit_status = spawn_and_run(node, shell, count, &prev_fd);
-		if (shell->exit_status)
-			return (shell->exit_status);
+		state->exit_status = spawn_and_run(node, state, count, &prev_fd);
+		if (state->exit_status)
+			return (state->exit_status);
 		node = node->next;
 		count++;
 	}
-	wait_pids(node, shell);
-	return (shell->exit_status);
+	wait_pids(node, state);
+	return (state->exit_status);
 }

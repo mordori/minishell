@@ -17,7 +17,7 @@
 	* it can also take variables of different types (WIP)
 	* puts a newline instead of space after last arg
 */
-int	ft_echo(t_cmd *cmd, t_state *state)
+int	echo(t_cmd *cmd, t_state *state)
 {
 	char		*string;
 	bool		in_between;
