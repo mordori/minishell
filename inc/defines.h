@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/02 19:27:09 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/06 04:43:09 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <stddef.h>
 # include <limits.h>
 # include <errno.h>
+
+# include "libft_list.h"
 
 # define ERROR_INVALID_EXIT		255
 # define ERROR_S_TERMINATED		130
@@ -36,25 +38,41 @@
 # define INT32_LENGTH			11
 # define INT64_LENGTH			20
 
-# define SYSTEM_SIZE			256
-# ifndef POOL_SIZE
-#  define POOL_SIZE				1024
+# define SYSTEM_MEMORY			524288UL
+# ifndef MEM_UNIT
+#  define MEM_UNIT				1024UL
+# endif
+# ifndef MEMORY
+#  define MEMORY				1048576UL
 # endif
 
-# define PROMPT					"\033[0;36m[minishell]\033[0m$ "
+# ifndef PATH_MAX
+#  define PATH_MAX				4096
+# endif
+
+# ifndef HOSTNAME_MAX
+#  define HOSTNAME_MAX			64
+# endif
+
+# define RWRWRW					0666
+
+# define PROMPT					"> "
 
 typedef enum e_builtin_type		t_builtin;
 typedef enum e_mode				t_mode;
-typedef enum e_type				t_type;
+typedef enum e_token_type		t_token_type;
 typedef enum e_errors			t_errors;
+typedef enum e_redir_type		t_redir_type;
 
 typedef struct s_env			t_env;
 typedef struct s_token			t_token;
+typedef struct s_node			t_node;
 typedef struct s_cmd			t_cmd;
 typedef struct s_state			t_state;
-typedef struct s_node			t_node;
-typedef struct s_mem_arena		t_mem_arena;
+typedef struct s_arena			t_arena;
 typedef struct s_minishell		t_minishell;
+typedef struct s_redir			t_redir;
+typedef struct s_prompt			t_prompt;
 
 typedef int		t_cmd_func(t_cmd, t_state);
 
@@ -76,10 +94,28 @@ enum e_mode
 	PIPELINE
 };
 
-enum e_type
+enum e_token_type
 {
 	WORD,
-	OPERATOR
+	REDIR,
+	PIPE,
+	NEW_LINE
+};
+
+enum e_redir_type
+{
+	UNDEFINED,
+	IN,
+	OUT,
+	OUT_APPEND,
+	HEREDOC
+};
+
+struct s_redir
+{
+	t_redir_type	type;
+	char			*filename;
+	t_redir			*next;
 };
 
 struct s_env
@@ -92,13 +128,25 @@ struct s_env
 
 struct s_token
 {
-	char		*src;
-	t_type		type;
+	char			*src;
+	t_token_type	type;
+	size_t			pos;
+};
+
+struct s_cmd
+{
+	t_builtin	builtin;
+	char		*cmd;
+	int			argc;
+	char		**args;
+	int			in;
+	int			out;
+	t_list		*redirs;
 };
 
 struct s_node
 {
-	t_cmd		*cmd;
+	t_cmd		cmd;
 	t_node		*next;
 	t_node		*prev;
 	int			pipe_fds[2];
@@ -114,14 +162,7 @@ struct s_state
 	char		**envp;
 };
 
-struct s_cmd
-{
-	t_builtin	builtin;
-	char		*cmd;
-	char		**argv;
-};
-
-struct s_mem_arena
+struct s_arena
 {
 	char		*base;
 	size_t		capacity;
@@ -130,15 +171,26 @@ struct s_mem_arena
 
 struct	s_minishell
 {
-	t_mem_arena	system;
-	t_mem_arena	pool;
+	t_arena		system;
+	t_arena		pool;
 	char		*line;
-	t_state		*state;
-	bool		exit;
+	t_state		state;
+	t_node		*node;
 };
 
-const char**	get_redirs();
-const char**	get_pipe();
+struct s_prompt
+{
+	char		cwd[PATH_MAX];
+	char		*prompt;
+	char		*path;
+	char		*home;
+	char		hostname[HOSTNAME_MAX];
+	int			len;
+	int			fd;
+};
+
+
+const char**	get_redirections();
 const char**	get_quotes();
 
 #endif

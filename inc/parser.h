@@ -1,23 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/24 04:11:12 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/01 03:03:41 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/10/06 05:53:57 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEXER_H
-# define LEXER_H
+#ifndef PARSER_H
+# define PARSER_H
+
+# include <fcntl.h>
+# include <unistd.h>
+# include <readline/readline.h>
 
 # include "defines.h"
 
-t_token	**create_tokens(char *src, t_minishell *ms);
-bool	cmp_strs(const char **types, const char *src);
-bool	is_operator(const char *src);
-bool	is_quote(const char *src);
+bool	parse_tokens(t_minishell *ms, t_token **tokens);
+void	setup_io(t_minishell *ms);
+void	expand_variables(t_minishell *ms);
 
 #endif

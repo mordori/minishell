@@ -1,17 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mem_arena.c                                        :+:      :+:    :+:   */
+/*   arena.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 22:05:05 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/01 16:06:15 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/05 23:07:59 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mem_arena.h"
+#include "arena.h"
+#include "errors.h"
 #include "libft_mem.h"
+#include "libft_math.h"
 
 /**
  * @brief	Allocates and zero-initializes memory for the arena and initializes
@@ -21,10 +23,14 @@
  *
  * @return	Created memory arena or NULL if creation fails.
  */
-t_mem_arena	arena_create(size_t capacity)
+t_arena	arena_create(t_minishell *ms, size_t capacity)
 {
-	t_mem_arena	arena;
+	t_arena	arena;
 
+	if (capacity < MEM_UNIT)
+		error_exit(ms, "arena capacity is less than 1 KiB");
+	if (!ft_is_pot(capacity))
+		error_exit(ms, "arena capacity is not a power of 2");
 	arena.base = ft_calloc(sizeof(char), capacity);
 	arena.capacity = capacity;
 	arena.head = 0;
@@ -39,7 +45,7 @@ t_mem_arena	arena_create(size_t capacity)
  *
  * @return	Pointer to the block of memory that was reserved.
  */
-void	*arena_alloc(t_mem_arena *arena, size_t size)
+void	*arena_alloc(t_arena *arena, size_t size)
 {
 	void	*ptr;
 
@@ -58,9 +64,28 @@ void	*arena_alloc(t_mem_arena *arena, size_t size)
  *
  * @param	arena Pointer to the arena.
  */
-void	arena_reset(t_mem_arena *arena)
+void	arena_reset(t_arena *arena)
 {
-	ft_memset(arena->base, 0, arena->capacity);
+	size_t	i;
+	size_t	bit;
+	size_t	e;
+	size_t	mem;
+
+	mem = arena->capacity;
+	bit = 0;
+	while (((mem >> 1) & 1) == 0)
+	{
+		++bit;
+		mem >>= 1;
+	}
+	arena->base[0] = 0;
+	e = 0;
+	while (e < bit)
+	{
+		i = 1UL << e;
+		ft_memcpy(&arena->base[i], arena->base, i);
+		++e;
+	}
 	arena->head = 0;
 }
 
@@ -69,7 +94,7 @@ void	arena_reset(t_mem_arena *arena)
  *
  * @param	arena Pointer to the arena.
  */
-void	arena_destroy(t_mem_arena *arena)
+void	arena_destroy(t_arena *arena)
 {
 	if (!arena)
 		return ;

@@ -1,35 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mem_utils.c                                        :+:      :+:    :+:   */
+/*   arena_list.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/25 00:00:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/01 16:06:12 by jvalkama         ###   ########.fr       */
+/*   Created: 2025/10/02 01:35:52 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/10/03 17:48:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mem_utils.h"
-#include "mem_arena.h"
-#include "errors.h"
 
-void	*alloc_system(t_minishell *ms, size_t size)
-{
-	void	*ptr;
+#ifndef ARENA_LIST_H
+# define ARENA_LIST_H
 
-	ptr = arena_alloc(&ms->system, size);
-	if (!ptr)
-		error_exit(ms, "System alloc failed");
-	return (ptr);
-}
+# include "defines.h"
+# include "libft_list.h"
 
-void	*alloc_pool(t_minishell *ms, size_t size)
-{
-	void	*ptr;
+t_list	*lstnew(t_minishell *ms, void *content);
+bool	lstadd_back(t_list **lst, t_list *new);
+int		lstsize(t_list *lst);
 
-	ptr = arena_alloc(&ms->pool, size);
-	if (!ptr)
-		error_exit(ms, "Pool alloc failed");
-	return (ptr);
-}
+#endif
