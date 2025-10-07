@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 21:30:13 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/07 19:39:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,11 @@ int	main(int argc, char *argv[], char **envp)
 
 	(void)argv;
 	startup();
+#ifdef DEBUG
+printf("\033[1;33m[DEBUG MODE]\033[0m\n");
+#else
+printf("Remove #ifdef DEBUG directives before submission\n");
+#endif
 	if (MEMORY < 0)
 		error_exit(NULL, "defined memory amount is negative");
 	if (argc > 1)
@@ -65,6 +70,32 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	//init_nodes();
 }
 
+#ifdef DEBUG
+static inline void	debug_print_args_redirs(t_minishell *ms, t_token **tokens)
+{
+	printf("\n");
+	int i = 0;
+	while (ms->node)
+	{
+		printf("[%d] ARGS:\t", i);
+		while (tokens[1] && ms->node->cmd.args && *ms->node->cmd.args)
+		{
+			printf("%s, ", *ms->node->cmd.args);
+			ms->node->cmd.args++;
+		}
+		printf("\n[%d] REDIRS:\t", i);
+		while (tokens[1] && ms->node->cmd.redirs)
+		{
+			printf("%s, ", ((t_redir *)ms->node->cmd.redirs->content)->filename);
+			ms->node->cmd.redirs = ms->node->cmd.redirs->next;
+		}
+		printf("\n\n");
+		ms->node = ms->node->next;
+		++i;
+	}
+}
+#endif
+
 /**
  * @brief	WIP
  *
@@ -91,26 +122,9 @@ static inline void	run(t_minishell *ms)
 			continue ;
 		//expand_variables(ms);
 		setup_io(ms);
-		printf("\n");
-		int i = 0;
-		while (ms->node)
-		{
-			printf("[%d]ARGS\n--------\n", i);
-			while (tokens[1] && ms->node->cmd.args && *ms->node->cmd.args)
-			{
-				printf(" %s\n", *ms->node->cmd.args);
-				ms->node->cmd.args++;
-			}
-			printf("[%d]REDIRS\n--------\n", i);
-			while (tokens[1] && ms->node->cmd.redirs)
-			{
-				printf(" %s\n", ((t_redir *)ms->node->cmd.redirs->content)->filename);
-				ms->node->cmd.redirs = ms->node->cmd.redirs->next;
-			}
-			printf("\n");
-			ms->node = ms->node->next;
-			++i;
-		}
+#ifdef DEBUG
+debug_print_args_redirs(ms, tokens);
+#endif
 		// if (ms->node->cmd.args)
 		// 	executor(ms);
 		close_fds(ms);
@@ -146,19 +160,35 @@ static inline void	get_prompt(t_minishell *ms, t_prompt *p)
 	}
 	else
 		p->path = "";
-	p->prompt = str_join(ms, "\001\033[38;5;90m\002", getenv("LOGNAME"));
-	if (p->prompt)
-	p->prompt = str_join(ms, p->prompt, "@");
-	if (p->prompt)
-		p->prompt = str_join(ms, p->prompt, p->hostname);
-	if (p->prompt)
-		p->prompt = str_join(ms, p->prompt, "\001\033[0m:\033[38;5;39m\002");
-	if (p->prompt)
-		p->prompt = str_join(ms, p->prompt, p->home);
-	if (p->prompt)
-		p->prompt = str_join(ms, p->prompt, p->path);
-	if (p->prompt)
-		p->prompt = str_join(ms, p->prompt, "\001\033[0m\002$ ");
+	p->prompt = \
+str_join(ms, \
+str_join(ms, \
+str_join(ms, \
+str_join(ms, \
+str_join(ms, \
+str_join(ms, \
+str_join(ms, \
+"\001\033[38;5;90m\002", \
+getenv("LOGNAME")), \
+"@"), \
+p->hostname), \
+"\001\033[0m:\033[38;5;39m\002"), \
+p->home), \
+p->path), \
+"\001\033[0m\002$ ");
+	// p->prompt = str_join(ms, "\001\033[38;5;90m\002", getenv("LOGNAME"));
+	// if (p->prompt)
+	// p->prompt = str_join(ms, p->prompt, "@");
+	// if (p->prompt)
+	// 	p->prompt = str_join(ms, p->prompt, p->hostname);
+	// if (p->prompt)
+	// 	p->prompt = str_join(ms, p->prompt, "\001\033[0m:\033[38;5;39m\002");
+	// if (p->prompt)
+	// 	p->prompt = str_join(ms, p->prompt, p->home);
+	// if (p->prompt)
+	// 	p->prompt = str_join(ms, p->prompt, p->path);
+	// if (p->prompt)
+	// 	p->prompt = str_join(ms, p->prompt, "\001\033[0m\002$ ");
 }
 
 /**

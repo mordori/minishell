@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 20:20:32 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/07 20:50:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ static inline bool	set_in_file(t_minishell *ms, t_node *node, char *filename);
 static inline bool	set_out_file(t_minishell *ms, t_node *node, t_redir *r);
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof);
 
-// TODO: use  dup and stdin/out
 void	setup_io(t_minishell *ms)
 {
 	t_redir	*r;
@@ -46,6 +45,20 @@ void	setup_io(t_minishell *ms)
 			head = head->next;
 		}
 		node = node->next;
+	}
+}
+
+void	dup_io(t_node *node)
+{
+	if (node->cmd.in != STDIN_FILENO)
+	{
+		dup2(node->cmd.in, STDIN_FILENO);
+		close (node->cmd.in);
+	}
+	if (node->cmd.out != STDOUT_FILENO)
+	{
+		dup2(node->cmd.out, STDOUT_FILENO);
+		close (node->cmd.out);
 	}
 }
 
