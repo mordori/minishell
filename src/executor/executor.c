@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/06 17:26:35 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/06 21:27:18 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	executor(t_minishell *ms)
 {
 	t_state		*state;
 
-	state = ms->state;
+	state = &ms->state;
 	command_verification(ms); //FIX: define command_verification() in executor_utils.c
 	if (state->mode == SIMPLE)
 		execute_simple(ms);

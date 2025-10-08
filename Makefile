@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/06 03:07:06 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/07 20:56:23 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,11 +15,12 @@ NAME		:=minishell
 MEMORY		?=1048576
 CONF		:=.config
 
-WARNS		:=-Wall -Wextra -Werror -Wunreachable-code
+WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 DEFS		:=-D MEMORY=$(MEMORY)
+DFLAGS		:=-D DEBUG -g
 OPTS		:=-O3 -march=native -funroll-loops -fno-plt
 CC			:=cc
-CFLAGS		:=$(WARNS) $(DEFS) $(OPTS)
+CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
 LDFLAGS		:=-flto
 LIBS		:=-lreadline
 
@@ -47,8 +48,6 @@ INCS		:=$(addprefix -I, \
 				$(DIR_INC)$(DIR_BUILT) \
 				$(DIR_INC)$(DIR_ENV) \
 				$(DIR_INC)$(DIR_EXE) \
-				$(DIR_INC)$(DIR_LEX) \
-				$(DIR_INC)$(DIR_PAR) \
 				$(DIR_INC)$(DIR_UTILS) \
 				)
 
@@ -97,12 +96,69 @@ $(LIBFT):
 	@make -j4 -C $(DIR_LIBFT)
 
 config:
-	@if [ ! -e "$(CONF)" ] || [ "$$(cat "$(CONF)")" != "$(MEMORY)" ]; then \
-		echo "$(MEMORY)" > "$(CONF)"; \
-	fi
+	@$(call check_config,NORMAL)
 
 $(NAME): $(OBJS) $(LIBFT) $(CONF)
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBS) $(LIBFT)
+	@$(call output)
+
+$(DIR_OBJ)%.o: $(DIR_SRC)%.c $(LIBFT) $(CONF)
+	@mkdir -p $(dir $@) $(patsubst $(DIR_OBJ)%, $(DIR_DEP)%, $(dir $@))
+	@$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP -MF $(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $@) $(INCS)
+	@echo "$(GREEN) [+]$(COLOR) compiling $@"
+
+clean:
+	@make -j4 -C $(DIR_LIBFT) clean
+	@$(call rm_dir,$(DIR_OBJ))
+
+fclean: clean
+	@make -j4 -C $(DIR_LIBFT) fclean
+	@$(call rm_dir,$(DIR_DEP))
+	@$(call rm_file,$(CONF))
+	@$(call rm_file,$(NAME))
+
+re: fclean all
+
+debug: CFLAGS := $(WFLAGS) $(DEFS) $(DFLAGS) -O0
+debug: $(LIBFT) config_debug $(NAME)
+
+config_debug:
+	@$(call check_config,DEBUG)
+
+.PHONY: all clean fclean re config debug config_debug
+.SECONDARY: $(OBJS) $(DEPS) $(CONF)
+
+-include $(DEPS)
+
+define rm_dir
+	@if [ -d "$(1)" ]; then \
+		rm -rf $(1); \
+		echo "$(RED) [-]$(COLOR) removed $(1)"; \
+	fi
+endef
+
+define rm_file
+	@if [ -e "$(1)" ]; then \
+		rm -f $(1); \
+		echo "$(RED) [-]$(COLOR) removed $(1)"; \
+	fi
+endef
+
+define check_config
+	@if [ ! -e "$(CONF)" ]; then \
+		touch "$(CONF)"; \
+		echo "" >> $(CONF); \
+		echo "" >> $(CONF); \
+	fi
+	@if [ "$$(head -n 1 $(CONF))" != "$(1)" ]; then \
+		sed -i '1c\$(1)' "$(CONF)"; \
+	fi
+	@if [ "$$(head -n 2 $(CONF) | tail -n 1)" != "$(MEMORY)" ]; then \
+		sed -i '2c\$(MEMORY)' "$(CONF)"; \
+	fi
+endef
+
+define output
 	@if [ $$(($(MEMORY))) -lt 1024 ]; then \
 		echo "$(YELLOW) [✔] $(NAME) built with invalid amount of memory (1 KiB is minimum)$(COLOR)"; \
 		echo "$(RED) [/] the program will throw an error if run$(COLOR)"; \
@@ -119,37 +175,7 @@ $(NAME): $(OBJS) $(LIBFT) $(CONF)
 	@if [ $$(($(MEMORY))) -gt 1023 ] && [ $$(($(MEMORY) & ($(MEMORY) - 1))) -eq 0 ]; then \
 		echo "$(GREEN) [/] usage: ./$(NAME)$(COLOR)"; \
 	fi
-
-$(DIR_OBJ)%.o: $(DIR_SRC)%.c $(LIBFT) $(CONF)
-	@mkdir -p $(dir $@) $(patsubst $(DIR_OBJ)%, $(DIR_DEP)%, $(dir $@))
-	@$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP -MF $(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $@) $(INCS)
-	@echo "$(GREEN) [+]$(COLOR) compiling $@"
-
-clean:
-	@if [ -d "$(DIR_OBJ)" ]; then \
-		rm -rf $(DIR_OBJ); \
-		echo "$(RED) [-]$(COLOR) removed $(DIR_OBJ)"; \
+	@if [ "$$(head -n 1 $(CONF))" != "NORMAL" ]; then \
+		echo "$(YELLOW) [DEBUG MODE]$(COLOR)"; \
 	fi
-	@make -j4 -C $(DIR_LIBFT) clean
-
-fclean: clean
-	@make -j4 -C $(DIR_LIBFT) fclean
-	@if [ -d "$(DIR_DEP)" ]; then \
-		rm -rf $(DIR_DEP); \
-		echo "$(RED) [-]$(COLOR) removed $(DIR_DEP)"; \
-	fi
-	@if [ -e "$(CONF)" ]; then \
-		rm -f $(CONF); \
-		echo "$(RED) [-]$(COLOR) removed $(CONF)"; \
-	fi
-	@if [ -e "$(NAME)" ]; then \
-		rm -f $(NAME); \
-		echo "$(RED) [-]$(COLOR) removed $(NAME)"; \
-	fi
-
-re: fclean all
-
-.PHONY: all clean fclean re config
-.SECONDARY: $(OBJS) $(DEPS) $(CONF)
-
--include $(DEPS)
+endef

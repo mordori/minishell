@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 17:26:26 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/08 05:24:36 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,11 @@ int	main(int argc, char *argv[], char **envp)
 
 	(void)argv;
 	startup();
+#ifdef DEBUG
+printf("\033[1;33m[DEBUG MODE]\033[0m\n");
+#else
+printf("Remove #ifdef DEBUG directives before submission\n");
+#endif
 	if (MEMORY < 0)
 		error_exit(NULL, "defined memory amount is negative");
 	if (argc > 1)
@@ -57,14 +62,42 @@ int	main(int argc, char *argv[], char **envp)
 static inline void	initialize(t_minishell *ms, char **envp)
 {
 	ft_memset(ms, 0, sizeof(*ms));
-	ms->system = arena_create(ms, SYSTEM_MEMORY);
-	ms->pool = arena_create(ms, MEMORY);
-	if (!ms->system.base || !ms->pool.base)
+	ms->vars = arena_create(ms, MEMORY_VARS, PERSISTENT);
+	ms->pool = arena_create(ms, MEMORY, VOLATILE);
+	if (!ms->vars.base || !ms->pool.base)
 		error_exit(ms, "arena creation failed");
 	ms->state.envp = dup_envp_system(ms, envp);
-	init_nodes();
-	printf("%s\n", ms->state.envp[3]);
+	//init_nodes();
 }
+
+#ifdef DEBUG
+static inline void	debug_print_args_redirs(t_minishell *ms, t_token **tokens)
+{
+	t_node	*node;
+
+	node = ms->node;
+	printf("\n");
+	int i = 0;
+	while (node)
+	{
+		printf("[%d] ARGS:\t", i);
+		while (tokens[1] && node->cmd.args && *node->cmd.args)
+		{
+			printf("%s, ", *node->cmd.args);
+			node->cmd.args++;
+		}
+		printf("\n[%d] REDIRS:\t", i);
+		while (tokens[1] && node->cmd.redirs)
+		{
+			printf("%s, ", ((t_redir *)node->cmd.redirs->content)->filename);
+			node->cmd.redirs = node->cmd.redirs->next;
+		}
+		printf("\n\n");
+		node = node->next;
+		++i;
+	}
+}
+#endif
 
 /**
  * @brief	WIP
@@ -78,25 +111,29 @@ static inline void	run(t_minishell *ms)
 
 	while (true)
 	{
-		arena_reset(&ms->pool);
-		free(ms->line);
 		get_prompt(ms, &p);
 		ms->line = readline(p.prompt);
 		if (!ms->line)
-			break ;
+			error_exit(ms, "readline failed");
 		if (*ms->line)
 			add_history(ms->line);
-		ms->node = alloc_pool(ms, sizeof(*ms->node));
+		else
+			break;
+		arena_reset(&ms->pool);
+		ms->node = alloc_volatile(ms, sizeof(t_node));
 		tokens = create_tokens(ms->line, ms);
 		if (!tokens || !parse_tokens(ms, tokens))
 			continue ;
 		//expand_variables(ms);
 		setup_io(ms);
+#ifdef DEBUG
+debug_print_args_redirs(ms, tokens);
+#endif
 		// if (ms->node->cmd.args)
 		// 	executor(ms);
+		if (ms->line)
+			free(ms->line);
 		close_fds(ms);
-		int ads = chdir("..");
-		(void)ads;
 	}
 }
 
@@ -108,16 +145,18 @@ static inline void	get_prompt(t_minishell *ms, t_prompt *p)
 		error_exit(ms, "open failed");
 	p->len = read(p->fd, p->hostname, HOSTNAME_MAX);
 	close(p->fd);
-	if (p->len == ERROR)
+	if (p->len < 1)
 		error_exit(ms, "read failed");
 	p->hostname[p->len - 1] = 0;
+	if (ft_strchr(p->hostname, '.') - p->hostname > 0)
+		p->hostname[ft_strchr(p->hostname, '.') - p->hostname] = 0;
 	p->path = getcwd(p->cwd, sizeof(p->cwd));
 	if (!p->path)
 		error_exit(ms, "getcwd failed");
 	p->home = "/";
 	if (!ft_strncmp(p->path, getenv("HOME"), ft_strlen(getenv("HOME"))))
 	{
-		p->path += ft_strlen(getenv("HOME"));
+		p->path = p->cwd + ft_strlen(getenv("HOME"));
 		p->home = "~";
 	}
 	else if (!ft_strncmp(p->path, "/home", 5))
@@ -135,14 +174,14 @@ str_join(ms, \
 str_join(ms, \
 str_join(ms, \
 str_join(ms, \
-"\033[38;5;90m", \
+"\001\033[38;5;90m\002", \
 getenv("LOGNAME")), \
 "@"), \
 p->hostname), \
-"\033[0m:\033[38;5;39m"), \
+"\001\033[0m:\033[38;5;39m\002"), \
 p->home), \
 p->path), \
-"\033[0m$ ");
+"\001\033[0m\002$ ");
 }
 
 /**

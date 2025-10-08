@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/05 21:16:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/08 05:15:50 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	warning_system(t_minishell *ms)
 	int	bytes;
 
 	bytes = write(\
-STDERR_FILENO, "minishell: system memory capacity reached: variable was not recorded\n", 70);
+STDERR_FILENO, "minishell: arena is at capacity: memory was not allocated\n", 59);
 	if (bytes == ERROR)
 		error_exit(ms, "write failed");
 }

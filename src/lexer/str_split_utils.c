@@ -6,12 +6,13 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:10:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 05:52:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/07 02:49:23 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 #include "errors.h"
+#include "libft_str.h"
 
 void	march_operator(char const **src, int *count)
 {
@@ -20,20 +21,6 @@ void	march_operator(char const **src, int *count)
 ((*(*src - 1) == '>' && **src == '>') || (*(*src - 1) == '<' && **src == '<')))
 		++(*src);
 	++(*count);
-}
-
-void	is_quote_closed(t_minishell *ms, char const **src, char c, int *count)
-{
-	++(*src);
-	while (**src && **src != c)
-		++(*src);
-	if (**src != c)
-	{
-		warning_input(ms, "unclosed quotes");
-		*count = ERROR;
-		return ;
-	}
-	++(*src);
 }
 
 void	add_src_len(char const **src, size_t *len)
@@ -48,4 +35,22 @@ void	march_quoted_word(char const **src, const char c, size_t *len)
 	while (*src && **src != c)
 		add_src_len(src, len);
 	add_src_len(src, len);
+}
+
+bool	is_unclosed_quote(t_minishell *ms, const char **src)
+{
+	char	*closing_quote;
+
+	if (cmp_strs(get_quotes(), *src))
+	{
+		closing_quote = ft_strchr(*src + 1, **src);
+		if (closing_quote)
+			*src = closing_quote;
+		else
+		{
+			warning_input(ms, "unclosed quotes");
+			return (true);
+		}
+	}
+	return (false);
 }

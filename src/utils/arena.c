@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 22:05:05 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/05 23:07:59 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/08 05:08:39 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
  *
  * @return	Created memory arena or NULL if creation fails.
  */
-t_arena	arena_create(t_minishell *ms, size_t capacity)
+t_arena	arena_create(t_minishell *ms, size_t capacity, t_arena_type type)
 {
 	t_arena	arena;
 
@@ -34,6 +34,7 @@ t_arena	arena_create(t_minishell *ms, size_t capacity)
 	arena.base = ft_calloc(sizeof(char), capacity);
 	arena.capacity = capacity;
 	arena.head = 0;
+	arena.type = type;
 	return (arena);
 }
 
@@ -80,7 +81,7 @@ void	arena_reset(t_arena *arena)
 	}
 	arena->base[0] = 0;
 	e = 0;
-	while (e < bit)
+	while (e <= bit)
 	{
 		i = 1UL << e;
 		ft_memcpy(&arena->base[i], arena->base, i);

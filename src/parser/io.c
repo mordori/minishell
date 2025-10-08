@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 05:54:39 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/08 00:45:01 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,20 @@ void	setup_io(t_minishell *ms)
 	}
 }
 
+void	dup_io(t_node *node)
+{
+	if (node->cmd.in != STDIN_FILENO)
+	{
+		dup2(node->cmd.in, STDIN_FILENO);
+		close (node->cmd.in);
+	}
+	if (node->cmd.out != STDOUT_FILENO)
+	{
+		dup2(node->cmd.out, STDOUT_FILENO);
+		close (node->cmd.out);
+	}
+}
+
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 {
 	int		pipefd[2];
@@ -57,7 +71,7 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 	if (pipe(pipefd) == ERROR)
 		error_exit(ms, "pipe creation failed");
 	line = readline(PROMPT);
-	while (ft_strcmp(line, eof))
+	while (line && ft_strcmp(line, eof))
 	{
 		bytes = write(pipefd[1], line, ft_strlen(line));
 		if (bytes != ERROR)
@@ -67,11 +81,12 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 		free(line);
 		line = readline(PROMPT);
 	}
-	free(line);
+	if (line)
+		free(line);
 	close(pipefd[1]);
 	node->cmd.in = pipefd[0];
-	if (bytes == ERROR)
-		error_exit(ms, "write failed");
+	if (!line || bytes == ERROR)
+		error_exit(ms, "readline/write failed");
 }
 
 static inline bool	set_in_file(t_minishell *ms, t_node *node, char *filename)

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 05:58:14 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/08 05:23:35 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_minishell *ms, const char *src, unsigned int start, size_t len)
 	if (ft_strlen(src) > start)
 		while (src[start + i] && i < len)
 			++i;
-	sub = alloc_pool(ms, (i + 1) * sizeof(char));
+	sub = alloc_volatile(ms, (i + 1) * sizeof(char));
 	ft_memcpy(sub, &src[start], i);
 	sub[i] = '\0';
 	return (sub);
@@ -51,7 +51,7 @@ char	*str_join(t_minishell *ms, const char *s1, const char *s2)
 		return (NULL);
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
-	str = alloc_pool(ms, (len1 + len2 + 1) * sizeof(char));
+	str = alloc_volatile(ms, (len1 + len2 + 1) * sizeof(char));
 	ft_memcpy(str, s1, len1);
 	ft_memcpy(&str[len1], s2, len2);
 	str[len1 + len2] = '\0';
@@ -67,16 +67,16 @@ char	**dup_envp_system(t_minishell *ms, char **envp)
 
 	if (!envp)
 		return (NULL);
-	arena_reset(&ms->system);
+	arena_reset(&ms->vars);
 	count = 0;
 	while (envp[count])
 		++count;
-	dup = alloc_system(ms, (count + 1) * sizeof(*dup));
+	dup = alloc_persistent(ms, &ms->vars, (count + 1) * sizeof(*dup));
 	i = 0;
 	while (i < count)
 	{
 		len = ft_strlen(envp[i]);
-		dup[i] = alloc_system(ms, (len + 1) * sizeof(char));
+		dup[i] = alloc_persistent(ms, &ms->vars, (len + 1) * sizeof(char));
 		if (!dup[i])
 			break;
 		ft_memcpy(dup[i], envp[i], len + 1);
@@ -96,7 +96,7 @@ char	*int_to_str(t_minishell *ms, int n)
 	if (n < 0)
 		num = -(int64_t)num;
 	digits = ft_countdigits(num, 10) + (n < 0);
-	str = alloc_pool(ms, digits + 1);
+	str = alloc_volatile(ms, digits + 1 * sizeof(char));
 	str[digits] = '\0';
 	while (digits--)
 	{
