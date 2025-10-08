@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/07 19:39:16 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/08 05:24:36 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ printf("Remove #ifdef DEBUG directives before submission\n");
 static inline void	initialize(t_minishell *ms, char **envp)
 {
 	ft_memset(ms, 0, sizeof(*ms));
-	ms->system = arena_create(ms, SYSTEM_MEMORY);
-	ms->pool = arena_create(ms, MEMORY);
-	if (!ms->system.base || !ms->pool.base)
+	ms->vars = arena_create(ms, MEMORY_VARS, PERSISTENT);
+	ms->pool = arena_create(ms, MEMORY, VOLATILE);
+	if (!ms->vars.base || !ms->pool.base)
 		error_exit(ms, "arena creation failed");
 	ms->state.envp = dup_envp_system(ms, envp);
 	//init_nodes();
@@ -73,24 +73,27 @@ static inline void	initialize(t_minishell *ms, char **envp)
 #ifdef DEBUG
 static inline void	debug_print_args_redirs(t_minishell *ms, t_token **tokens)
 {
+	t_node	*node;
+
+	node = ms->node;
 	printf("\n");
 	int i = 0;
-	while (ms->node)
+	while (node)
 	{
 		printf("[%d] ARGS:\t", i);
-		while (tokens[1] && ms->node->cmd.args && *ms->node->cmd.args)
+		while (tokens[1] && node->cmd.args && *node->cmd.args)
 		{
-			printf("%s, ", *ms->node->cmd.args);
-			ms->node->cmd.args++;
+			printf("%s, ", *node->cmd.args);
+			node->cmd.args++;
 		}
 		printf("\n[%d] REDIRS:\t", i);
-		while (tokens[1] && ms->node->cmd.redirs)
+		while (tokens[1] && node->cmd.redirs)
 		{
-			printf("%s, ", ((t_redir *)ms->node->cmd.redirs->content)->filename);
-			ms->node->cmd.redirs = ms->node->cmd.redirs->next;
+			printf("%s, ", ((t_redir *)node->cmd.redirs->content)->filename);
+			node->cmd.redirs = node->cmd.redirs->next;
 		}
 		printf("\n\n");
-		ms->node = ms->node->next;
+		node = node->next;
 		++i;
 	}
 }
@@ -108,15 +111,16 @@ static inline void	run(t_minishell *ms)
 
 	while (true)
 	{
-		free(ms->line);
 		get_prompt(ms, &p);
 		ms->line = readline(p.prompt);
 		if (!ms->line)
-			break ;
+			error_exit(ms, "readline failed");
 		if (*ms->line)
 			add_history(ms->line);
+		else
+			break;
 		arena_reset(&ms->pool);
-		ms->node = alloc_pool(ms, sizeof(*ms->node));
+		ms->node = alloc_volatile(ms, sizeof(t_node));
 		tokens = create_tokens(ms->line, ms);
 		if (!tokens || !parse_tokens(ms, tokens))
 			continue ;
@@ -127,6 +131,8 @@ debug_print_args_redirs(ms, tokens);
 #endif
 		// if (ms->node->cmd.args)
 		// 	executor(ms);
+		if (ms->line)
+			free(ms->line);
 		close_fds(ms);
 	}
 }
@@ -176,19 +182,6 @@ p->hostname), \
 p->home), \
 p->path), \
 "\001\033[0m\002$ ");
-	// p->prompt = str_join(ms, "\001\033[38;5;90m\002", getenv("LOGNAME"));
-	// if (p->prompt)
-	// p->prompt = str_join(ms, p->prompt, "@");
-	// if (p->prompt)
-	// 	p->prompt = str_join(ms, p->prompt, p->hostname);
-	// if (p->prompt)
-	// 	p->prompt = str_join(ms, p->prompt, "\001\033[0m:\033[38;5;39m\002");
-	// if (p->prompt)
-	// 	p->prompt = str_join(ms, p->prompt, p->home);
-	// if (p->prompt)
-	// 	p->prompt = str_join(ms, p->prompt, p->path);
-	// if (p->prompt)
-	// 	p->prompt = str_join(ms, p->prompt, "\001\033[0m\002$ ");
 }
 
 /**

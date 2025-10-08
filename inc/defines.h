@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/07 04:48:20 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/08 05:24:22 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 # define INT32_LENGTH			11
 # define INT64_LENGTH			20
 
-# define SYSTEM_MEMORY			524288UL
+# define MEMORY_VARS			524288UL
 # ifndef MEM_UNIT
 #  define MEM_UNIT				1024UL
 # endif
@@ -63,6 +63,7 @@ typedef enum e_mode				t_mode;
 typedef enum e_token_type		t_token_type;
 typedef enum e_errors			t_errors;
 typedef enum e_redir_type		t_redir_type;
+typedef enum e_arena_type		t_arena_type;
 
 typedef struct s_env			t_env;
 typedef struct s_token			t_token;
@@ -109,6 +110,12 @@ enum e_redir_type
 	OUT,
 	OUT_APPEND,
 	HEREDOC
+};
+
+enum e_arena_type
+{
+	PERSISTENT,
+	VOLATILE
 };
 
 struct s_redir
@@ -164,14 +171,15 @@ struct s_state
 
 struct s_arena
 {
-	char		*base;
-	size_t		capacity;
-	size_t		head;
+	char			*base;
+	size_t			capacity;
+	size_t			head;
+	t_arena_type	type;
 };
 
 struct	s_minishell
 {
-	t_arena		system;
+	t_arena		vars;
 	t_arena		pool;
 	char		*line;
 	t_state		state;
@@ -188,7 +196,6 @@ struct s_prompt
 	int			len;
 	int			fd;
 };
-
 
 const char**	get_redirections();
 const char**	get_quotes();

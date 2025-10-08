@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/07 20:46:57 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/07 20:56:23 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,12 +15,12 @@ NAME		:=minishell
 MEMORY		?=1048576
 CONF		:=.config
 
-WARNS		:=-Wall -Wextra -Werror -Wunreachable-code
+WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 DEFS		:=-D MEMORY=$(MEMORY)
 DFLAGS		:=-D DEBUG -g
 OPTS		:=-O3 -march=native -funroll-loops -fno-plt
 CC			:=cc
-CFLAGS		:=$(WARNS) $(DEFS) $(OPTS)
+CFLAGS		:=$(WFLAGS) $(DEFS) $(OPTS)
 LDFLAGS		:=-flto
 LIBS		:=-lreadline
 
@@ -119,7 +119,7 @@ fclean: clean
 
 re: fclean all
 
-debug: CFLAGS := $(WARNS) $(DEFS) $(DFLAGS) -O0
+debug: CFLAGS := $(WFLAGS) $(DEFS) $(DFLAGS) -O0
 debug: $(LIBFT) config_debug $(NAME)
 
 config_debug:

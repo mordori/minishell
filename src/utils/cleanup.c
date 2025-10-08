@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 22:27:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/07 16:46:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/08 05:23:22 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,16 @@
 
 void	close_fds(t_minishell *ms)
 {
-	while (ms->node)
+	t_node	*node;
+
+	node = ms->node;
+	while (node)
 	{
-		if (ms->node->cmd.in > STDOUT_FILENO)
-			close(ms->node->cmd.in);
-		if (ms->node->cmd.out > STDOUT_FILENO)
-			close(ms->node->cmd.out);
-		ms->node = ms->node->next;
+		if (node->cmd.in > STDOUT_FILENO)
+			close(node->cmd.in);
+		if (node->cmd.out > STDOUT_FILENO)
+			close(node->cmd.out);
+		node = node->next;
 	}
 }
 
@@ -34,9 +37,9 @@ void	clean(t_minishell *ms)
 		return ;
 	close_fds(ms);
 	arena_destroy(&ms->pool);
-	arena_destroy(&ms->system);
+	arena_destroy(&ms->vars);
 	rl_clear_history();
-	// if (ms->line)
-	// 	free(ms->line);
+	if (ms->line)
+		free(ms->line);
 	ms->line = NULL;
 }

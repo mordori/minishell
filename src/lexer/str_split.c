@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:06:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/07 02:49:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/08 04:57:47 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	**str_split(t_minishell *ms, char const *src)
 	words = count_words(ms, src);
 	if (words == ERROR)
 		return (NULL);
-	strs = alloc_pool(ms, sizeof(*strs) * (words + 1));
+	strs = alloc_volatile(ms, sizeof(char *) * (words + 1));
 	i = 0;
 	while (i < words)
 	{

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 05:53:57 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/08 02:40:34 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 
 bool	parse_tokens(t_minishell *ms, t_token **tokens);
 void	setup_io(t_minishell *ms);
+void	dup_io(t_node *node);
 void	expand_variables(t_minishell *ms);
 
 #endif
