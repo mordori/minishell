@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/10 05:03:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/10 05:52:05 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,7 @@ struct	s_minishell
 	char		*line;
 	t_state		state;
 	t_node		*node;
+	char		cwd[PATH_MAX];
 };
 
 struct s_prompt

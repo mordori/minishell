@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/10 05:19:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/10 06:35:31 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static inline void	initialize(t_minishell *ms, char **envp);
 static inline void	run(t_minishell *ms);
 static inline char	*get_prompt(t_minishell *ms, t_prompt *p);
 void	set_hostname(t_minishell *ms, t_prompt *p);
+void	store_cwd(t_minishell *ms);
 
 /**
  * @brief	Entry point to the program.
@@ -111,8 +112,11 @@ static inline void	run(t_minishell *ms)
 	t_prompt	p;
 
 	set_hostname(ms, &p);
+	int ad = chdir("test");
+	(void)ad;
 	while (true)
 	{
+		store_cwd(ms);
 		ms->line = readline(get_prompt(ms, &p));
 		if (!ms->line)
 			error_exit(ms, "readline failed");
@@ -132,8 +136,8 @@ debug_print_args_redirs(ms, tokens);
 #endif
 		// if (ms->node->cmd.args)
 		// 	executor(ms);
-		if (ms->line)
-			free(ms->line);
+		free(ms->line);
+		ms->line = NULL;
 		close_fds(ms);
 	}
 }
@@ -155,28 +159,39 @@ void	set_hostname(t_minishell *ms, t_prompt *p)
 		p->hostname[ft_strchr(p->hostname, '.') - p->hostname] = 0;
 }
 
-// TODO: set wrapper for getenv
+void	store_cwd(t_minishell *ms)
+{
+	char	*cwd;
+	char	buf[PATH_MAX];
+
+	cwd = getcwd(buf, sizeof(buf));
+	if (!cwd)
+	{
+		if (errno == ENOENT && ms->cwd[0])
+			return ;
+		else
+			error_exit(ms, "cwd failed");
+	}
+	ft_memcpy(ms->cwd, cwd, strlen(cwd));
+}
+
 static inline char	*get_prompt(t_minishell *ms, t_prompt *p)
 {
 	char	*prompt;
 	char	*home;
-	char	cwd[PATH_MAX];
 
-	p->path = getcwd(cwd, sizeof(cwd));
-	if (!p->path)
-		error_exit(ms, "getcwd failed");
 	home = getenv("HOME");
 	if (!home)
 	{
 		p->home = "";
-		p->path = cwd;
+		p->path = ms->cwd;
 	}
-	else if (!ft_strncmp(p->path, home, ft_strlen(home)))
+	else if (!ft_strncmp(ms->cwd, home, ft_strlen(home)))
 	{
 		p->home = "~";
-		p->path = cwd + ft_strlen(home);
+		p->path = ms->cwd + ft_strlen(home);
 	}
-	else if (!ft_strncmp(p->path, "/home", 5))
+	else if (!ft_strncmp(ms->cwd, "/home", 5))
 	{
 		p->home = "/home";
 		p->path = "";
