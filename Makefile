@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/07 20:56:23 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/08 21:04:38 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -161,10 +161,10 @@ endef
 define output
 	@if [ $$(($(MEMORY))) -lt 1024 ]; then \
 		echo "$(YELLOW) [✔] $(NAME) built with invalid amount of memory (1 KiB is minimum)$(COLOR)"; \
-		echo "$(RED) [/] the program will throw an error if run$(COLOR)"; \
+		echo "$(RED) [/] the program will produce an error when run$(COLOR)"; \
 	elif [ $$(($(MEMORY) & ($(MEMORY) - 1))) -ne 0 ]; then \
 		echo "$(YELLOW) [✔] $(NAME) built with non power of two amount of memory$(COLOR)"; \
-		echo "$(RED) [/] the program will throw an error if run$(COLOR)"; \
+		echo "$(RED) [/] the program will produce an error when run$(COLOR)"; \
 	elif [ $$(($(MEMORY)/1024/1024)) -lt 1 ]; then \
 		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024" | bc) KiB memory$(COLOR)"; \
 	elif [ $$(($(MEMORY)/1024/1024)) -lt 1000 ]; then \

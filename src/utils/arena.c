@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 22:05:05 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/08 05:08:39 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/10 04:15:29 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,14 +74,14 @@ void	arena_reset(t_arena *arena)
 
 	mem = arena->capacity;
 	bit = 0;
-	while (((mem >> 1) & 1) == 0)
+	while ((mem & 1) == 0)
 	{
 		++bit;
 		mem >>= 1;
 	}
 	arena->base[0] = 0;
 	e = 0;
-	while (e <= bit)
+	while (e < bit)
 	{
 		i = 1UL << e;
 		ft_memcpy(&arena->base[i], arena->base, i);

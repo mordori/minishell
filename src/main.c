@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/08 05:24:36 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/10 05:19:53 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@
 static inline void	startup(void);
 static inline void	initialize(t_minishell *ms, char **envp);
 static inline void	run(t_minishell *ms);
-static inline void	get_prompt(t_minishell *ms, t_prompt *p);
+static inline char	*get_prompt(t_minishell *ms, t_prompt *p);
+void	set_hostname(t_minishell *ms, t_prompt *p);
 
 /**
  * @brief	Entry point to the program.
@@ -109,10 +110,10 @@ static inline void	run(t_minishell *ms)
 	t_token		**tokens;
 	t_prompt	p;
 
+	set_hostname(ms, &p);
 	while (true)
 	{
-		get_prompt(ms, &p);
-		ms->line = readline(p.prompt);
+		ms->line = readline(get_prompt(ms, &p));
 		if (!ms->line)
 			error_exit(ms, "readline failed");
 		if (*ms->line)
@@ -137,36 +138,55 @@ debug_print_args_redirs(ms, tokens);
 	}
 }
 
-// TODO: set wrapper for getenv
-static inline void	get_prompt(t_minishell *ms, t_prompt *p)
+void	set_hostname(t_minishell *ms, t_prompt *p)
 {
-	p->fd = open("/etc/hostname", O_RDONLY);
-	if (p->fd == ERROR)
+	int	fd;
+	int	len;
+
+	fd = open("/etc/hostname", O_RDONLY);
+	if (fd == ERROR)
 		error_exit(ms, "open failed");
-	p->len = read(p->fd, p->hostname, HOSTNAME_MAX);
-	close(p->fd);
-	if (p->len < 1)
+	len = read(fd, p->hostname, HOSTNAME_MAX);
+	close(fd);
+	if (len < 0)
 		error_exit(ms, "read failed");
-	p->hostname[p->len - 1] = 0;
+	p->hostname[len - 1] = 0;
 	if (ft_strchr(p->hostname, '.') - p->hostname > 0)
 		p->hostname[ft_strchr(p->hostname, '.') - p->hostname] = 0;
-	p->path = getcwd(p->cwd, sizeof(p->cwd));
+}
+
+// TODO: set wrapper for getenv
+static inline char	*get_prompt(t_minishell *ms, t_prompt *p)
+{
+	char	*prompt;
+	char	*home;
+	char	cwd[PATH_MAX];
+
+	p->path = getcwd(cwd, sizeof(cwd));
 	if (!p->path)
 		error_exit(ms, "getcwd failed");
-	p->home = "/";
-	if (!ft_strncmp(p->path, getenv("HOME"), ft_strlen(getenv("HOME"))))
+	home = getenv("HOME");
+	if (!home)
 	{
-		p->path = p->cwd + ft_strlen(getenv("HOME"));
+		p->home = "";
+		p->path = cwd;
+	}
+	else if (!ft_strncmp(p->path, home, ft_strlen(home)))
+	{
 		p->home = "~";
+		p->path = cwd + ft_strlen(home);
 	}
 	else if (!ft_strncmp(p->path, "/home", 5))
 	{
-		p->path = "";
 		p->home = "/home";
+		p->path = "";
 	}
 	else
+	{
+		p->home = "/";
 		p->path = "";
-	p->prompt = \
+	}
+	prompt = \
 str_join(ms, \
 str_join(ms, \
 str_join(ms, \
@@ -182,6 +202,7 @@ p->hostname), \
 p->home), \
 p->path), \
 "\001\033[0m\002$ ");
+	return (prompt);
 }
 
 /**

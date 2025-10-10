@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/08 05:24:22 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/10 05:03:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,13 +188,9 @@ struct	s_minishell
 
 struct s_prompt
 {
-	char		cwd[PATH_MAX];
-	char		*prompt;
 	char		*path;
 	char		*home;
 	char		hostname[HOSTNAME_MAX];
-	int			len;
-	int			fd;
 };
 
 const char**	get_redirections();

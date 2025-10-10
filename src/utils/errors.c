@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/08 05:15:50 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/10 04:22:21 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ STDERR_FILENO, "minishell: syntax error near unxpected token `", 46);
 	if (token && bytes > 0)
 		bytes = write(STDERR_FILENO, token, ft_strlen(token));
 	if (bytes > 0)
-	bytes = write(STDERR_FILENO, "\'\n", 2);
+		bytes = write(STDERR_FILENO, "\'\n", 2);
 	if (bytes == ERROR)
 		error_exit(ms, "write failed");
 }
