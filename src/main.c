@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/10 06:35:31 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/12 07:25:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	main(int argc, char *argv[], char **envp)
 	(void)argv;
 	startup();
 #ifdef DEBUG
-printf("\033[1;33m[DEBUG MODE]\033[0m\n");
+printf("\033[1;33m[DEBUG]\033[0m\n");
 #else
 printf("Remove #ifdef DEBUG directives before submission\n");
 #endif
@@ -112,8 +112,6 @@ static inline void	run(t_minishell *ms)
 	t_prompt	p;
 
 	set_hostname(ms, &p);
-	int ad = chdir("test");
-	(void)ad;
 	while (true)
 	{
 		store_cwd(ms);
@@ -122,14 +120,12 @@ static inline void	run(t_minishell *ms)
 			error_exit(ms, "readline failed");
 		if (*ms->line)
 			add_history(ms->line);
-		else
-			break;
 		arena_reset(&ms->pool);
 		ms->node = alloc_volatile(ms, sizeof(t_node));
 		tokens = create_tokens(ms->line, ms);
 		if (!tokens || !parse_tokens(ms, tokens))
 			continue ;
-		//expand_variables(ms);
+		expand_variables(ms);
 		setup_io(ms);
 #ifdef DEBUG
 debug_print_args_redirs(ms, tokens);
@@ -170,7 +166,7 @@ void	store_cwd(t_minishell *ms)
 		if (errno == ENOENT && ms->cwd[0])
 			return ;
 		else
-			error_exit(ms, "cwd failed");
+			error_exit(ms, "get cwd failed");
 	}
 	ft_memcpy(ms->cwd, cwd, strlen(cwd));
 }

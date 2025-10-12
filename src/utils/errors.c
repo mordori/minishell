@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/10 04:22:21 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/12 06:11:33 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,15 @@ void	warning_input(t_minishell *ms, char *msg)
 {
 	int	bytes;
 
-	bytes = write(STDERR_FILENO, "minishell: input error: ", 24);
-	if (msg && bytes > 0)
+	bytes = write(STDERR_FILENO, "\033[1;33m", 8);
+	if (bytes != ERROR)
+		bytes = write(STDERR_FILENO, "minishell: input error: ", 24);
+	if (msg && bytes != ERROR)
 		bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
-	if (bytes > 0)
+	if (bytes != ERROR)
 		bytes = write(STDERR_FILENO, "\n", 1);
+	if (bytes != ERROR)
+		bytes = write(STDERR_FILENO, "\033[0m", 5);
 	if (bytes == ERROR)
 		error_exit(ms, "write failed");
 }
@@ -52,12 +56,14 @@ void	warning_syntax(t_minishell *ms, char *token)
 {
 	int	bytes;
 
-	bytes = write(\
-STDERR_FILENO, "minishell: syntax error near unxpected token `", 46);
-	if (token && bytes > 0)
+	bytes = write(STDERR_FILENO, "\033[1;33m", 8);
+	if (bytes != ERROR)
+		bytes = write(\
+STDERR_FILENO, "\033[1;33mminishell: syntax error near unxpected token `", 54);
+	if (token && bytes != ERROR)
 		bytes = write(STDERR_FILENO, token, ft_strlen(token));
-	if (bytes > 0)
-		bytes = write(STDERR_FILENO, "\'\n", 2);
+	if (bytes != ERROR)
+		bytes = write(STDERR_FILENO, "\'\n\033[0m", 7);
 	if (bytes == ERROR)
 		error_exit(ms, "write failed");
 }
@@ -66,22 +72,30 @@ void	warning_file(t_minishell *ms, char *filename)
 {
 	int	bytes;
 
-	bytes = write(STDERR_FILENO, "minishell: ", 11);
-	if (bytes != ERROR && errno)
+	bytes = write(STDERR_FILENO, "\033[1;33m", 8);
+	if (bytes != ERROR)
+		bytes = write(STDERR_FILENO, "minishell: ", 12);
+	if (errno && bytes != ERROR)
 	{
 		perror(filename);
 		errno = 0;
 	}
+	if (bytes != ERROR)
+		bytes = write(STDERR_FILENO, "\033[0m", 5);
 	if (bytes == ERROR)
 		error_exit(ms, "write failed");
 }
 
-void	warning_system(t_minishell *ms)
+void	warning_arena_persistent(t_minishell *ms)
 {
 	int	bytes;
 
-	bytes = write(\
-STDERR_FILENO, "minishell: arena is at capacity: memory was not allocated\n", 59);
+	bytes = write(STDERR_FILENO, "\033[1;33m", 8);
+	if (bytes != ERROR)
+		bytes = write(STDERR_FILENO, \
+"minishell: persistent arena is at capacity: memory was not allocated\n", 70);
+	if (bytes != ERROR)
+		bytes = write(STDERR_FILENO, "\033[0m", 5);
 	if (bytes == ERROR)
 		error_exit(ms, "write failed");
 }
@@ -97,12 +111,13 @@ static inline void	print_error(char *msg)
 {
 	int	bytes;
 
-	if (errno)
+	bytes = write(STDERR_FILENO, "\033[1;31m", 8);
+	if (errno && bytes != ERROR)
 	{
 		perror("minishell");
 		errno = 0;
 	}
-	else
+	else if (bytes != ERROR)
 	{
 		bytes = write(STDERR_FILENO, "minishell: fatal error: ", 24);
 		if (bytes != ERROR && msg)
@@ -110,4 +125,6 @@ static inline void	print_error(char *msg)
 		if (bytes != ERROR)
 			bytes = write(STDERR_FILENO, "\n", 1);
 	}
+	if (bytes != ERROR)
+		bytes = write(STDERR_FILENO, "\033[0m", 5);
 }

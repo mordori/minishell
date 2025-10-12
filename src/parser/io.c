@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/08 00:45:01 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/12 00:18:32 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 
 	if (pipe(pipefd) == ERROR)
 		error_exit(ms, "pipe creation failed");
+	bytes = 0;
 	line = readline(PROMPT);
 	while (line && ft_strcmp(line, eof))
 	{

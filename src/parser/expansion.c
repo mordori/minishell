@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/06 16:34:12 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/12 07:48:21 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "libft_mem.h"
 #include "str_utils.h"
 #include "arena_list.h"
+#include "arena.h"
 
 static inline char		**expand_args(t_minishell *ms, char **args);
 static inline t_list	*expand_redirs(t_list *redirs);
@@ -37,51 +38,63 @@ static inline char	**expand_args(t_minishell *ms, char **raw_args)
 	char	**result;
 	char	*start;
 	t_list	*args;
+	char	buf[4096];
+	char	*arg;
 
+	(void)ms;
+	args = NULL;
 	result = raw_args;
-	while (raw_args)
+	while (*raw_args)
 	{
 		start = ft_strchr(*raw_args, '$');
-		if (!start || **raw_args == '\'') //NO EXPANSION
+		if (!start) //NO EXPANSION
 		{
 			lstadd_back(&args, ft_lstnew(*raw_args));
+			++raw_args;
 			continue ;
 		}
-		// WORD UNTIL $
-		if (start != *raw_args && *(start - 1) == '\"') //NO WORD SPLITTING
-		{
-			;
-		}
-		while (start && ++start)
-		{
-			if (*start == '?') //PRINT LAST ESCAPE CODE
-			{
-				;
-			}
-			if (*start == '$') //PRINT SHELL PID
-			{
-				lstadd_back(&args, ft_lstnew(int_to_str(ms, getpid())));
-			}
-			if (*start == '\"' || *start == '\'') //LOCALIZATION AND ANSI-C QUOTING - NOT HANDLED
-			{
-				;
-			}
-			else //TRY TO FIND VAR AND EXPAND
-			{
-				// size_t	i;
-				// t_env	*env;
+		ft_memset(buf, 0, 4096);
+		ft_memcpy(buf, *raw_args, start - *raw_args);
+		arg = alloc_volatile(ms, sizeof(char) * (start - *raw_args));
+		ft_memcpy(arg, *raw_args, start - *raw_args);
+		printf("%s\n", arg);
+		// while (start)
+		// {
+		// 	if (start != *raw_args && *(start - 1) == '\"')
+		// 	{
 
-				// i = 0;
-				// while (start[i] && start[i] != '$')
-				// 	++i;
-				// env = find_key(ms->state, str_sub(ms, start, 0, i));
-				// if (env)
-				// 	lstadd_back(&args, ft_lstnew(env->value));
-			}
-			if (!*start)
-				break ;
-			start = ft_strchr(start, '$');
-		}
+		// 	}
+		// 	if (!*start)
+		// 	{
+
+		// 		break ;
+		// 	}
+		// 	if (*start == '?') //PRINT LAST ESCAPE CODE
+		// 	{
+		// 		;
+		// 	}
+		// 	if (*start == '$') //PRINT SHELL PID
+		// 	{
+		// 		lstadd_back(&args, ft_lstnew(int_to_str(ms, getpid())));
+		// 	}
+		// 	if (*start == '\"' || *start == '\'') //LOCALIZATION AND ANSI-C QUOTING - NOT HANDLED
+		// 	{
+		// 		;
+		// 	}
+		// 	else //TRY TO FIND VAR AND EXPAND
+		// 	{
+		// 		// size_t	i;
+		// 		// t_env	*env;
+
+		// 		// i = 0;
+		// 		// while (start[i] && start[i] != '$')
+		// 		// 	++i;
+		// 		// env = find_key(ms->state, str_sub(ms, start, 0, i));
+		// 		// if (env)
+		// 		// 	lstadd_back(&args, ft_lstnew(env->value));
+		// 	}
+		// 	start = ft_strchr(start, '$');
+		// }
 		++raw_args;
 	}
 	return (result);
