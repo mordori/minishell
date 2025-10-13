@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/12 07:23:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/12 22:25:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ t_minishell *ms, const char *src, unsigned int start, size_t len)
 			++i;
 	sub = alloc_volatile(ms, (i + 1) * sizeof(char));
 	ft_memcpy(sub, &src[start], i);
-	sub[i] = '\0';
 	return (sub);
 }
 
@@ -54,7 +53,6 @@ char	*str_join(t_minishell *ms, const char *s1, const char *s2)
 	str = alloc_volatile(ms, (len1 + len2 + 1) * sizeof(char));
 	ft_memcpy(str, s1, len1);
 	ft_memcpy(&str[len1], s2, len2);
-	str[len1 + len2] = '\0';
 	return (str);
 }
 
@@ -97,7 +95,6 @@ char	*int_to_str(t_minishell *ms, int n)
 		num = -(int64_t)num;
 	digits = ft_countdigits(num, 10) + (n < 0);
 	str = alloc_volatile(ms, digits + 1 * sizeof(char));
-	str[digits] = '\0';
 	while (digits--)
 	{
 		str[digits] = '0' + num % 10;

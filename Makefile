@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/12 05:47:06 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/12 18:42:17 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -92,20 +92,20 @@ COLOR		:=\033[0m
 
 all: config $(LIBFT) $(NAME)
 
+config:
+	@$(call check_config,$(BUILD_TYPE))
+
 $(LIBFT): $(CONF)
 	@if [ ! -e "$(LIBFT)" ] || [ "$$(head -n 1 $(DIR_LIBFT)$(CONF))" != "$(BUILD_TYPE)" ]; then \
 		echo "$(GREEN) [+]$(COLOR) compiling libft.a"; \
 		make -C $(DIR_LIBFT) BUILD_TYPE="$(BUILD_TYPE)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"; \
 	fi
 
-config:
-	@$(call check_config,$(BUILD_TYPE))
-
-$(NAME): $(OBJS) $(LIBFT) $(CONF)
+$(NAME): $(CONF) $(LIBFT) $(OBJS)
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBS) $(LIBFT)
 	@$(call output)
 
-$(DIR_OBJ)%.o: $(DIR_SRC)%.c $(LIBFT) $(CONF)
+$(DIR_OBJ)%.o: $(DIR_SRC)%.c $(CONF) $(LIBFT)
 	@mkdir -p $(dir $@) $(patsubst $(DIR_OBJ)%, $(DIR_DEP)%, $(dir $@))
 	@$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP -MF $(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $@) $(INCS)
 	@echo "$(GREEN) [+]$(COLOR) compiling $@"

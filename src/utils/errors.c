@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/12 06:11:33 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/12 21:47:55 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,23 +35,6 @@ void	error_exit(t_minishell *ms, char *msg)
 	exit(EXIT_FAILURE);
 }
 
-void	warning_input(t_minishell *ms, char *msg)
-{
-	int	bytes;
-
-	bytes = write(STDERR_FILENO, "\033[1;33m", 8);
-	if (bytes != ERROR)
-		bytes = write(STDERR_FILENO, "minishell: input error: ", 24);
-	if (msg && bytes != ERROR)
-		bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
-	if (bytes != ERROR)
-		bytes = write(STDERR_FILENO, "\n", 1);
-	if (bytes != ERROR)
-		bytes = write(STDERR_FILENO, "\033[0m", 5);
-	if (bytes == ERROR)
-		error_exit(ms, "write failed");
-}
-
 void	warning_syntax(t_minishell *ms, char *token)
 {
 	int	bytes;
@@ -68,7 +51,7 @@ STDERR_FILENO, "\033[1;33mminishell: syntax error near unxpected token `", 54);
 		error_exit(ms, "write failed");
 }
 
-void	warning_file(t_minishell *ms, char *filename)
+void	warning(t_minishell *ms, char *msg)
 {
 	int	bytes;
 
@@ -77,23 +60,15 @@ void	warning_file(t_minishell *ms, char *filename)
 		bytes = write(STDERR_FILENO, "minishell: ", 12);
 	if (errno && bytes != ERROR)
 	{
-		perror(filename);
+		perror(msg);
 		errno = 0;
 	}
-	if (bytes != ERROR)
-		bytes = write(STDERR_FILENO, "\033[0m", 5);
-	if (bytes == ERROR)
-		error_exit(ms, "write failed");
-}
-
-void	warning_arena_persistent(t_minishell *ms)
-{
-	int	bytes;
-
-	bytes = write(STDERR_FILENO, "\033[1;33m", 8);
-	if (bytes != ERROR)
-		bytes = write(STDERR_FILENO, \
-"minishell: persistent arena is at capacity: memory was not allocated\n", 70);
+	else if (msg && bytes != ERROR)
+	{
+		bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
+		if (bytes != ERROR)
+			bytes = write(STDERR_FILENO, "\n", 1);
+	}
 	if (bytes != ERROR)
 		bytes = write(STDERR_FILENO, "\033[0m", 5);
 	if (bytes == ERROR)

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/12 06:34:42 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/12 22:50:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,5 +196,6 @@ struct s_prompt
 
 const char**	get_redirections();
 const char**	get_quotes();
+const char**	get_unsupported_chars();
 
 #endif

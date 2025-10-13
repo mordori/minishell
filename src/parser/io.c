@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/12 00:18:32 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/12 17:32:45 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ static inline bool	set_in_file(t_minishell *ms, t_node *node, char *filename)
 	node->cmd.in = open(filename, flags, 0);
 	if (node->cmd.in == ERROR)
 	{
-		warning_file(ms, filename);
+		warning(ms, filename);
 		return (false);
 	}
 	return (true);
@@ -120,7 +120,7 @@ static inline bool	set_out_file(t_minishell *ms, t_node *node, t_redir *r)
 	node->cmd.out = open(r->filename, flags, RWRWRW);
 	if (node->cmd.out == ERROR)
 	{
-		warning_file(ms, r->filename);
+		warning(ms, r->filename);
 		return (false);
 	}
 	return (true);

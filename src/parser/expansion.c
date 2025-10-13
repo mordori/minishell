@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/12 07:48:21 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/13 02:59:37 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@ void	expand_variables(t_minishell *ms)
 	head = ms->node;
 	while(head)
 	{
-		head->cmd.args = expand_args(ms, head->cmd.args);
-		head->cmd.redirs = expand_redirs(head->cmd.redirs);
+		if (head->cmd.args)
+			head->cmd.args = expand_args(ms, head->cmd.args);
+		//head->cmd.redirs = expand_redirs(head->cmd.redirs);
 		head = head->next;
 	}
 }
@@ -38,11 +39,11 @@ static inline char	**expand_args(t_minishell *ms, char **raw_args)
 	char	**result;
 	char	*start;
 	t_list	*args;
-	char	buf[4096];
 	char	*arg;
+	int		i;
 
-	(void)ms;
 	args = NULL;
+	arg = NULL;
 	result = raw_args;
 	while (*raw_args)
 	{
@@ -53,48 +54,51 @@ static inline char	**expand_args(t_minishell *ms, char **raw_args)
 			++raw_args;
 			continue ;
 		}
-		ft_memset(buf, 0, 4096);
-		ft_memcpy(buf, *raw_args, start - *raw_args);
-		arg = alloc_volatile(ms, sizeof(char) * (start - *raw_args));
+		arg = alloc_volatile(ms, sizeof(char) * (start - *raw_args + 1));
 		ft_memcpy(arg, *raw_args, start - *raw_args);
+		while (start++)
+		{
+			if (!*start)
+				arg = str_join(ms, arg, start - 1);
+			if (*start == '?')
+			{
+				arg = str_join(ms, arg, int_to_str(ms, ms->state.exit_status));
+				++start;
+			}
+			if (*start == '$')
+			{
+				arg = str_join(ms, arg, int_to_str(ms, getpid()));
+				++start;
+			}
+			if (*start == '\"' || *start == '\'')
+			{
+				i = start - *raw_args;
+				printf("%c\n", start[i]);
+				while (start[i] && start[i] != '\"')
+					++i;
+				printf("%c\n", start[--i]);
+				arg = str_join(ms, arg, str_sub(ms, start, start - *raw_args, i));
+				start += i + 2;
+			}
+			else //TRY TO FIND VAR AND EXPAND
+			{
+				;
+				// size_t	i;
+				// t_env	*env;
+
+				// i = 0;
+				// while (start[i] && start[i] != '$')
+				// 	++i;
+				// env = find_key(ms->state, str_sub(ms, start, 0, i));
+				// if (env)
+				// 	lstadd_back(&args, ft_lstnew(env->value));
+			}
+			if (!ft_strchr(start, '$'))
+				break;
+			start = ft_strchr(start, '$');
+		}
+		arg = str_join(ms, arg, start);
 		printf("%s\n", arg);
-		// while (start)
-		// {
-		// 	if (start != *raw_args && *(start - 1) == '\"')
-		// 	{
-
-		// 	}
-		// 	if (!*start)
-		// 	{
-
-		// 		break ;
-		// 	}
-		// 	if (*start == '?') //PRINT LAST ESCAPE CODE
-		// 	{
-		// 		;
-		// 	}
-		// 	if (*start == '$') //PRINT SHELL PID
-		// 	{
-		// 		lstadd_back(&args, ft_lstnew(int_to_str(ms, getpid())));
-		// 	}
-		// 	if (*start == '\"' || *start == '\'') //LOCALIZATION AND ANSI-C QUOTING - NOT HANDLED
-		// 	{
-		// 		;
-		// 	}
-		// 	else //TRY TO FIND VAR AND EXPAND
-		// 	{
-		// 		// size_t	i;
-		// 		// t_env	*env;
-
-		// 		// i = 0;
-		// 		// while (start[i] && start[i] != '$')
-		// 		// 	++i;
-		// 		// env = find_key(ms->state, str_sub(ms, start, 0, i));
-		// 		// if (env)
-		// 		// 	lstadd_back(&args, ft_lstnew(env->value));
-		// 	}
-		// 	start = ft_strchr(start, '$');
-		// }
 		++raw_args;
 	}
 	return (result);

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 00:57:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/07 02:17:24 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/13 01:00:31 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,20 @@
 #include "errors.h"
 #include "libft_str.h"
 
-bool	cmp_strs(const char **types, const char *src)
+bool	cmp_strs(const char **types, const char *src, const char **out)
 {
 	while (*types)
 	{
 		if (!ft_strncmp(src, *types, ft_strlen(*types)))
+		{
+			if (out)
+				*out = *types;
 			return (true);
+		}
 		++types;
 	}
+	if (out)
+		*out = NULL;
 	return (false);
 }
 
@@ -34,7 +40,7 @@ bool	is_operator(const char *src)
 
 bool	is_redirection(const char *src)
 {
-	if (cmp_strs(get_redirections(), src))
+	if (cmp_strs(get_redirections(), src, NULL))
 		return (true);
 	return (false);
 }
@@ -42,6 +48,10 @@ bool	is_redirection(const char *src)
 bool	is_pipe(const char *src)
 {
 	if (!ft_strncmp(src, "|", 1))
+	{
+		if (!ft_strncmp(src + 1, "|", 1))
+			return (false);
 		return (true);
+	}
 	return (false);
 }

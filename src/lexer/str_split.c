@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:06:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/08 04:57:47 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/13 01:01:31 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static inline int	count_words(t_minishell *ms, char const *src)
 		{
 			if (ft_isspace(*src) || is_operator(src))
 				break ;
-			if (is_unclosed_quote(ms, &src))
+			if (is_unsupported_char(ms, src) || is_unclosed_quote(ms, &src))
 				return (ERROR);
 			++src;
 		}
@@ -89,7 +89,7 @@ static inline size_t	word_length(char const **src)
 	{
 		if (ft_isspace(**src) || is_operator(*src))
 			break;
-		if (cmp_strs(get_quotes(), *src))
+		if (cmp_strs(get_quotes(), *src, NULL))
 			march_quoted_word(src, **src, &len);
 		else
 			add_src_len(src, &len);
