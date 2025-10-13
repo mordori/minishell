@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/13 02:59:37 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/13 12:14:22 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "arena.h"
 
 static inline char		**expand_args(t_minishell *ms, char **args);
-static inline t_list	*expand_redirs(t_list *redirs);
+// static inline t_list	*expand_redirs(t_list *redirs);
 
 void	expand_variables(t_minishell *ms)
 {
@@ -107,29 +107,18 @@ static inline char	**expand_args(t_minishell *ms, char **raw_args)
 
 // READ HEREDOC IN TOO
 
-/**
- * *[expansion][~/Projects/minishell]$ cd ~
-[~]$ mkdir playground
-[~]$ cd playground
-[~/playground]$ mkdir new
-[~/playground]$ cd new
-[~/playground/new]$ rm ../new
-rm: cannot remove '../new': Is a directory
-[~/playground/new]$ rm -rf ../new
-[~/playground/new]$ pwd
-/home/myli-pen/playground/new
- */
 
-static inline t_list	*expand_redirs(t_list *raw_redirs)
-{
-	t_list	*redirs;
-	//t_redir	*r;
 
-	redirs = raw_redirs;
-	while (raw_redirs)
-	{
-		//r = (t_redir *)raw_redirs->content;
-		raw_redirs = raw_redirs->next;
-	}
-	return (redirs);
-}
+// static inline t_list	*expand_redirs(t_list *raw_redirs)
+// {
+// 	t_list	*redirs;
+// 	//t_redir	*r;
+
+// 	redirs = raw_redirs;
+// 	while (raw_redirs)
+// 	{
+// 		//r = (t_redir *)raw_redirs->content;
+// 		raw_redirs = raw_redirs->next;
+// 	}
+// 	return (redirs);
+// }

@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/12 18:42:17 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/13 12:40:12 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -98,7 +98,7 @@ config:
 $(LIBFT): $(CONF)
 	@if [ ! -e "$(LIBFT)" ] || [ "$$(head -n 1 $(DIR_LIBFT)$(CONF))" != "$(BUILD_TYPE)" ]; then \
 		echo "$(GREEN) [+]$(COLOR) compiling libft.a"; \
-		make -C $(DIR_LIBFT) BUILD_TYPE="$(BUILD_TYPE)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"; \
+		make -C $(DIR_LIBFT) BUILD_TYPE="$(BUILD_TYPE)" CFLAGS="$(CFLAGS)"; \
 	fi
 
 $(NAME): $(CONF) $(LIBFT) $(OBJS)

@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/02 20:19:00 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/12 18:31:23 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/13 12:38:15 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,6 @@ WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 CC			:=cc
 OPTS		:=-O3 -march=native -funroll-loops -fno-plt
 CFLAGS		?=$(WFLAGS) $(OPTS)
-LDFLAGS		?=-flto
 MAKEFLAGS	+= --no-print-directory
 
 DIR_INC		:=inc/
@@ -65,7 +64,7 @@ $(NAME): $(CONF) $(OBJS)
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c $(CONF)
 	@mkdir -p $(dir $@) $(patsubst $(DIR_OBJ)%, $(DIR_DEP)%, $(dir $@))
-	@$(CC) $(CFLAGS) $(LDFLAGS) -c $< -o $@ -MMD -MP -MF $(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $@) $(INCS)
+	@$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP -MF $(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $@) $(INCS)
 
 clean:
 	@$(call rm_dir,$(DIR_OBJ))
