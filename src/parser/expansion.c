@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/13 12:14:22 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/13 18:29:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,80 +28,78 @@ void	expand_variables(t_minishell *ms)
 	while(head)
 	{
 		if (head->cmd.args)
-			head->cmd.args = expand_args(ms, head->cmd.args);
+			expand_args(ms, head->cmd.args);
 		//head->cmd.redirs = expand_redirs(head->cmd.redirs);
 		head = head->next;
 	}
 }
 
+static inline char	*expand_str(t_minishell *ms, char *src)
+{
+	char	*str;
+	char	*ptr;
+	char	*result;
+	size_t	i;
+	char	*env;
+
+	str = ft_strchr(src, '$');
+	if (!str)
+		return(src);
+	i = str - src;
+	result = alloc_volatile(ms, sizeof(char) * (i + 1));
+	ft_memcpy(result, src, i);
+	while (str++)
+	{
+		if (!*str)
+			result = str_join(ms, result, "$");
+		if (*str == '?')
+		{
+			result = str_join(ms, result, int_to_str(ms, ms->state.exit_status));
+			++str;
+		}
+		if (*str == '\"' || *str == '\'')
+		{
+			++str;
+			i = 0;
+			while (str[i] && str[i] != '\"')
+				++i;
+			result = str_join(ms, result, str_sub(ms, str, 0, i));
+			str += i;
+			if (*str == '\"' || *str == '\'')
+				++str;
+		}
+		else
+		{
+			i = 0;
+			while (str[i] && str[i] != '$')
+				++i;
+			env = getenv(str_sub(ms, str, 0, i));
+			if (env)
+				result = str_join(ms, result, env);
+			str += i;
+		}
+		ptr = ft_strchr(str, '$');
+		if (ptr)
+			result = str_join(ms, result, str_sub(ms, str, 0, ptr - str));
+		else
+			break ;
+		str = ptr;
+	}
+	result = str_join(ms, result, str);
+#ifdef DEBUG
+	printf("%s\n", result);
+#endif
+	return (result);
+}
+
 static inline char	**expand_args(t_minishell *ms, char **raw_args)
 {
-	char	**result;
-	char	*start;
-	t_list	*args;
-	char	*arg;
-	int		i;
-
-	args = NULL;
-	arg = NULL;
-	result = raw_args;
 	while (*raw_args)
 	{
-		start = ft_strchr(*raw_args, '$');
-		if (!start) //NO EXPANSION
-		{
-			lstadd_back(&args, ft_lstnew(*raw_args));
-			++raw_args;
-			continue ;
-		}
-		arg = alloc_volatile(ms, sizeof(char) * (start - *raw_args + 1));
-		ft_memcpy(arg, *raw_args, start - *raw_args);
-		while (start++)
-		{
-			if (!*start)
-				arg = str_join(ms, arg, start - 1);
-			if (*start == '?')
-			{
-				arg = str_join(ms, arg, int_to_str(ms, ms->state.exit_status));
-				++start;
-			}
-			if (*start == '$')
-			{
-				arg = str_join(ms, arg, int_to_str(ms, getpid()));
-				++start;
-			}
-			if (*start == '\"' || *start == '\'')
-			{
-				i = start - *raw_args;
-				printf("%c\n", start[i]);
-				while (start[i] && start[i] != '\"')
-					++i;
-				printf("%c\n", start[--i]);
-				arg = str_join(ms, arg, str_sub(ms, start, start - *raw_args, i));
-				start += i + 2;
-			}
-			else //TRY TO FIND VAR AND EXPAND
-			{
-				;
-				// size_t	i;
-				// t_env	*env;
-
-				// i = 0;
-				// while (start[i] && start[i] != '$')
-				// 	++i;
-				// env = find_key(ms->state, str_sub(ms, start, 0, i));
-				// if (env)
-				// 	lstadd_back(&args, ft_lstnew(env->value));
-			}
-			if (!ft_strchr(start, '$'))
-				break;
-			start = ft_strchr(start, '$');
-		}
-		arg = str_join(ms, arg, start);
-		printf("%s\n", arg);
+		expand_str(ms, *raw_args);
 		++raw_args;
 	}
-	return (result);
+	return (raw_args);
 }
 
 
