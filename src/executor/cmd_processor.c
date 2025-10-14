@@ -44,7 +44,7 @@ int	exec_extern(t_cmd *cmd, t_state *state)
 	char		**args;
 	char		**envp;
 
-	command = cmd->cmd; //get_path(cmd->cmd, get_env("PATH"));
+	command = cmd->cmd;
 	args = cmd->argv + 1;
 	envp = state->envp;
 	execve(command, args, envp); //execve should automatically clean up all memory, even heap
