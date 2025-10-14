@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/12 22:50:16 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/15 01:18:10 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@
 #  define HOSTNAME_MAX			64
 # endif
 
-# define RWRWRW					0666
+# define RW_RW_RW_				0666
+# define RW_______				0600
 
 # define PROMPT					"> "
 

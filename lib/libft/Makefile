@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/02 20:19:00 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/13 12:38:15 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/14 00:20:42 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,7 @@ config:
 	@$(call check_config,$(BUILD_TYPE))
 
 $(NAME): $(CONF) $(OBJS)
-	@ar -rcs $(NAME) $(OBJS)
+	@ar -rcs $@ $(OBJS)
 	@$(call output)
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c $(CONF)

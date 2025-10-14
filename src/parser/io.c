@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/12 17:32:45 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/15 02:35:14 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,21 +62,18 @@ void	dup_io(t_node *node)
 	}
 }
 
-static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
+static inline void	write_heredoc(t_minishell *ms, t_node *node, char *eof)
 {
-	int		pipefd[2];
 	char	*line;
 	int		bytes;
 
-	if (pipe(pipefd) == ERROR)
-		error_exit(ms, "pipe creation failed");
 	bytes = 0;
 	line = readline(PROMPT);
 	while (line && ft_strcmp(line, eof))
 	{
-		bytes = write(pipefd[1], line, ft_strlen(line));
+		bytes = write(node->cmd.in, line, ft_strlen(line));
 		if (bytes != ERROR)
-			bytes = write(pipefd[1], "\n", 1);
+			bytes = write(node->cmd.in, "\n", 1);
 		if (bytes == ERROR)
 			break ;
 		free(line);
@@ -84,20 +81,32 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 	}
 	if (line)
 		free(line);
-	close(pipefd[1]);
-	node->cmd.in = pipefd[0];
 	if (!line || bytes == ERROR)
 		error_exit(ms, "readline/write failed");
 }
 
-static inline bool	set_in_file(t_minishell *ms, t_node *node, char *filename)
+static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 {
-	int	flags;
+	const char	*filename = "/tmp/heredoc.tmp";
 
-	flags = O_RDONLY;
 	if (node->cmd.in > STDOUT_FILENO)
 		close(node->cmd.in);
-	node->cmd.in = open(filename, flags, 0);
+	node->cmd.in = open(filename, O_RDWR | O_CREAT | O_TRUNC, RW_______);
+	if (node->cmd.in == ERROR)
+		error_exit(ms, "heredoc create failed");
+	write_heredoc(ms, node, eof);
+	close(node->cmd.in);
+	node->cmd.in = open(filename, O_RDWR, RW_______);
+	if (node->cmd.in == ERROR)
+		error_exit(ms, "heredoc open failed");
+	unlink(filename);
+}
+
+static inline bool	set_in_file(t_minishell *ms, t_node *node, char *filename)
+{
+	if (node->cmd.in > STDOUT_FILENO)
+		close(node->cmd.in);
+	node->cmd.in = open(filename, O_RDONLY, 0);
 	if (node->cmd.in == ERROR)
 	{
 		warning(ms, filename);
@@ -117,7 +126,7 @@ static inline bool	set_out_file(t_minishell *ms, t_node *node, t_redir *r)
 		flags |= O_TRUNC;
 	if (node->cmd.out > STDOUT_FILENO)
 		close(node->cmd.out);
-	node->cmd.out = open(r->filename, flags, RWRWRW);
+	node->cmd.out = open(r->filename, flags, RW_RW_RW_);
 	if (node->cmd.out == ERROR)
 	{
 		warning(ms, r->filename);

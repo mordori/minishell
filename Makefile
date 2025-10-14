@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/13 12:40:12 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/14 00:19:51 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -102,7 +102,7 @@ $(LIBFT): $(CONF)
 	fi
 
 $(NAME): $(CONF) $(LIBFT) $(OBJS)
-	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBS) $(LIBFT)
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS) $(LIBS) $(LIBFT)
 	@$(call output)
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c $(CONF) $(LIBFT)
