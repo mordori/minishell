@@ -12,17 +12,6 @@
 
 #include "builtin_utils.h"
 
-bool	is_builtin(t_cmd *cmd)
-{
-	return (cmd->builtin == ECHO
-		|| cmd->builtin == CD
-		|| cmd->builtin == PWD
-		|| cmd->builtin == EXPORT
-		|| cmd->builtin == UNSET
-		|| cmd->builtin == ENV
-		|| cmd->builtin == EXIT);
-}
-
 // might as well be moved to str_utils2.c once that exists
 bool	is_pluschar(char *var, char delimiter)
 {

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 10:33:34 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/06 03:01:52 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/14 15:05:24 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "defines.h"
 # include <fcntl.h>
 # include <unistd.h>
+# include <dirent.h>
 
 //executor.c
 int		executor(t_minishell *ms);

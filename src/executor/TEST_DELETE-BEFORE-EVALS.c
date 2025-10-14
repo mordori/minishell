@@ -31,4 +31,5 @@ int main(void)
 	free(node);
 	free(cmd);
 
+	return (0);
 }
