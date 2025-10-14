@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/06 21:27:18 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/14 16:16:45 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,16 @@ int	executor(t_minishell *ms)
 	t_state		*state;
 
 	state = &ms->state;
-	command_verification(ms); //FIX: define command_verification() in executor_utils.c
+	command_verification(ms);
+	if (state->exit_status)
+		clean_reset(ms);
 	if (state->mode == SIMPLE)
 		execute_simple(ms);
 	else if (state->mode == PIPELINE)
 		execute_pipeline(ms);
 	if (state->exit_status)
 		clean_reset(ms);
-	return(state->exit_status);
+	return(SUCCESS);
 }
 
 //NOTE: ms is needed at least by the builtin export, if it triggers 'invalid identificator' -error
@@ -70,4 +72,19 @@ int	execute_pipeline(t_minishell *ms)
 	}
 	wait_pids(node, state);
 	return (state->exit_status);
+}
+
+void	wait_pids(t_cmd *cmd, t_shell *shell)
+{
+	int		status;
+
+	while (i < shell->pid_count)
+	{
+		wait_pid(shell->pids[i], &status, 0);
+		if (WIFEXITED(status))
+			shell->exit_status = WEXITSTATUS(status);
+		if (shell->exit_status)
+			return (shell->exit_status); // if error, should close *everything*, and probably return some msg.
+		i++;
+	}
 }
