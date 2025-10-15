@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/15 04:04:50 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/15 20:01:34 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@
 
 # define PROMPT					"> "
 
-//
-
 extern volatile sig_atomic_t	g_signal;
 
 typedef enum e_builtin_type		t_builtin;
@@ -72,6 +70,7 @@ typedef enum e_token_type		t_token_type;
 typedef enum e_errors			t_errors;
 typedef enum e_redir_type		t_redir_type;
 typedef enum e_arena_type		t_arena_type;
+typedef enum e_shell_mode		t_shell_mode;
 
 typedef struct s_env			t_env;
 typedef struct s_token			t_token;
@@ -124,6 +123,12 @@ enum e_arena_type
 {
 	PERSISTENT,
 	VOLATILE
+};
+
+enum e_shell_mode
+{
+	AUTONOMOUS,
+	INTERACTIVE
 };
 
 struct s_redir
@@ -194,6 +199,8 @@ struct	s_minishell
 	t_node				*node;
 	char				cwd[PATH_MAX];
 	struct sigaction	sa;
+	t_shell_mode		mode;
+	int					lineno;
 };
 
 struct s_prompt

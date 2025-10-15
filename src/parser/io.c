@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/15 05:31:51 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/15 20:28:18 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include "errors.h"
 #include "arena_list.h"
 #include "libft_str.h"
+#include "str_utils.h"
+#include "main.h"
 
 static inline bool	set_in_file(t_minishell *ms, t_node *node, char *filename);
 static inline bool	set_out_file(t_minishell *ms, t_node *node, t_redir *r);
@@ -66,8 +68,11 @@ static inline void	write_heredoc(t_minishell *ms, t_node *node, char *eof)
 {
 	char	*line;
 	int		bytes;
+	char	*w;
+	int		i;
 
 	bytes = 0;
+	i = 0;
 	line = readline(PROMPT);
 	while (line && ft_strcmp(line, eof) && !g_signal)
 	{
@@ -78,28 +83,37 @@ static inline void	write_heredoc(t_minishell *ms, t_node *node, char *eof)
 			break ;
 		free(line);
 		line = readline(PROMPT);
+		++i;
 	}
 	if (line)
 		free(line);
+	else
+	{
+		w = str_join(ms, "warning: here-document at line ", int_to_str(ms, ms->lineno));
+		w = str_join(ms, w, " delimited by end-of-file (wanted `");
+		w = str_join(ms, w, eof);
+		w = str_join(ms, w, "')");
+		warning(ms, w);
+	}
+	ms->lineno += i;
 	if (bytes == ERROR)
 		error_exit(ms, "readline/write failed");
 }
 
 static inline int	rl_hook(void)
 {
-	rl_done = g_signal;
-	return (rl_done);
+	if (g_signal == SIGINT)
+	{
+		rl_done = 1;
+		return (1);
+	}
+	return (0);
 }
 
 void	sig_handler2(int sig)
 {
-	(void)sig;
-	write(1, "^C\n", 3);
-	// rl_replace_line("", 0);
-	// rl_on_new_line();
-	// rl_redisplay();
-	g_signal = 1;
-	rl_done = 1;
+	write(1, "^C", 2);
+	g_signal = sig;
 }
 
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
@@ -111,13 +125,15 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 	node->cmd.in = open(filename, O_RDWR | O_CREAT | O_TRUNC, RW_______);
 	if (node->cmd.in == ERROR)
 		error_exit(ms, "heredoc create failed");
-	//rl_event_hook = rl_hook;
-	ms->sa.sa_flags = 0;
 	ms->sa.sa_handler = sig_handler2;
-	if (sigemptyset(&ms->sa.sa_mask) == ERROR || \
-sigaction(SIGINT, &ms->sa, NULL) == ERROR)
+	if (sigaction(SIGINT, &ms->sa, NULL) == ERROR)
 		error_exit(ms, "sigaction init failed");
+	rl_event_hook = rl_hook;
 	write_heredoc(ms, node, eof);
+	rl_event_hook = NULL;
+	ms->sa.sa_handler = sig_handler;
+	if (sigaction(SIGINT, &ms->sa, NULL) == ERROR)
+		error_exit(ms, "sigaction init failed");
 	close(node->cmd.in);
 	node->cmd.in = open(filename, O_RDWR, RW_______);
 	if (node->cmd.in == ERROR)

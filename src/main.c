@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/15 05:23:46 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/15 20:29:42 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "cleanup.h"
 #include "libft_str.h"
 #include "str_utils.h"
+#include "get_next_line.h"
 // #include "executor.h"
 
 volatile sig_atomic_t	g_signal = 0;
@@ -59,12 +60,11 @@ printf("Remove #ifdef DEBUG directives before submission\n");
 
 void	sig_handler(int sig)
 {
-	(void)sig;
 	write(1, "^C\n", 3);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
-	g_signal = 1;
+	g_signal = sig;
 }
 
 /**
@@ -82,12 +82,16 @@ static inline void	initialize(t_minishell *ms, char **envp)
 		error_exit(ms, "arena creation failed");
 	ms->state.envp = dup_envp_system(ms, envp);
 	//init_nodes(ms);
-	rl_catch_signals = 0;
-	ms->sa.sa_flags = SA_SIGINFO | SA_RESTART;
-	ms->sa.sa_handler = sig_handler;
-	if (sigemptyset(&ms->sa.sa_mask) == ERROR || \
+	if (isatty(STDIN_FILENO))
+	{
+		ms->mode = INTERACTIVE;
+		rl_catch_signals = 0;
+		ms->sa.sa_flags = SA_SIGINFO | SA_RESTART;
+		ms->sa.sa_handler = sig_handler;
+		if (sigemptyset(&ms->sa.sa_mask) == ERROR || \
 sigaction(SIGINT, &ms->sa, NULL) == ERROR)
-		error_exit(ms, "sigaction init failed");
+			error_exit(ms, "sigaction init failed");
+	}
 }
 
 #ifdef DEBUG
@@ -119,6 +123,23 @@ static inline void	debug_print_args_redirs(t_minishell *ms, t_token **tokens)
 }
 #endif
 
+char	*get_line(t_minishell *ms, t_prompt *p)
+{
+	char	*line;
+	char	*prompt;
+
+	if (ms->mode == AUTONOMOUS)
+	{
+		get_next_line(ms, STDIN_FILENO, &line);
+	}
+	if (ms->mode == INTERACTIVE)
+	{
+		prompt = get_prompt(ms, p);
+		line = readline(prompt);
+	}
+	return (line);
+}
+
 /**
  * @brief	WIP
  *
@@ -133,7 +154,9 @@ static inline void	run(t_minishell *ms)
 	while (true)
 	{
 		store_cwd(ms);
-		ms->line = readline(get_prompt(ms, &p));
+		ms->line = get_line(ms, &p);
+		++ms->lineno;
+		g_signal = 0;
 		if (!ms->line)
 			break ;
 		if (*ms->line)
