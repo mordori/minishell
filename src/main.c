@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/15 02:40:41 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/15 05:23:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 #include "libft_str.h"
 #include "str_utils.h"
 // #include "executor.h"
+
+volatile sig_atomic_t	g_signal = 0;
 
 static inline void	startup(void);
 static inline void	initialize(t_minishell *ms, char **envp);
@@ -55,6 +57,16 @@ printf("Remove #ifdef DEBUG directives before submission\n");
 	return (EXIT_SUCCESS);
 }
 
+void	sig_handler(int sig)
+{
+	(void)sig;
+	write(1, "^C\n", 3);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+	g_signal = 1;
+}
+
 /**
  * @brief	Zero-initializes the minishell and creates memory arenas.
  *
@@ -69,7 +81,13 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	if (!ms->vars.base || !ms->pool.base)
 		error_exit(ms, "arena creation failed");
 	ms->state.envp = dup_envp_system(ms, envp);
-	init_nodes(ms);
+	//init_nodes(ms);
+	rl_catch_signals = 0;
+	ms->sa.sa_flags = SA_SIGINFO | SA_RESTART;
+	ms->sa.sa_handler = sig_handler;
+	if (sigemptyset(&ms->sa.sa_mask) == ERROR || \
+sigaction(SIGINT, &ms->sa, NULL) == ERROR)
+		error_exit(ms, "sigaction init failed");
 }
 
 #ifdef DEBUG
@@ -117,7 +135,7 @@ static inline void	run(t_minishell *ms)
 		store_cwd(ms);
 		ms->line = readline(get_prompt(ms, &p));
 		if (!ms->line)
-			error_exit(ms, "readline failed");
+			break ;
 		if (*ms->line)
 			add_history(ms->line);
 		arena_reset(&ms->pool);
@@ -135,6 +153,8 @@ debug_print_args_redirs(ms, tokens);
 		free(ms->line);
 		ms->line = NULL;
 		close_fds(ms);
+		g_signal = 0;
+		rl_event_hook = NULL;
 	}
 }
 
