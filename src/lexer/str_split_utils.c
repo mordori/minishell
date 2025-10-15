@@ -6,13 +6,14 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:10:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/07 02:49:23 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/13 01:16:45 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 #include "errors.h"
 #include "libft_str.h"
+#include "str_utils.h"
 
 void	march_operator(char const **src, int *count)
 {
@@ -41,16 +42,32 @@ bool	is_unclosed_quote(t_minishell *ms, const char **src)
 {
 	char	*closing_quote;
 
-	if (cmp_strs(get_quotes(), *src))
+	if (cmp_strs(get_quotes(), *src, NULL))
 	{
 		closing_quote = ft_strchr(*src + 1, **src);
 		if (closing_quote)
 			*src = closing_quote;
 		else
 		{
-			warning_input(ms, "unclosed quotes");
+			warning(ms, "unexpected end of file");
 			return (true);
 		}
+	}
+	return (false);
+}
+
+bool	is_unsupported_char(t_minishell *ms, const char *src)
+{
+	const char	*c;
+
+	if (cmp_strs(get_unsupported_chars(), src, &c))
+	{
+		warning(ms, \
+str_join(ms, \
+str_join(ms, \
+"unsupported meta-character `", c), \
+"'"));
+		return (true);
 	}
 	return (false);
 }

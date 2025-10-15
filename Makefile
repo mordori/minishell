@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/07 20:56:23 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/14 00:19:51 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,7 @@ NAME		:=minishell
 
 MEMORY		?=1048576
 CONF		:=.config
+BUILD_TYPE	:=RELEASE
 
 WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 DEFS		:=-D MEMORY=$(MEMORY)
@@ -89,43 +90,44 @@ GREEN		:=\033[1;32m
 RED			:=\033[1;31m
 COLOR		:=\033[0m
 
-all: $(LIBFT) config $(NAME)
-
-$(LIBFT):
-	@echo "$(GREEN) [+]$(COLOR) compiling libft.a"
-	@make -j4 -C $(DIR_LIBFT)
+all: config $(LIBFT) $(NAME)
 
 config:
-	@$(call check_config,NORMAL)
+	@$(call check_config,$(BUILD_TYPE))
 
-$(NAME): $(OBJS) $(LIBFT) $(CONF)
-	@$(CC) $(CFLAGS) $(LDFLAGS) -o $(NAME) $(OBJS) $(LIBS) $(LIBFT)
+$(LIBFT): $(CONF)
+	@if [ ! -e "$(LIBFT)" ] || [ "$$(head -n 1 $(DIR_LIBFT)$(CONF))" != "$(BUILD_TYPE)" ]; then \
+		echo "$(GREEN) [+]$(COLOR) compiling libft.a"; \
+		make -C $(DIR_LIBFT) BUILD_TYPE="$(BUILD_TYPE)" CFLAGS="$(CFLAGS)"; \
+	fi
+
+$(NAME): $(CONF) $(LIBFT) $(OBJS)
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS) $(LIBS) $(LIBFT)
 	@$(call output)
 
-$(DIR_OBJ)%.o: $(DIR_SRC)%.c $(LIBFT) $(CONF)
+$(DIR_OBJ)%.o: $(DIR_SRC)%.c $(CONF) $(LIBFT)
 	@mkdir -p $(dir $@) $(patsubst $(DIR_OBJ)%, $(DIR_DEP)%, $(dir $@))
 	@$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP -MF $(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $@) $(INCS)
 	@echo "$(GREEN) [+]$(COLOR) compiling $@"
 
 clean:
-	@make -j4 -C $(DIR_LIBFT) clean
+	@make -C $(DIR_LIBFT) clean
 	@$(call rm_dir,$(DIR_OBJ))
 
 fclean: clean
-	@make -j4 -C $(DIR_LIBFT) fclean
+	@make -C $(DIR_LIBFT) fclean
 	@$(call rm_dir,$(DIR_DEP))
 	@$(call rm_file,$(CONF))
 	@$(call rm_file,$(NAME))
 
 re: fclean all
 
-debug: CFLAGS := $(WFLAGS) $(DEFS) $(DFLAGS) -O0
-debug: $(LIBFT) config_debug $(NAME)
+debug: BUILD_TYPE	:=DEBUG
+debug: CFLAGS		:=$(WFLAGS) $(DEFS) $(DFLAGS) -O0
+debug: LDFLAGS		:=
+debug: all
 
-config_debug:
-	@$(call check_config,DEBUG)
-
-.PHONY: all clean fclean re config debug config_debug
+.PHONY: all clean fclean re config debug
 .SECONDARY: $(OBJS) $(DEPS) $(CONF)
 
 -include $(DEPS)
@@ -161,10 +163,10 @@ endef
 define output
 	@if [ $$(($(MEMORY))) -lt 1024 ]; then \
 		echo "$(YELLOW) [✔] $(NAME) built with invalid amount of memory (1 KiB is minimum)$(COLOR)"; \
-		echo "$(RED) [/] the program will throw an error if run$(COLOR)"; \
+		echo "$(RED) [/] the program will produce an error when run$(COLOR)"; \
 	elif [ $$(($(MEMORY) & ($(MEMORY) - 1))) -ne 0 ]; then \
 		echo "$(YELLOW) [✔] $(NAME) built with non power of two amount of memory$(COLOR)"; \
-		echo "$(RED) [/] the program will throw an error if run$(COLOR)"; \
+		echo "$(RED) [/] the program will produce an error when run$(COLOR)"; \
 	elif [ $$(($(MEMORY)/1024/1024)) -lt 1 ]; then \
 		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024" | bc) KiB memory$(COLOR)"; \
 	elif [ $$(($(MEMORY)/1024/1024)) -lt 1000 ]; then \
@@ -172,10 +174,10 @@ define output
 	else \
 		echo "$(YELLOW) [✔] $(NAME) built with $$(echo "scale=1; $(MEMORY)/1024/1024/1024" | bc) GiB memory$(COLOR)"; \
 	fi
-	@if [ $$(($(MEMORY))) -gt 1023 ] && [ $$(($(MEMORY) & ($(MEMORY) - 1))) -eq 0 ]; then \
+	@if [ $$(($(MEMORY))) -ge 1024 ] && [ $$(($(MEMORY) & ($(MEMORY) - 1))) -eq 0 ]; then \
 		echo "$(GREEN) [/] usage: ./$(NAME)$(COLOR)"; \
-	fi
-	@if [ "$$(head -n 1 $(CONF))" != "NORMAL" ]; then \
-		echo "$(YELLOW) [DEBUG MODE]$(COLOR)"; \
+		if [ "$(BUILD_TYPE)" = "DEBUG" ]; then \
+			echo "$(YELLOW) [DEBUG]$(COLOR)"; \
+		fi; \
 	fi
 endef

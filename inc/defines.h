@@ -6,12 +6,14 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/08 05:24:22 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/15 04:04:50 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DEFINES_H
 # define DEFINES_H
+
+# define _GNU_SOURCE
 
 # include <stdbool.h>
 # include <stdint.h>
@@ -19,6 +21,7 @@
 # include <stddef.h>
 # include <limits.h>
 # include <errno.h>
+# include <signal.h>
 
 # include "libft_list.h"
 
@@ -54,9 +57,14 @@
 #  define HOSTNAME_MAX			64
 # endif
 
-# define RWRWRW					0666
+# define RW_RW_RW_				0666
+# define RW_______				0600
 
 # define PROMPT					"> "
+
+//
+
+extern volatile sig_atomic_t	g_signal;
 
 typedef enum e_builtin_type		t_builtin;
 typedef enum e_mode				t_mode;
@@ -179,25 +187,24 @@ struct s_arena
 
 struct	s_minishell
 {
-	t_arena		vars;
-	t_arena		pool;
-	char		*line;
-	t_state		state;
-	t_node		*node;
+	t_arena				vars;
+	t_arena				pool;
+	char				*line;
+	t_state				state;
+	t_node				*node;
+	char				cwd[PATH_MAX];
+	struct sigaction	sa;
 };
 
 struct s_prompt
 {
-	char		cwd[PATH_MAX];
-	char		*prompt;
 	char		*path;
 	char		*home;
 	char		hostname[HOSTNAME_MAX];
-	int			len;
-	int			fd;
 };
 
 const char**	get_redirections();
 const char**	get_quotes();
+const char**	get_unsupported_chars();
 
 #endif

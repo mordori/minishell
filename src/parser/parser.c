@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:15:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/08 04:58:12 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/11 01:24:23 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ bool	parse_tokens(t_minishell *ms, t_token **tokens)
 		}
 		if (t->type == PIPE)
 			set_node(ms, &args, &head);
-		if (t->type == WORD && t->pos > 0 && (*(tokens- 1))->type == REDIR)
+		if (t->type == WORD && t->pos > 0 && prev->type == REDIR)
 			add_redir(ms, head, tokens);
 		else if (t->type == WORD)
 			lstadd_back(&args, lstnew(ms, t->src));

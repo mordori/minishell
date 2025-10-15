@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/14 16:03:27 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/15 05:23:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,14 @@
 #include "str_utils.h"
 // #include "executor.h"
 
+volatile sig_atomic_t	g_signal = 0;
+
 static inline void	startup(void);
 static inline void	initialize(t_minishell *ms, char **envp);
 static inline void	run(t_minishell *ms);
-static inline void	get_prompt(t_minishell *ms, t_prompt *p);
+static inline char	*get_prompt(t_minishell *ms, t_prompt *p);
+void	set_hostname(t_minishell *ms, t_prompt *p);
+void	store_cwd(t_minishell *ms);
 
 /**
  * @brief	Entry point to the program.
@@ -39,7 +43,7 @@ int	main(int argc, char *argv[], char **envp)
 	(void)argv;
 	startup();
 #ifdef DEBUG
-printf("\033[1;33m[DEBUG MODE]\033[0m\n");
+printf("\033[1;33m[DEBUG]\033[0m\n");
 #else
 printf("Remove #ifdef DEBUG directives before submission\n");
 #endif
@@ -51,6 +55,16 @@ printf("Remove #ifdef DEBUG directives before submission\n");
 	run(&ms);
 	clean(&ms);
 	return (EXIT_SUCCESS);
+}
+
+void	sig_handler(int sig)
+{
+	(void)sig;
+	write(1, "^C\n", 3);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+	g_signal = 1;
 }
 
 /**
@@ -67,7 +81,13 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	if (!ms->vars.base || !ms->pool.base)
 		error_exit(ms, "arena creation failed");
 	ms->state.envp = dup_envp_system(ms, envp);
-	init_nodes(ms);
+	//init_nodes(ms);
+	rl_catch_signals = 0;
+	ms->sa.sa_flags = SA_SIGINFO | SA_RESTART;
+	ms->sa.sa_handler = sig_handler;
+	if (sigemptyset(&ms->sa.sa_mask) == ERROR || \
+sigaction(SIGINT, &ms->sa, NULL) == ERROR)
+		error_exit(ms, "sigaction init failed");
 }
 
 #ifdef DEBUG
@@ -109,64 +129,95 @@ static inline void	run(t_minishell *ms)
 	t_token		**tokens;
 	t_prompt	p;
 
+	set_hostname(ms, &p);
 	while (true)
 	{
-		get_prompt(ms, &p);
-		ms->line = readline(p.prompt);
+		store_cwd(ms);
+		ms->line = readline(get_prompt(ms, &p));
 		if (!ms->line)
-			error_exit(ms, "readline failed");
+			break ;
 		if (*ms->line)
 			add_history(ms->line);
-		else
-			break;
 		arena_reset(&ms->pool);
 		ms->node = alloc_volatile(ms, sizeof(t_node));
 		tokens = create_tokens(ms->line, ms);
 		if (!tokens || !parse_tokens(ms, tokens))
 			continue ;
-		//expand_variables(ms);
+		expand_variables(ms);
 		setup_io(ms);
 #ifdef DEBUG
 debug_print_args_redirs(ms, tokens);
 #endif
 		// if (ms->node->cmd.args)
 		// 	executor(ms);
-		if (ms->line)
-			free(ms->line);
+		free(ms->line);
+		ms->line = NULL;
 		close_fds(ms);
+		g_signal = 0;
+		rl_event_hook = NULL;
 	}
 }
 
-// TODO: set wrapper for getenv
-static inline void	get_prompt(t_minishell *ms, t_prompt *p)
+void	set_hostname(t_minishell *ms, t_prompt *p)
 {
-	p->fd = open("/etc/hostname", O_RDONLY);
-	if (p->fd == ERROR)
+	int	fd;
+	int	len;
+
+	fd = open("/etc/hostname", O_RDONLY);
+	if (fd == ERROR)
 		error_exit(ms, "open failed");
-	p->len = read(p->fd, p->hostname, HOSTNAME_MAX);
-	close(p->fd);
-	if (p->len < 1)
+	len = read(fd, p->hostname, HOSTNAME_MAX);
+	close(fd);
+	if (len < 0)
 		error_exit(ms, "read failed");
-	p->hostname[p->len - 1] = 0;
+	p->hostname[len - 1] = 0;
 	if (ft_strchr(p->hostname, '.') - p->hostname > 0)
 		p->hostname[ft_strchr(p->hostname, '.') - p->hostname] = 0;
-	p->path = getcwd(p->cwd, sizeof(p->cwd));
-	if (!p->path)
-		error_exit(ms, "getcwd failed");
-	p->home = "/";
-	if (!ft_strncmp(p->path, getenv("HOME"), ft_strlen(getenv("HOME"))))
+}
+
+void	store_cwd(t_minishell *ms)
+{
+	char	*cwd;
+	char	buf[PATH_MAX];
+
+	cwd = getcwd(buf, sizeof(buf));
+	if (!cwd)
 	{
-		p->path = p->cwd + ft_strlen(getenv("HOME"));
-		p->home = "~";
+		if (errno == ENOENT && ms->cwd[0])
+			return ;
+		else
+			error_exit(ms, "get cwd failed");
 	}
-	else if (!ft_strncmp(p->path, "/home", 5))
+	ft_memcpy(ms->cwd, cwd, strlen(cwd));
+}
+
+static inline char	*get_prompt(t_minishell *ms, t_prompt *p)
+{
+	char	*prompt;
+	char	*home;
+
+	home = getenv("HOME");
+	if (!home)
 	{
-		p->path = "";
+		p->home = "";
+		p->path = ms->cwd;
+	}
+	else if (!ft_strncmp(ms->cwd, home, ft_strlen(home)))
+	{
+		p->home = "~";
+		p->path = ms->cwd + ft_strlen(home);
+	}
+	else if (!ft_strncmp(ms->cwd, "/home", 5))
+	{
 		p->home = "/home";
+		p->path = "";
 	}
 	else
+	{
+		p->home = "/";
 		p->path = "";
-	p->prompt = \
+	}
+	prompt = \
 str_join(ms, \
 str_join(ms, \
 str_join(ms, \
@@ -182,6 +233,7 @@ p->hostname), \
 p->home), \
 p->path), \
 "\001\033[0m\002$ ");
+	return (prompt);
 }
 
 /**

@@ -6,14 +6,19 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/02 20:19:00 by myli-pen          #+#    #+#              #
-#    Updated: 2025/09/17 22:13:27 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/14 00:20:42 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:=libft.a
 
+CONF		:=.config
+BUILD_TYPE	?=RELEASE
+
+WFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code
 CC			:=cc
-CFLAGS		:=-Wall -Wextra -Werror -Wunreachable-code -O3 -march=native -funroll-loops -fno-plt
+OPTS		:=-O3 -march=native -funroll-loops -fno-plt
+CFLAGS		?=$(WFLAGS) $(OPTS)
 MAKEFLAGS	+= --no-print-directory
 
 DIR_INC		:=inc/
@@ -48,32 +53,58 @@ GREEN		:=\033[1;32m
 RED			:=\033[1;31m
 COLOR		:=\033[0m
 
-all: $(NAME)
+all: config $(NAME)
 
-$(NAME): $(OBJS)
-	@ar -rcs $(NAME) $(OBJS)
-	@echo "$(YELLOW) [✔] libft.a created $(COLOR)"
+config:
+	@$(call check_config,$(BUILD_TYPE))
 
-$(DIR_OBJ)%.o: $(DIR_SRC)%.c
+$(NAME): $(CONF) $(OBJS)
+	@ar -rcs $@ $(OBJS)
+	@$(call output)
+
+$(DIR_OBJ)%.o: $(DIR_SRC)%.c $(CONF)
 	@mkdir -p $(dir $@) $(patsubst $(DIR_OBJ)%, $(DIR_DEP)%, $(dir $@))
 	@$(CC) $(CFLAGS) -c $< -o $@ -MMD -MP -MF $(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $@) $(INCS)
 
 clean:
-	@if [ -d "$(DIR_OBJ)" ]; then rm -rf $(DIR_OBJ); \
-		echo "$(RED) [-]$(COLOR) removed libft/$(DIR_OBJ)"; \
-	fi
+	@$(call rm_dir,$(DIR_OBJ))
 
 fclean: clean
-	@if [ -d "$(DIR_DEP)" ]; then rm -rf $(DIR_DEP); \
-		echo "$(RED) [-]$(COLOR) removed libft/$(DIR_DEP)"; \
-	fi
-	@if [ -e "$(NAME)" ]; then rm -f $(NAME); \
-		echo "$(RED) [-]$(COLOR) removed libft.a"; \
-	fi
+	@$(call rm_dir,$(DIR_DEP))
+	@$(call rm_file,$(CONF))
+	@$(call rm_file,$(NAME))
 
 re: fclean all
 
-.PHONY: all clean fclean re
-.SECONDARY: $(OBJS) $(DEPS)
+.PHONY: all clean fclean re config
+.SECONDARY: $(OBJS) $(DEPS) $(CONF)
 
 -include $(DEPS)
+
+define rm_dir
+	@if [ -d "$(1)" ]; then \
+		rm -rf $(1); \
+		echo "$(RED) [-]$(COLOR) removed $(1)"; \
+	fi
+endef
+
+define rm_file
+	@if [ -e "$(1)" ]; then \
+		rm -f $(1); \
+		echo "$(RED) [-]$(COLOR) removed $(1)"; \
+	fi
+endef
+
+define check_config
+	@if [ ! -e "$(CONF)" ]; then \
+		touch "$(CONF)"; \
+		echo "" >> $(CONF); \
+	fi
+	@if [ "$$(head -n 1 $(CONF))" != "$(1)" ]; then \
+		sed -i '1c\$(1)' "$(CONF)"; \
+	fi
+endef
+
+define output
+	@echo "$(YELLOW) [✔] $(NAME) built$(COLOR)"
+endef
