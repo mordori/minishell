@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/14 00:19:51 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/16 05:11:39 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,6 +71,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LEX), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
 				expansion.c \
 				parser.c \
+				io_utils.c \
 				io.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				arena_list.c \
@@ -80,6 +81,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				defines.c \
 				errors.c \
 				str_utils.c \
+				line_utils.c \
 				)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))

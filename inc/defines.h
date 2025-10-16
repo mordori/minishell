@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/15 20:01:34 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/16 05:23:57 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ enum e_arena_type
 
 enum e_shell_mode
 {
-	AUTONOMOUS,
+	SCRIPT,
 	INTERACTIVE
 };
 
@@ -198,7 +198,6 @@ struct	s_minishell
 	t_state				state;
 	t_node				*node;
 	char				cwd[PATH_MAX];
-	struct sigaction	sa;
 	t_shell_mode		mode;
 	int					lineno;
 };
@@ -208,6 +207,7 @@ struct s_prompt
 	char		*path;
 	char		*home;
 	char		hostname[HOSTNAME_MAX];
+	char		*prompt;
 };
 
 const char**	get_redirections();

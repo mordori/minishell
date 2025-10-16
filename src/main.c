@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/15 20:29:42 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/16 05:11:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 #include "libft_mem.h"
 #include "lexer.h"
 #include "parser.h"
+#include "io.h"
 #include "cleanup.h"
-#include "libft_str.h"
 #include "str_utils.h"
-#include "get_next_line.h"
+#include "line_utils.h"
 // #include "executor.h"
 
 volatile sig_atomic_t	g_signal = 0;
@@ -27,8 +27,6 @@ volatile sig_atomic_t	g_signal = 0;
 static inline void	startup(void);
 static inline void	initialize(t_minishell *ms, char **envp);
 static inline void	run(t_minishell *ms);
-static inline char	*get_prompt(t_minishell *ms, t_prompt *p);
-void	set_hostname(t_minishell *ms, t_prompt *p);
 void	store_cwd(t_minishell *ms);
 
 /**
@@ -60,10 +58,6 @@ printf("Remove #ifdef DEBUG directives before submission\n");
 
 void	sig_handler(int sig)
 {
-	write(1, "^C\n", 3);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
 	g_signal = sig;
 }
 
@@ -86,12 +80,10 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	{
 		ms->mode = INTERACTIVE;
 		rl_catch_signals = 0;
-		ms->sa.sa_flags = SA_SIGINFO | SA_RESTART;
-		ms->sa.sa_handler = sig_handler;
-		if (sigemptyset(&ms->sa.sa_mask) == ERROR || \
-sigaction(SIGINT, &ms->sa, NULL) == ERROR)
-			error_exit(ms, "sigaction init failed");
+		rl_event_hook = rl_event;
 	}
+	signal(SIGINT, sig_handler);
+	signal(SIGINT, sig_handler);
 }
 
 #ifdef DEBUG
@@ -123,23 +115,6 @@ static inline void	debug_print_args_redirs(t_minishell *ms, t_token **tokens)
 }
 #endif
 
-char	*get_line(t_minishell *ms, t_prompt *p)
-{
-	char	*line;
-	char	*prompt;
-
-	if (ms->mode == AUTONOMOUS)
-	{
-		get_next_line(ms, STDIN_FILENO, &line);
-	}
-	if (ms->mode == INTERACTIVE)
-	{
-		prompt = get_prompt(ms, p);
-		line = readline(prompt);
-	}
-	return (line);
-}
-
 /**
  * @brief	WIP
  *
@@ -154,13 +129,9 @@ static inline void	run(t_minishell *ms)
 	while (true)
 	{
 		store_cwd(ms);
-		ms->line = get_line(ms, &p);
-		++ms->lineno;
-		g_signal = 0;
+		ms->line = get_line(ms, get_prompt(ms, &p));
 		if (!ms->line)
 			break ;
-		if (*ms->line)
-			add_history(ms->line);
 		arena_reset(&ms->pool);
 		ms->node = alloc_volatile(ms, sizeof(t_node));
 		tokens = create_tokens(ms->line, ms);
@@ -176,26 +147,7 @@ debug_print_args_redirs(ms, tokens);
 		free(ms->line);
 		ms->line = NULL;
 		close_fds(ms);
-		g_signal = 0;
-		rl_event_hook = NULL;
 	}
-}
-
-void	set_hostname(t_minishell *ms, t_prompt *p)
-{
-	int	fd;
-	int	len;
-
-	fd = open("/etc/hostname", O_RDONLY);
-	if (fd == ERROR)
-		error_exit(ms, "open failed");
-	len = read(fd, p->hostname, HOSTNAME_MAX);
-	close(fd);
-	if (len < 0)
-		error_exit(ms, "read failed");
-	p->hostname[len - 1] = 0;
-	if (ft_strchr(p->hostname, '.') - p->hostname > 0)
-		p->hostname[ft_strchr(p->hostname, '.') - p->hostname] = 0;
 }
 
 void	store_cwd(t_minishell *ms)
@@ -212,51 +164,6 @@ void	store_cwd(t_minishell *ms)
 			error_exit(ms, "get cwd failed");
 	}
 	ft_memcpy(ms->cwd, cwd, strlen(cwd));
-}
-
-static inline char	*get_prompt(t_minishell *ms, t_prompt *p)
-{
-	char	*prompt;
-	char	*home;
-
-	home = getenv("HOME");
-	if (!home)
-	{
-		p->home = "";
-		p->path = ms->cwd;
-	}
-	else if (!ft_strncmp(ms->cwd, home, ft_strlen(home)))
-	{
-		p->home = "~";
-		p->path = ms->cwd + ft_strlen(home);
-	}
-	else if (!ft_strncmp(ms->cwd, "/home", 5))
-	{
-		p->home = "/home";
-		p->path = "";
-	}
-	else
-	{
-		p->home = "/";
-		p->path = "";
-	}
-	prompt = \
-str_join(ms, \
-str_join(ms, \
-str_join(ms, \
-str_join(ms, \
-str_join(ms, \
-str_join(ms, \
-str_join(ms, \
-"\001\033[38;5;90m\002", \
-getenv("LOGNAME")), \
-"@"), \
-p->hostname), \
-"\001\033[0m:\033[38;5;39m\002"), \
-p->home), \
-p->path), \
-"\001\033[0m\002$ ");
-	return (prompt);
 }
 
 /**
