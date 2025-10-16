@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:58:00 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/14 14:29:20 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/16 16:50:56 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,15 @@ char	*scan_directory(t_minishell *ms, char *directory, char *cmd_name)
 	struct dirent	*file;
 	struct stat		*buffer;
 
+	file = NULL;
+	buffer = NULL;
 	dirstream = opendir(directory);
 	if (!dirstream)
 		//FIXME: add logic: FAILED TO OPEN DIRECTORY.
 	file = readdir(dirstream);
 	while (file) //NOTE: readdir returns NULL if nothing's left in dir.
 	{
-		if (stat(file->d_name, &buffer) == -1) //FIXME: stat requires full path, d_name not enough.
+		if (stat(file->d_name, buffer) == -1) //FIXME: stat requires full path, d_name not enough.
 			//FIXME: add logic: FAILED TO STAT FILE.
 		if ((buffer->st_mode & S_IFMT) == S_IFREG)
 		{

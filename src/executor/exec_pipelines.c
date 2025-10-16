@@ -38,14 +38,14 @@ int	spawn_and_run(t_node *node, t_state *state, int count, int *prev_fd)
 	{
 		if (io_directions(node, *prev_fd))
 			return (ERROR_REDIR);
-		run_node(node->cmd, state);
+		run_node(&node->cmd, state);
 	}
 	if (close_parent_pps(node))
-		return (ERROR_CLOSING_FD);
+		return (ERROR_PIPELINE);
 	return (SUCCESS);
 }
 
-int	fork_child(pid_t *child_pid);
+int	fork_child(pid_t *child_pid)
 {
 	*child_pid = fork();
 	if (*child_pid == -1)
@@ -69,19 +69,19 @@ int	io_directions(t_node *node, int prev_fd)
 		if (dup2(prev_fd, STDIN_FILENO))
 	  		return (ERROR_REDIR);
 		if (close(prev_fd))
-			return (ERROR_CLOSING_FD);
+			return (ERROR_PIPELINE);
 	}
 	else if (node->prev == NULL)
 	{
 		if (close(prev_fd))
-			return (ERROR_CLOSING_FD);
+			return (ERROR_PIPELINE);
 	}
 	if (node->next)
 	{
 		if (dup2(node->pipe_fds[1], STDOUT_FILENO))
 			return (ERROR_REDIR);
 		if (close(node->pipe_fds[0]))
-			return (ERROR_CLOSING_FD);
+			return (ERROR_PIPELINE);
 	}
 	return (SUCCESS);
 }
@@ -89,11 +89,11 @@ int	io_directions(t_node *node, int prev_fd)
 int	close_parent_pps(t_node *node)
 {
 	if (close(node->pipe_fds[0]))
-		return (ERROR_CLOSING_FD);
+		return (ERROR_PIPELINE);
 	if (node->prev)
 	{
 		if (close(node->prev->pipe_fds[1])) // Or prev->prev ?
-			return (ERROR_CLOSING_FD);
+			return (ERROR_PIPELINE);
 	}
 	return (SUCCESS);
 }

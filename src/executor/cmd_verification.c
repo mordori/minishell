@@ -15,9 +15,9 @@
 //FIXME: to do: ft_strjoin and ft_split called in scan_directory are not memarena-friendly rn.
 
 static t_builtin	verify_builtin(char *cmd);
-static char			*verify_path(char *cmd_name);
-static char			*env_path_verif(char *path, char *cmd_name);
-static char			*absolute_path_verif(char *path);
+static char			*verify_path(t_minishell *ms, char *cmd_name);
+static char			*env_path_verif(t_minishell *ms, char *path, char *cmd_name);
+static char			*absolute_path_verif(t_minishell *ms, char *path);
 
 void	command_verification(t_minishell *ms)
 {
@@ -36,7 +36,7 @@ void	command_verification(t_minishell *ms)
 			cmd->cmd = verify_path(ms, cmd_name);
 			if (!cmd->cmd)
 			{
-				ms.state->exit_status = ERROR;
+				ms->state.exit_status = ERROR;
 				return ;
 			}
 		}
@@ -49,7 +49,7 @@ void	command_verification(t_minishell *ms)
 static t_builtin	verify_builtin(char *cmd)
 {
 	t_builtin	type;
-	static char	**types = {\
+	static char	*types[] = {\
 		NULL, "echo", "cd", "pwd", "export", "unset", "env", "exit"};
 
 	type = 1;

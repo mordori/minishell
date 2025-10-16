@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 10:33:34 by jvalkama          #+#    #+#             */
 /*   Updated: 2025/10/14 15:05:24 by jvalkama         ###   ########.fr       */
@@ -16,20 +16,24 @@
 # include "defines.h"
 # include "builtin.h"
 # include "libft_str.h"
+# include "str_utils.h"
 # include "executor_utils.h"
+# include "errors.h"
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <sys/wait.h>
 
 //executor.c
 int		executor(t_minishell *ms);
-void	execute_simple(t_cmd *cmd, t_state *shell_state);
-void	execute_pipeline(t_cmd **cmd, t_state *shell_state);
+void	execute_simple(t_minishell *ms, t_node *node, t_state *state);
+void	execute_pipeline(t_minishell *ms, t_node *node, t_state *state);
+int		wait_pids(t_state *state);
 
 //cmd_processor.c
 void	run_node(t_cmd *cmd, t_state *state);
 void	exec_builtin(t_cmd *cmd, t_state *state);
-int		exec_extern(t_cmd *cmd, t_state *state);
+void	exec_extern(t_cmd *cmd, t_state *state);
 
 //cmd_verification.c
 void	command_verification(t_minishell *ms);
