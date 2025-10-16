@@ -14,6 +14,11 @@
 
 //FIXME: to do: ft_strjoin and ft_split called in scan_directory are not memarena-friendly rn.
 
+static t_builtin	verify_builtin(char *cmd);
+static char			*verify_path(t_minishell *ms, char *cmd_name);
+static char			*env_path_verif(t_minishell *ms, char *path, char *cmd_name);
+static char			*absolute_path_verif(t_minishell *ms, char *path);
+
 void	command_verification(t_minishell *ms)
 {
 	t_node		*node;
@@ -23,15 +28,15 @@ void	command_verification(t_minishell *ms)
 	node = ms->node;
 	if (node)
 	{
-		cmd = node->cmd;
+		cmd = &node->cmd;
 		cmd_name = cmd->args[0];
 		cmd->builtin = verify_builtin(cmd_name);
-		if (!cmd->buitin)
+		if (!cmd->builtin)
 		{
-			cmd->cmd = verify_path(cmd_name);
+			cmd->cmd = verify_path(ms, cmd_name);
 			if (!cmd->cmd)
 			{
-				ms->state->exit_status = ERROR;
+				ms->state.exit_status = ERROR;
 				return ;
 			}
 		}
@@ -41,13 +46,13 @@ void	command_verification(t_minishell *ms)
 	}
 }
 
-t_builtin	verify_builtin(char *cmd)
+static t_builtin	verify_builtin(char *cmd)
 {
 	t_builtin	type;
-	char		**types;
+	static char	*types[] = {\
+		NULL, "echo", "cd", "pwd", "export", "unset", "env", "exit"};
 
 	type = 1;
-	types = {NULL, "echo", "cd", "pwd", "export", "unset", "env", "exit"};
 	while (type < 8)
 	{
 		if (ft_strcmp(types[type], cmd) == 0)
@@ -57,7 +62,7 @@ t_builtin	verify_builtin(char *cmd)
 	return (FALSE);
 }
 
-char	*verify_path(char *cmd_name)
+static char	*verify_path(t_minishell *ms, char *cmd_name)
 {
 	char	*path;
 	int		i;
@@ -65,33 +70,35 @@ char	*verify_path(char *cmd_name)
 	i = 0;
 	path = getenv("PATH");
 	if (!path || cmd_name[0] == '/')
-		return (absolute_path_verif(cmd_name));
-	return (env_path_verif(path, cmd_name));
+		return (absolute_path_verif(ms, cmd_name));
+	return (env_path_verif(ms, path, cmd_name));
 }
 
-char	*env_path_verif(char *path, char *cmd_name)
+static char	*absolute_path_verif(t_minishell *ms, char *cmd_path)
+{
+	if (access(cmd_path, F_OK) == SUCCESS)
+		return (cmd_path);
+	warning(ms, cmd_path);
+	return (NULL);
+}
+
+static char	*env_path_verif(t_minishell *ms, char *path, char *cmd_name)
 {
 	char			**dir_list;
 	char			*full_path;
 	int				i;
 
 	i = 0;
-	dir_list = ft_split(path, ':'); //FIXME: ft_split malloccaa
+	dir_list = ft_split(path, ':');
 	while (dir_list[i])
 	{
-		full_path = scan_directory(dir_list[i]);
+		full_path = scan_directory(ms, dir_list[i], cmd_name);
 		if (full_path)
 			return (full_path);
 		i++;
 	}
-	printf("%s: command not found", cmd_name);
+	warning(ms, cmd_name);
 	return (NULL);
 }
 
-char	*absolute_path_verif(char *path)
-{
-	if (access(path, F_OK) == SUCCESS)
-		return (path);
-	printf("minishell: %s: No such file or directory", path);
-	return (NULL);
-}
+

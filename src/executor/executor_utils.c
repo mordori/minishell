@@ -6,32 +6,34 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:58:00 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/16 16:50:53 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/16 16:50:56 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#include "executor_utils.h"
 
-char	*scan_directory(char *directory)
+char	*scan_directory(t_minishell *ms, char *directory, char *cmd_name)
 {
 	DIR				*dirstream;
 	struct dirent	*file;
 	struct stat		*buffer;
 
+	file = NULL;
+	buffer = NULL;
 	dirstream = opendir(directory);
 	if (!dirstream)
 		//FIXME: add logic: FAILED TO OPEN DIRECTORY.
 	file = readdir(dirstream);
 	while (file) //NOTE: readdir returns NULL if nothing's left in dir.
 	{
-		if (stat(file->d_name, &buffer) == -1) //FIXME: stat requires full path, d_name not enough.
+		if (stat(file->d_name, buffer) == -1) //FIXME: stat requires full path, d_name not enough.
 			//FIXME: add logic: FAILED TO STAT FILE.
-		if ((buffer.st_mode & S_IFMT) == S_IFREG)
+		if ((buffer->st_mode & S_IFMT) == S_IFREG)
 		{
 			if (ft_strcmp(file->d_name, cmd_name) == 0)
 			{
 				closedir(dirstream);
-				return (ft_strjoin(dir_list[i], cmd_name)); //FIXME: muuten hyva mutta ft_strjoin malloccaa
+				return (str_join(ms, directory, cmd_name));
 			}
 		}
 		file = readdir(dirstream);
