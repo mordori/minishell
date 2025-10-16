@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/14 16:16:45 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/16 16:50:58 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,46 +17,40 @@
 
 int	executor(t_minishell *ms)
 {
-	t_state		*state;
-
-	state = &ms->state;
-	command_verification(ms);
-	if (state->exit_status)
-		clean_reset(ms);
-	if (state->mode == SIMPLE)
-		execute_simple(ms);
-	else if (state->mode == PIPELINE)
-		execute_pipeline(ms);
-	if (state->exit_status)
-		clean_reset(ms);
+	command_verification(ms); //NOTE: look into moving this deeper. reason: commands could be verified where they're accessed, e.g. within the loop.
+	if (ms->state.mode == SIMPLE)
+		execute_simple(ms, ms->node, &ms->state);
+	else if (ms->state.mode == PIPELINE)
+		execute_pipeline(ms, ms->node, &ms->state);
 	return(SUCCESS);
 }
 
 //NOTE: ms is needed at least by the builtin export, if it triggers 'invalid identificator' -error
 
-int	execute_simple(t_minishell *ms)
+void	execute_simple(t_minishell *ms, t_node *node, t_state *state)
 {
 	pid_t		child_pid;
 	int			status;
 
-	if (is_builtin(cmd->cmd))
-		exec_builtin(cmd, state);
+	if (node->cmd.builtin)
+		exec_builtin(&node->cmd, state);
 	else
 	{
-		if (fork_child(&child_pid, state))
-			return (ERROR_FORKING);
+		if (fork_child(&child_pid))
+			warning(ms, NULL);
 		if (child_pid == 0)
-			exec_extern(cmd, state);
+			exec_extern(&node->cmd, state);
 		waitpid(child_pid, &status, 0);
 		if (WIFEXITED(status))
+		{
 			state->exit_status = WEXITSTATUS(status);
-	}
-	return (state->exit_status);
+			warning(ms, NULL);
+		}
+	} //katotaan mita on in ja out ja sitten luetaan/kirjoitetaan
 }
 
-int	execute_pipeline(t_minishell *ms)
+void	execute_pipeline(t_minishell *ms, t_node *node, t_state *state)
 {
-	bool		is_builtin;
 	int			prev_fd;
 	int			count;
 
@@ -66,25 +60,28 @@ int	execute_pipeline(t_minishell *ms)
 	{
 		state->exit_status = spawn_and_run(node, state, count, &prev_fd);
 		if (state->exit_status)
-			return (state->exit_status);
+			warning(ms, NULL);
 		node = node->next;
 		count++;
 	}
-	wait_pids(node, state);
-	return (state->exit_status);
+	if (wait_pids(state))
+		warning(ms, NULL);
 }
 
-void	wait_pids(t_cmd *cmd, t_shell *shell)
+int	wait_pids(t_state *state)
 {
 	int		status;
+	int		i;
 
-	while (i < shell->pid_count)
+	i = 0;
+	while (i < state->child_count)
 	{
-		wait_pid(shell->pids[i], &status, 0);
+		waitpid(state->pids[i], &status, 0); //FIX: declaration from sys/types.h in defines.h doesnt seem to reach here. so There's also sys/wait.h in executor.h now.
 		if (WIFEXITED(status))
-			shell->exit_status = WEXITSTATUS(status);
-		if (shell->exit_status)
-			return (shell->exit_status); // if error, should close *everything*, and probably return some msg.
+			state->exit_status = WEXITSTATUS(status);
+		if (state->exit_status)
+			return (state->exit_status);
 		i++;
 	}
+	return (SUCCESS);
 }
