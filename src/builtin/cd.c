@@ -12,12 +12,12 @@
 
 #include "builtin.h"
 
-//still VERIFY ARG SYNTAX
+//FIXME: still VERIFY ARG SYNTAX
 void	cd(t_cmd *cmd, t_state *state)
 {
 	char	*path;
 
-	path = cmd->args[1]; //arg syntax ?
+	path = cmd->args[1]; //FIXME: arg syntax ? esim. "cd -"
 	if (!path)
 	{
 		path = getenv("HOME");

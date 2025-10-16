@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/08 05:24:22 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/14 16:26:39 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ typedef struct s_minishell		t_minishell;
 typedef struct s_redir			t_redir;
 typedef struct s_prompt			t_prompt;
 
-typedef int		t_cmd_func(t_cmd, t_state);
+typedef void	t_funct(t_cmd, t_state);
 
 enum e_builtin_type
 {

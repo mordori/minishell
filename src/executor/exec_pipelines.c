@@ -12,12 +12,7 @@
 
 #include "executor.h"
 
-//the child must call free() on heap-allocated memory 
-//if it owns pointers and intends to exit cleanly — 
-//but only if it accesses dynamically allocated memory. 
-//	Accesses =
-//
-//However, due to fork(), both parent and child initially share 
+//due to fork(), both parent and child initially share 
 //the same heap (via COW), but each is responsible for its own cleanup.
 //The key insight is: free() in the child does not free memory 
 //from the parent, and vice versa.
@@ -29,19 +24,19 @@ int	spawn_and_run(t_node *node, t_state *state, int count, int *prev_fd)
 	child_pid = -1;
 	if (node->next)
 	{
-		if (create_pipe(node, prev_fd)
+		if (create_pipe(node, prev_fd))
 			return (ERROR_PIPELINE);
 	}
-	if (child_pid != 0) //no child will ever get here since they terminate in run_node() - conditional can be changed.
+	if (child_pid != 0)
 	{
 		if (fork_child(&child_pid))
 			return (ERROR_FORKING);
 		if (child_pid > 0)
-			state->pids[count] = child_pid; //this creates a copy (COW) to child of shell i think.
+			state->pids[count] = child_pid; //NOTE: this creates a copy on write (COW) to child i think.
 	}
 	if (child_pid == 0)
 	{
-		if (redirections(node, *prev_fd))
+		if (io_directions(node, *prev_fd))
 			return (ERROR_REDIR);
 		run_node(node->cmd, state);
 	}
@@ -66,11 +61,12 @@ int	create_pipe(t_node *node, int *prev_fd)
 	return (SUCCESS);
 }
 
-int	redirections(t_node *node, int prev_fd)
+int	io_directions(t_node *node, int prev_fd)
 {
+	//NOTE: if in or out redir, then plug it in here somewhere
 	if (node->prev)
 	{
-		if (dup2(prev_fd, STDIN_FILENO)
+		if (dup2(prev_fd, STDIN_FILENO))
 	  		return (ERROR_REDIR);
 		if (close(prev_fd))
 			return (ERROR_CLOSING_FD);

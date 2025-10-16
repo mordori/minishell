@@ -10,3 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef EXECUTOR_UTILS_H
+# define EXECUTOR_UTILS_H
+
+# include "defines.h"
+# include "libft_str.h"
+# include <dirent.h>
+# include <sys/stat.h>
+
+char	*scan_directory(t_minishell *ms, char *directory);
+
+#endif
