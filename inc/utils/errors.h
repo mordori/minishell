@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:32:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/05 20:43:01 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/15 02:15:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@
 # include "defines.h"
 
 void	error_exit(t_minishell *ms, char *msg);
-void	warning_input(t_minishell *ms, char *msg);
 void	warning_syntax(t_minishell *ms, char *token);
-void	warning_file(t_minishell *ms, char *filename);
-void	warning_system(t_minishell *ms);
+void	warning(t_minishell *ms, char *msg);
 
 #endif

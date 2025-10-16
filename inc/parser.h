@@ -6,16 +6,19 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/08 02:40:34 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/15 04:50:18 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
 
+# define _GNU_SOURCE
+
 # include <fcntl.h>
 # include <unistd.h>
 # include <readline/readline.h>
+# include <readline/history.h>
 
 # include "defines.h"
 

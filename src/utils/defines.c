@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 21:46:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/02 03:36:19 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/13 01:03:34 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,3 +24,9 @@ const char**	get_quotes()
 	return (quotes);
 }
 
+const char**	get_unsupported_chars()
+{
+	static const char	*characters[] = \
+{"\\", ";", "&&", "&", "||", "*", "(", ")", "{", "}", "~", "#", "`", "!", NULL};
+	return (characters);
+}
