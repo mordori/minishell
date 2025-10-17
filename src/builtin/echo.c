@@ -23,12 +23,13 @@ void	echo(t_cmd *cmd, t_state *state)
 	bool		in_between;
 	int			i;
 
+	(void) state;
 	i = 1;
 	in_between = false;
 	while (cmd->args[i])
 	{
 		if (in_between)
-			write(1, ' ', 1);
+			write(1, " ", 1);
 		string = cmd->args[i];
 		printf("%s", string);
 		if (!in_between)

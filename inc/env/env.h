@@ -17,7 +17,7 @@
 # include "defines.h"
 # include "libft_str.h"
 # include "env_utils.h"
-# include "mem_utils.h"
+# include "arena.h"
 
 int		envp_to_envll(char **envp, t_state *state);
 void	var_to_node(char *var, t_env *env);

@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "env_utils.h"
+
 t_env	**envll_findkey(t_state *state, char *key)
 {
 	t_env	*env;
@@ -18,7 +20,7 @@ t_env	**envll_findkey(t_state *state, char *key)
 	while (env)
 	{
 		if (ft_strcmp(env->value, key) == 0)
-			return (&env);
+			return (env);
 		env = env->next;
 	}
 	return (NULL);
@@ -27,7 +29,6 @@ t_env	**envll_findkey(t_state *state, char *key)
 bool	is_valid_key(const char *key, char *delimiter)
 {
 	bool	is_valid;
-	char	c;
 	int		i;
 
 	is_valid = true;
@@ -60,7 +61,9 @@ bool	replace_value(t_env **var, char *value)
 	return (true);
 }
 
+//FIX: the identifier warning thing is something that comes from errno or perror or manually?
 void	warning_identifier(void)
 {
-	warning_input();
+	return ;
+	//warning_input();
 }

@@ -10,3 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef BUILTIN_UTILS_H
+# define BUILTIN_UTILS_H
+
+# include "defines.h"
+
+#endif

@@ -13,11 +13,13 @@
 #include "builtin.h"
 
 static void	display_exporting_vars(t_state *state);
-static void	put_var_into_env(t_state *state);
+static void	put_var_into_env(t_state *state, t_cmd *cmd);
+static int	parse_export(char *var, char **key, char **value, char **delimiter);
+static bool	handle_specials(t_state *state, char *var, char *key, char *value);
 
 void	export(t_cmd *cmd, t_state *state)
 {
-	if (!cmd->argv[1])
+	if (!cmd->args[1])
 		display_exporting_vars(state);
 	else
 		put_var_into_env(state, cmd);
@@ -29,7 +31,7 @@ static void	display_exporting_vars(t_state *state)
 	t_env		*last;
 
 	head = state->env;
-	last = ft_lstlast(state->env);
+	last = (t_env *) ft_lstlast((t_list *) state->env); //NOTE: the casts here might fuck things up. or at least they are not elegant.
 	quicksort(head, last);
 	while (head)
 	{
@@ -50,14 +52,14 @@ static void	put_var_into_env(t_state *state, t_cmd *cmd)
 	int		i;
 	
 	i = 1;
-	while (cmd->argv[i])
+	while (cmd->args[i])
 	{
-		parse_export(cmd->argv[i], &key, &value, &delimiter);
+		parse_export(cmd->args[i], &key, &value, &delimiter);
 		if (!is_valid_key(key, delimiter))
-			return (warning_identifier()); //ask mika
+			warning(ms, NULL); //NOTE: BREAK HERE? also ask mika about error message. "Invalid identifier."
 		if (!delimiter)
 			ft_envadd_back(state->env, ft_envnode_new(key, NULL));
-		is_handled = handle_special_cases(state, cmd->argv[i], key, value);
+		is_handled = handle_specials(state, cmd->args[i], key, value);
 		if (is_handled)
 		{
 			i++;
@@ -66,7 +68,7 @@ static void	put_var_into_env(t_state *state, t_cmd *cmd)
 		ft_envadd_back(&env, ft_envnode_new(key, value));
 		i++;
 	}
-	state->envp = envll_to_envp(state->env);
+	state->envp = envll_to_envp(state->env); //FIX: where the fok is this function these days anyway
 }
 
 static int	parse_export(char *var, char **key, char **value, char **delimiter)
