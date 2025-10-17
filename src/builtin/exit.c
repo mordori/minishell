@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/01 18:09:07 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/17 17:23:00 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 
-void	exitt(t_cmd *cmd, t_state *state)
+void	exitt(t_minishell *ms)
 {
 	//FIX: remember to build this as soon as the exits and errors are clearer.
 	//clean(ms);
 	//exit(EXIT_SUCCESS);
-	(void) cmd; (void) state;
+       (void)ms;
 	return ;
 }
 

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/16 19:40:44 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/17 16:33:02 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include "cleanup.h"
 #include "str_utils.h"
 #include "line_utils.h"
-// #include "executor.h"
+#include "executor.h"
 
 volatile sig_atomic_t	g_signal = 0;
 
@@ -74,8 +74,10 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	ms->pool = arena_create(ms, MEMORY, VOLATILE);
 	if (!ms->vars.base || !ms->pool.base)
 		error_exit(ms, "arena creation failed");
-	ms->state.envp = dup_envp_system(ms, envp);
+	// ms->state.envp = dup_envp_system(ms, envp);
 	//init_nodes(ms);
+	// envp_to_envll(envp, &ms->state);
+	(void)envp;
 	if (isatty(STDIN_FILENO))
 	{
 		ms->mode = INTERACTIVE;
@@ -137,13 +139,13 @@ static inline void	run(t_minishell *ms)
 		tokens = create_tokens(ms->line, ms);
 		if (!tokens || !parse_tokens(ms, tokens))
 			continue ;
-		expand_variables(ms);
+		// expand_variables(ms);
 		setup_io(ms, ms->node);
 #ifdef DEBUG
 debug_print_args_redirs(ms, tokens);
 #endif
-		// if (ms->node->cmd.args)
-		// 	executor(ms);
+		if (ms->node->cmd.args)
+			executor(ms);
 		free(ms->line);
 		ms->line = NULL;
 		close_fds(ms);

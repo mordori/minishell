@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 22:05:32 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/12 06:34:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/17 17:34:15 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,6 @@ void	arena_destroy(t_arena *arena);
 void	arena_reset(t_arena *arena);
 void	*alloc_volatile(t_minishell *ms, size_t size);
 void	*alloc_persistent(t_minishell *ms, t_arena *arena, size_t size);
+void	*alloc_vars(t_minishell *ms, size_t size);
 
 #endif

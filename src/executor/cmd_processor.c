@@ -3,41 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_processor.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/16 16:50:51 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/17 17:46:11 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-void	run_node(t_cmd *cmd, t_state *state)
+void	run_node(t_minishell *ms)
 {
 	//FIXME: parent's custom signal handling back to default
-	if (cmd->builtin)
-		exec_builtin(cmd, state);
+	if (ms->node->cmd.builtin)
+		exec_builtin(ms);
 	else
-		exec_extern(cmd, state);
+		exec_extern(ms);
 	//clean_exit();  // FIXME: for builtins: free everything? Even FDs need to be closed according to many ppl.
 }
 
-void	exec_builtin(t_cmd *cmd, t_state *state)
+void	exec_builtin(t_minishell *ms)
 {
 	static t_fun	*dt[8] = {NULL, &echo, &cd, &pwd, &export, &unset, &env, &exitt};
 
-	return (dt[cmd->builtin](cmd, state));
+	dt[ms->node->cmd.builtin](ms);
 }
 
-void	exec_extern(t_cmd *cmd, t_state *state)
+void	exec_extern(t_minishell *ms)
 {
 	char		*command;
 	char		**args;
 	char		**envp;
 
-	command = cmd->cmd;
-	args = cmd->args + 1;
-	envp = state->envp;
+	command = ms->node->cmd.cmd;
+	args = ms->node->cmd.args + 1;
+	envp = ms->state.envp;
 	execve(command, args, envp); //execve should automatically clean up all memory, even heap
 	if (errno) //return to run_node if execve failed
 		//FIX: handle error.

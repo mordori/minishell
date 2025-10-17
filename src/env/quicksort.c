@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quicksort.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 18:10:23 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/01 19:13:13 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/17 17:42:24 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static t_env	*partition(t_env *low, t_env *high)
 			else
 				i = i->next;
 			swap(i, current);
-		}	
+		}
 		current = current->next;
 	}
 	if (i == NULL)
@@ -58,13 +58,13 @@ static t_env	*partition(t_env *low, t_env *high)
 
 static void	swap(t_env *a, t_env *b)
 {
-	const char		*temp_key;
-	const char		*temp_val;
+	char	*temp_key;
+	char	*temp_val;
 
 	temp_key = a->key;
 	temp_val = a->value;
 	a->key = b->key;
 	a->value = b->value;
 	b->key = temp_key;
-	b->value = temp_value;
+	b->value = temp_val;
 }

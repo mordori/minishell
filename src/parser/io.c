@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/17 09:28:55 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/17 18:17:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	setup_io(t_minishell *ms, t_node *node)
 {
 	t_redir	*r;
 	t_list	*redirs;
+	int i = 0;
 
 	while (node)
 	{
@@ -49,7 +50,9 @@ if (r->type == UNDEFINED)
 					break ;
 			redirs = redirs->next;
 		}
-		set_pipe(ms, node);
+		//if (i)
+			set_pipe(ms, node);
+		i = 1;
 		node = node->next;
 	}
 }

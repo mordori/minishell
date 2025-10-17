@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/17 09:18:12 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/17 17:16:45 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,9 @@ typedef struct s_arena			t_arena;
 typedef struct s_minishell		t_minishell;
 typedef struct s_redir			t_redir;
 typedef struct s_prompt			t_prompt;
+typedef struct s_key_value		t_key_value;
 
-typedef void	t_fun(t_cmd *, t_state *);
+typedef void	t_fun(t_minishell *);
 
 enum e_builtin_type
 {
@@ -137,6 +138,13 @@ struct s_redir
 	char			*filename;
 	t_redir			*next;
 };
+
+struct s_key_value
+{
+	char	*key;
+	char	*value;
+};
+
 
 struct s_env
 {

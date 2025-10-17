@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:24:14 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/02 16:51:14 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/17 17:37:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env_utils.h"
 
-t_env	*ft_envnode_new(char *key, char *value)
+t_env	*ft_envnode_new(t_minishell *ms, char *key, char *value)
 {
-	t_env			*node;
+	t_env	*node;
 
-	node = alloc_system(sizeof(t_env));
-	node->key = content;
+	node = alloc_vars(ms, sizeof(t_env));
+	node->key = key;
 	node->value = value;
 	node->next = NULL;
 	node->prev = NULL;
@@ -40,7 +40,7 @@ void	ft_envadd_back(t_env **env_head, t_env *new_node)
 	}
 }
 
-char	*ft_keydup(char *key_src, char *key_end)
+char	*ft_keydup(t_minishell *ms, char *key_src, char *key_end)
 {
 	size_t		len;
 	size_t		i;
@@ -52,7 +52,7 @@ char	*ft_keydup(char *key_src, char *key_end)
 		return (key_src);
 	while (key_src[len] != *key_end)
 		len++;
-	key = alloc_system((len + 1) * sizeof(char));
+	key = alloc_vars(ms, (len + 1) * sizeof(char));
 	while (i < len)
 	{
 		key[i] = key_src[i];

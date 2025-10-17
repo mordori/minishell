@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/16 06:14:44 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/17 17:41:39 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,13 +55,12 @@ INCS		:=$(addprefix -I, \
 SRCS		:=$(addprefix $(DIR_SRC), \
 				main.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_BUILT), \
-				 \
-				)
+				cd.c echo.c env.c exit.c export.c pwd.c unset.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_ENV), \
-				 \
-				)
+				env_handler.c env_utils.c env_utils2.c quicksort.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EXE), \
-				 \
+				executor.c cmd_verification.c cmd_processor.c \
+				exec_pipelines.c executor_utils.c\
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LEX), \
 				lexer_utils.c lexer.c str_split_utils.c str_split.c)
@@ -69,7 +68,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
 				expansion.c parser.c io_utils.c io.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				arena_list.c arena_utils.c arena.c cleanup.c defines.c \
-				errors.c str_utils.c line_utils.c )
+				errors.c str_utils.c line_utils.c builtin_utils.c)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
 

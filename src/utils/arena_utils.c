@@ -6,12 +6,17 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 00:00:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/12 17:29:56 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/17 17:36:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "arena.h"
 #include "errors.h"
+
+void	*alloc_vars(t_minishell *ms, size_t size)
+{
+	return (alloc_persistent(ms, &ms->vars, size));
+}
 
 void	*alloc_persistent(t_minishell *ms, t_arena *arena, size_t size)
 {
