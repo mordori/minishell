@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/13 18:29:07 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/16 19:45:10 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 #include "str_utils.h"
 #include "arena_list.h"
 #include "arena.h"
+
+#ifdef DEBUG
+#include <stdio.h>
+#endif
 
 static inline char		**expand_args(t_minishell *ms, char **args);
 // static inline t_list	*expand_redirs(t_list *redirs);

@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.h                                             :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/02 16:53:19 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/16 04:17:40 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/10/15 19:15:02 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/10/16 05:37:26 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAIN_H
-# define MAIN_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-# include <readline/readline.h>
-# include <readline/history.h>
+#include <stdlib.h>
 
 # include "defines.h"
 
-void	sig_handler(int sig);
+int	get_next_line(t_minishell *ms, int fd, char **line);
 
 #endif

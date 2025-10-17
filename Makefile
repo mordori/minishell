@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/14 00:19:51 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/16 06:14:44 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,23 +64,12 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EXE), \
 				 \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LEX), \
-				lexer_utils.c \
-				lexer.c \
-				str_split_utils.c \
-				str_split.c)
+				lexer_utils.c lexer.c str_split_utils.c str_split.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
-				expansion.c \
-				parser.c \
-				io.c)
+				expansion.c parser.c io_utils.c io.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
-				arena_list.c \
-				arena_utils.c \
-				arena.c \
-				cleanup.c \
-				defines.c \
-				errors.c \
-				str_utils.c \
-				)
+				arena_list.c arena_utils.c arena.c cleanup.c defines.c \
+				errors.c str_utils.c line_utils.c )
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
 

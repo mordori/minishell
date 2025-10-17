@@ -1,23 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.h                                             :+:      :+:    :+:   */
+/*   line_utils.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/02 16:53:19 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/16 04:17:40 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/10/16 04:06:14 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/10/16 04:12:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAIN_H
-# define MAIN_H
+#ifndef LINE_UTILS_H
+# define LINE_UTILS_H
+
+# define _GNU_SOURCE
 
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
+# include <fcntl.h>
 
 # include "defines.h"
 
-void	sig_handler(int sig);
+char	*get_line(t_minishell *ms, char *prompt);
+int		rl_event(void);
+char	*get_prompt(t_minishell *ms, t_prompt *p);
+void	set_hostname(t_minishell *ms, t_prompt *p);
 
 #endif

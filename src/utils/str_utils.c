@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/12 22:25:16 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/15 19:51:29 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,9 @@ char	**dup_envp_system(t_minishell *ms, char **envp)
 
 char	*int_to_str(t_minishell *ms, int n)
 {
-	char		*str;
-	size_t		digits;
-	int64_t		num;
+	char	*str;
+	size_t	digits;
+	int64_t	num;
 
 	num = n;
 	if (n < 0)
