@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/16 05:23:57 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/17 09:18:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ enum e_arena_type
 
 enum e_shell_mode
 {
-	SCRIPT,
+	AUTONOMOUS,
 	INTERACTIVE
 };
 

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 03:53:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/16 05:24:18 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/17 09:18:23 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*get_line(t_minishell *ms, char *prompt)
 	char	*line;
 
 	g_signal = 0;
-	if (ms->mode == SCRIPT)
+	if (ms->mode == AUTONOMOUS)
 		get_next_line(ms, STDIN_FILENO, &line);
 	if (ms->mode == INTERACTIVE)
 	{

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/16 05:32:10 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/17 09:28:55 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,21 +22,23 @@ static inline bool	set_out_file(t_minishell *ms, t_node *node, t_redir *r);
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof);
 static inline void	set_pipe(t_minishell *ms, t_node *node);;
 
-void	setup_io(t_minishell *ms)
+void	setup_io(t_minishell *ms, t_node *node)
 {
 	t_redir	*r;
-	t_node	*node;
-	t_list	*head;
+	t_list	*redirs;
 
-	node = ms->node;
 	while (node)
 	{
-		head = node->cmd.redirs;
+		redirs = node->cmd.redirs;
 		node->cmd.in = STDIN_FILENO;
 		node->cmd.out = STDOUT_FILENO;
-		while (head)
+		while (redirs)
 		{
-			r = (t_redir *)head->content;
+			r = (t_redir *)redirs->content;
+#ifdef DEBUG
+if (r->type == UNDEFINED)
+	printf("UNDEFINED TOKEN TYPE!");
+#endif
 			if (r->type == IN)
 				if (!set_in_file(ms, node, r->filename))
 					break ;
@@ -45,7 +47,7 @@ void	setup_io(t_minishell *ms)
 			if (r->type == OUT || r->type == OUT_APPEND)
 				if (!set_out_file(ms, node, r))
 					break ;
-			head = head->next;
+			redirs = redirs->next;
 		}
 		set_pipe(ms, node);
 		node = node->next;
@@ -82,7 +84,7 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 	if (!g_signal)
 		write_heredoc(ms, node, eof);
 	close(node->cmd.in);
-	node->cmd.in = open(filename, O_RDWR, RW_______);
+	node->cmd.in = open(filename, O_RDWR);
 	if (node->cmd.in == ERROR)
 		error_exit(ms, "heredoc open failed");
 	unlink(filename);
@@ -92,7 +94,7 @@ static inline bool	set_in_file(t_minishell *ms, t_node *node, char *filename)
 {
 	if (node->cmd.in > STDOUT_FILENO)
 		close(node->cmd.in);
-	node->cmd.in = open(filename, O_RDONLY, 0);
+	node->cmd.in = open(filename, O_RDONLY);
 	if (node->cmd.in == ERROR)
 	{
 		warning(ms, filename);

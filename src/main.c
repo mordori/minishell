@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/16 05:11:07 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/16 19:40:44 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ static inline void	run(t_minishell *ms)
 		if (!tokens || !parse_tokens(ms, tokens))
 			continue ;
 		expand_variables(ms);
-		setup_io(ms);
+		setup_io(ms, ms->node);
 #ifdef DEBUG
 debug_print_args_redirs(ms, tokens);
 #endif
