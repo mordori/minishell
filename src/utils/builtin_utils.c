@@ -16,7 +16,9 @@
 bool	is_pluschar(char *var, char delimiter)
 {
 	bool	is_pluschar;
+	int		i;
 
+	i = 0;
 	is_pluschar = false;
 	while (var[i] && var[i] != delimiter)
 	{

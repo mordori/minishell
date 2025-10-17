@@ -12,15 +12,17 @@
 
 #include "executor.h"
 
+static void	remove_node(t_env *env);
+
 void	unset(t_cmd *cmd, t_state *state)
 {	
 	char	*arg;
 	int		i;
 
 	i = 1;
-	while (argv[i])
+	while (cmd->args[i])
 	{
-		arg = cmd->argv[i];
+		arg = cmd->args[i];
 		while (state->env)
 		{
 			if (ft_strcmp(arg, state->env->key) == 0)
@@ -31,7 +33,7 @@ void	unset(t_cmd *cmd, t_state *state)
 	}
 }
 
-void	remove_node(t_env *env)
+static void	remove_node(t_env *env)
 {
 	t_env	*prior;
 	t_env	*latter;

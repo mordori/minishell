@@ -15,6 +15,8 @@
 
 # include "defines.h"
 # include "libft_list.h"
+# include "env_utils.h"
+# include "env.h"
 # include <stdio.h>
 # include <stdlib.h>
 

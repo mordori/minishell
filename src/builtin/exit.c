@@ -14,12 +14,16 @@
 
 void	exitt(t_cmd *cmd, t_state *state)
 {
-	clean(ms);
-	//clean up additional structs beside ms, but strive to have as many as possible structs on local stack.
-	exit(EXIT_SUCCESS);
+	//FIX: remember to build this as soon as the exits and errors are clearer.
+	//clean(ms);
+	//exit(EXIT_SUCCESS);
+	(void) cmd; (void) state;
+	return ;
 }
+
 /*
-"DESCRIPTION
+ * NOTE:
+"		DESCRIPTION
        The exit utility shall cause the shell to exit from its current  execu‐
        tion environment with the exit status specified by the unsigned decimal
        integer n.  If the current execution environment is a subshell environ‐
@@ -28,9 +32,7 @@ void	exitt(t_cmd *cmd, t_state *state)
        shell  environment was invoked; otherwise, the shell utility shall ter‐
        minate with the specified exit status. If n is specified, but its value
        is not between 0 and 255 inclusively, the exit status is undefined.
-
-       A  trap  on  EXIT shall be executed before the shell terminates, except
+			A  trap  on  EXIT shall be executed before the shell terminates, except
        when the exit utility is invoked in that trap itself, in which case the
        shell shall exit immediately."
 */
-
