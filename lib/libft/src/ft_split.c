@@ -6,16 +6,13 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 21:49:31 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/02 01:23:58 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 03:15:52 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
 #include "libft_str.h"
-
-static inline size_t	ft_count_words(char const *s, char c);
-static inline size_t	ft_word_len(char const **s, char c);
 
 /**
  * Allocates memory and returns an array of strings by splitting string `s`
@@ -62,7 +59,7 @@ char	**ft_split(char const *s, char c)
  * @param c Delimiter character.
  * @return Number of words found.
  */
-static inline size_t	ft_count_words(char const *s, char c)
+size_t	ft_count_words(char const *s, char c)
 {
 	size_t	count;
 
@@ -89,7 +86,7 @@ static inline size_t	ft_count_words(char const *s, char c)
  * @param c Delimiter character.
  * @return Length of a word.
  */
-static inline size_t	ft_word_len(char const **s, char c)
+size_t	ft_word_len(char const **s, char c)
 {
 	size_t	len;
 

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 04:09:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/08 04:57:33 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 03:11:32 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "errors.h"
 #include "str_utils.h"
 
-static inline void	tokenize(t_token *token);
+static inline void	set_token_type(t_token *token);
 
 t_token	**create_tokens(char *src, t_minishell *ms)
 {
@@ -23,7 +23,7 @@ t_token	**create_tokens(char *src, t_minishell *ms)
 	char	**srcs;
 	int		i;
 
-	srcs = str_split(ms, src);
+	srcs = tokenize(ms, src);
 	if (!srcs)
 		return (NULL);
 	i = 0;
@@ -36,7 +36,7 @@ t_token	**create_tokens(char *src, t_minishell *ms)
 		tokens[i] = alloc_volatile(ms, sizeof(t_token));
 		tokens[i]->src = srcs[i];
 		tokens[i]->pos = i;
-		tokenize(tokens[i]);
+		set_token_type(tokens[i]);
 		++i;
 	}
 	tokens[i] = alloc_volatile(ms, sizeof(t_token));
@@ -46,7 +46,7 @@ t_token	**create_tokens(char *src, t_minishell *ms)
 	return (tokens);
 }
 
-static inline void	tokenize(t_token *token)
+static inline void	set_token_type(t_token *token)
 {
 	if (is_redirection(token->src))
 		token->type = REDIR;

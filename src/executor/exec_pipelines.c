@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/17 18:12:09 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 00:00:22 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	io_directions(t_node *node, int prev_fd)
 	if (node->prev)
 	{
 		if (dup2(prev_fd, STDIN_FILENO))
-	  		return (ERROR_REDIR);
+			return (ERROR_REDIR);
 		if (close(prev_fd))
 			return (ERROR_PIPELINE);
 	}

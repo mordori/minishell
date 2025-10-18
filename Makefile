@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/17 17:41:39 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/18 03:13:32 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,7 +63,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EXE), \
 				exec_pipelines.c executor_utils.c\
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LEX), \
-				lexer_utils.c lexer.c str_split_utils.c str_split.c)
+				lexer_utils.c lexer.c tokenization_utils.c tokenization.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
 				expansion.c parser.c io_utils.c io.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \

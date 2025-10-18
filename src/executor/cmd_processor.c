@@ -6,11 +6,12 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/17 17:46:11 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 04:51:56 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "errors.h"
 
 void	run_node(t_minishell *ms)
 {
@@ -31,15 +32,15 @@ void	exec_builtin(t_minishell *ms)
 
 void	exec_extern(t_minishell *ms)
 {
-	char		*command;
-	char		**args;
-	char		**envp;
+	char	*command;
+	char	**args;
+	char	**envp;
 
 	command = ms->node->cmd.cmd;
-	args = ms->node->cmd.args + 1;
+	args = ms->node->cmd.args;
 	envp = ms->state.envp;
 	execve(command, args, envp); //execve should automatically clean up all memory, even heap
 	if (errno) //return to run_node if execve failed
-		//FIX: handle error.
-		return ;
+		warning(ms, command);
+	return ;
 }

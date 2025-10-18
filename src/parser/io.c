@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/17 18:17:30 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/17 23:27:31 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	setup_io(t_minishell *ms, t_node *node)
 {
 	t_redir	*r;
 	t_list	*redirs;
-	int i = 0;
 
 	while (node)
 	{
@@ -50,9 +49,7 @@ if (r->type == UNDEFINED)
 					break ;
 			redirs = redirs->next;
 		}
-		//if (i)
-			set_pipe(ms, node);
-		i = 1;
+		set_pipe(ms, node);
 		node = node->next;
 	}
 }
@@ -61,16 +58,19 @@ void	set_pipe(t_minishell *ms, t_node *node)
 {
 	int	pipefd[2];
 
-	if (pipe(pipefd) == ERROR)
-		error_exit(ms, "pipe failed");
-	if (node->cmd.out == STDOUT_FILENO)
-		node->cmd.out = pipefd[1];
-	else
-		close(pipefd[1]);
-	if (node->cmd.in == STDIN_FILENO)
-		node->cmd.in = pipefd[0];
-	else
-		close(pipefd[0]);
+	if (node != ms->node)
+	{
+		if (pipe(pipefd) == ERROR)
+			error_exit(ms, "pipe failed");
+		if (node->cmd.in == STDIN_FILENO)
+			node->cmd.in = pipefd[0];
+		else
+			close(pipefd[0]);
+		if (node->cmd.out == STDOUT_FILENO)
+			node->cmd.out = pipefd[1];
+		else
+			close(pipefd[1]);
+	}
 	node->pipe_fds[0] = node->cmd.in;
 	node->pipe_fds[1] = node->cmd.out;
 }
@@ -113,7 +113,7 @@ static inline bool	set_out_file(t_minishell *ms, t_node *node, t_redir *r)
 	flags = O_WRONLY | O_CREAT;
 	if (r->type == OUT_APPEND)
 		flags |= O_APPEND;
-	if (r->type == OUT && !node->cmd.args)
+	if (r->type == OUT)
 		flags |= O_TRUNC;
 	if (node->cmd.out > STDOUT_FILENO)
 		close(node->cmd.out);

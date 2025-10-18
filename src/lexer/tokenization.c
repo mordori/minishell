@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:06:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/13 01:01:31 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 03:11:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 static inline int		count_words(t_minishell *ms, char const *s);
 static inline size_t	word_length(char const **s);
 
-char	**str_split(t_minishell *ms, char const *src)
+char	**tokenize(t_minishell *ms, char const *src)
 {
 	char	**strs;
 	int		words;

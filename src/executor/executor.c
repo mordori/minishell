@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/17 18:06:50 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 07:08:36 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,11 @@ int	executor(t_minishell *ms)
 
 void	execute_simple(t_minishell *ms)
 {
-	pid_t		child_pid;
-	int			status;
+	pid_t	child_pid;
+	int		status;
 
+	if (ms->node->pipe_fds[0] == ERROR || ms->node->pipe_fds[1] == ERROR)
+		return ;
 	if (ms->node->cmd.builtin)
 		exec_builtin(ms);
 	else
@@ -51,16 +53,19 @@ void	execute_simple(t_minishell *ms)
 
 void	execute_pipeline(t_minishell *ms)
 {
-	int		prev_fd;
-	int		count;
+	int	prev_fd;
+	int	count;
 
 	count = 0;
 	prev_fd = -1;
 	while (ms->node)
 	{
-		ms->state.exit_status = spawn_and_run(ms, count, &prev_fd);
-		if (ms->state.exit_status)
-			warning(ms, NULL);
+		if (ms->node->pipe_fds[0] != ERROR && ms->node->pipe_fds[1] != ERROR)
+		{
+			ms->state.exit_status = spawn_and_run(ms, count, &prev_fd);
+			if (ms->state.exit_status)
+				warning(ms, NULL);
+		}
 		ms->node = ms->node->next;
 		count++;
 	}
@@ -70,8 +75,8 @@ void	execute_pipeline(t_minishell *ms)
 
 int	wait_pids(t_state *state)
 {
-	int		status;
-	int		i;
+	int	status;
+	int	i;
 
 	i = 0;
 	while (i < state->child_count)
