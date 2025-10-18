@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:28:15 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/01 14:28:55 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/18 17:42:09 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "defines.h"
 # include "libft_str.h"
 # include "str_utils.h"
+# include "arena.h"
 # include <dirent.h>
 # include <sys/stat.h>
 
