@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_processor.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/18 04:51:56 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 18:20:01 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	exec_extern(t_minishell *ms)
 	args = ms->node->cmd.args;
 	envp = ms->state.envp;
 	execve(command, args, envp); //execve should automatically clean up all memory, even heap
-	if (errno) //return to run_node if execve failed
-		warning(ms, command);
+	//if (errno) //return to run_node if execve failed
+	//	warning(ms, command);
 	return ;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/18 02:38:20 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 18:02:05 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,8 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	ms->pool = arena_create(ms, MEMORY, VOLATILE);
 	if (!ms->vars.base || !ms->pool.base)
 		error_exit(ms, "arena creation failed");
-	// ms->state.envp = dup_envp_system(ms, envp);
-	//init_nodes(ms);
-	// envp_to_envll(envp, &ms->state);
+	ms->state.envp = dup_envp_system(ms, envp);
+	envp_to_envll(ms, envp, &ms->state);
 	(void)envp;
 	if (isatty(STDIN_FILENO))
 	{

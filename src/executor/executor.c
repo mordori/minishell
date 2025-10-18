@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/18 07:08:36 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 18:13:58 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,15 @@ void	execute_simple(t_minishell *ms)
 		if (fork_child(&child_pid))
 			warning(ms, NULL);
 		if (child_pid == 0)
+		{
 			exec_extern(ms);
+		}
 		waitpid(child_pid, &status, 0);
 		if (WIFEXITED(status))
 		{
 			ms->state.exit_status = WEXITSTATUS(status);
-			warning(ms, NULL);
+			if (ms->state.exit_status)
+				warning(ms, NULL);
 		}
 	} //katotaan mita on in ja out ja sitten luetaan/kirjoitetaan
 }
