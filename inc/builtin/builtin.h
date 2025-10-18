@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 13:52:41 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/16 16:50:50 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/17 17:26:20 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,24 +21,24 @@
 # include <stdlib.h>
 
 //cd.c
-void	cd(t_cmd *cmd, t_state *state);
+void	cd(t_minishell *ms);
 
 //echo.c
-void	echo(t_cmd *cmd, t_state *state);
+void	echo(t_minishell *ms);
 
 //pwd.c
-void	pwd(t_cmd *cmd, t_state *state);
+void	pwd(t_minishell *ms);
 
 //export.c
-void	export(t_cmd *cmd, t_state *state);
+void	export(t_minishell *ms);
 
 //unset.c
-void	unset(t_cmd *cmd, t_state *state);
+void	unset(t_minishell *ms);
 
 //env.c
-void	env(t_cmd *cmd, t_state *state);
+void	env(t_minishell *ms);
 
 //exit.c
-void	exitt(t_cmd *cmd, t_state *state);
+void	exitt(t_minishell *ms);
 
 #endif

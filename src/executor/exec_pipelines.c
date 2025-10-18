@@ -3,44 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipelines.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/09/16 16:00:03 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/18 00:00:22 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-//due to fork(), both parent and child initially share 
+//due to fork(), both parent and child initially share
 //the same heap (via COW), but each is responsible for its own cleanup.
-//The key insight is: free() in the child does not free memory 
+//The key insight is: free() in the child does not free memory
 //from the parent, and vice versa.
 
-int	spawn_and_run(t_node *node, t_state *state, int count, int *prev_fd)
+int	spawn_and_run(t_minishell *ms, int count, int *prev_fd)
 {
 	pid_t		child_pid;
-	
+
 	child_pid = -1;
-	if (node->next)
-	{
-		if (create_pipe(node, prev_fd))
-			return (ERROR_PIPELINE);
-	}
+	// if (ms->node->next)
+	// {
+	// 	if (create_pipe(node, prev_fd))
+	// 		return (ERROR_PIPELINE);
+	// }
 	if (child_pid != 0)
 	{
 		if (fork_child(&child_pid))
 			return (ERROR_FORKING);
 		if (child_pid > 0)
-			state->pids[count] = child_pid; //NOTE: this creates a copy on write (COW) to child i think.
+			ms->state.pids[count] = child_pid; //NOTE: this creates a copy on write (COW) to child i think.
 	}
 	if (child_pid == 0)
 	{
-		if (io_directions(node, *prev_fd))
+		if (io_directions(ms->node, *prev_fd))
 			return (ERROR_REDIR);
-		run_node(&node->cmd, state);
+		run_node(ms);
 	}
-	if (close_parent_pps(node))
+	if (close_parent_pps(ms->node))
 		return (ERROR_PIPELINE);
 	return (SUCCESS);
 }
@@ -67,7 +67,7 @@ int	io_directions(t_node *node, int prev_fd)
 	if (node->prev)
 	{
 		if (dup2(prev_fd, STDIN_FILENO))
-	  		return (ERROR_REDIR);
+			return (ERROR_REDIR);
 		if (close(prev_fd))
 			return (ERROR_PIPELINE);
 	}

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 14:37:47 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/09/29 02:05:32 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 03:01:17 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ char	*ft_strnstr(const char *big, const char *little, size_t len);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strrchr(const char *s, int c);
 char	**ft_split(char const *s, char c);
+size_t	ft_count_words(char const *s, char c);
+size_t	ft_word_len(char const **s, char c);
 void	ft_free_split(char **strs);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 bool	ft_striteri(char *s, int (*f)(char*));

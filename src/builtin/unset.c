@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:23:57 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/01 17:25:42 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/17 17:20:05 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,24 @@
 
 static void	remove_node(t_env *env);
 
-void	unset(t_cmd *cmd, t_state *state)
-{	
+void	unset(t_minishell *ms)
+{
 	char	*arg;
 	int		i;
+	t_cmd	cmd;
+	t_env	*env;
 
 	i = 1;
-	while (cmd->args[i])
+	cmd = ms->node->cmd;
+	env = ms->state.env;
+	while (cmd.args[i])
 	{
-		arg = cmd->args[i];
-		while (state->env)
+		arg = cmd.args[i];
+		while (ms->state.env)
 		{
-			if (ft_strcmp(arg, state->env->key) == 0)
-				remove_node(state->env);
-			state->env = state->env->next;
+			if (ft_strcmp(arg, env->key) == 0)
+				remove_node(env);
+			env = env->next;
 		}
 		i++;
 	}
@@ -37,7 +41,7 @@ static void	remove_node(t_env *env)
 {
 	t_env	*prior;
 	t_env	*latter;
-	
+
 	prior = env->prev;
 	latter = env->next;
 	if (prior)

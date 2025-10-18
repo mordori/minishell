@@ -3,26 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:25:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/02 19:24:56 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/17 17:40:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
+#include "builtin_utils.h"
+#include "errors.h"
+#include "str_utils.h"
 
 static void	display_exporting_vars(t_state *state);
-static void	put_var_into_env(t_state *state, t_cmd *cmd);
-static int	parse_export(char *var, char **key, char **value, char **delimiter);
-static bool	handle_specials(t_state *state, char *var, char *key, char *value);
+static void	put_var_into_env(t_minishell *ms);
+static void	parse_export(t_minishell *ms, char *var, t_key_value *kv, char **delimiter);
+static bool	handle_specials(t_minishell *ms, char *var, char *key, char *value);
 
-void	export(t_cmd *cmd, t_state *state)
+void	export(t_minishell *ms)
 {
-	if (!cmd->args[1])
-		display_exporting_vars(state);
+	if (!ms->node->cmd.args[1])
+		display_exporting_vars(&ms->state);
 	else
-		put_var_into_env(state, cmd);
+		put_var_into_env(ms);
 }
 
 static void	display_exporting_vars(t_state *state)
@@ -43,62 +46,63 @@ static void	display_exporting_vars(t_state *state)
 	}
 }
 
-static void	put_var_into_env(t_state *state, t_cmd *cmd)
+static void	put_var_into_env(t_minishell *ms)
 {
-	char	*key;
-	char	*value;
-	char	*delimiter;
-	bool	is_handled;
-	int		i;
-	
+	t_key_value	kv;
+	char		*delimiter;
+	bool		is_handled;
+	int			i;
+	t_env		*env;
+
 	i = 1;
-	while (cmd->args[i])
+	env = ms->state.env;
+	while (ms->node->cmd.args[i])
 	{
-		parse_export(cmd->args[i], &key, &value, &delimiter);
-		if (!is_valid_key(key, delimiter))
+		parse_export(ms, ms->node->cmd.args[i], &kv, &delimiter);
+		if (!is_valid_key(kv.key, delimiter))
 			warning(ms, NULL); //NOTE: BREAK HERE? also ask mika about error message. "Invalid identifier."
 		if (!delimiter)
-			ft_envadd_back(state->env, ft_envnode_new(key, NULL));
-		is_handled = handle_specials(state, cmd->args[i], key, value);
+			ft_envadd_back(&env, ft_envnode_new(ms, kv.key, NULL));
+		is_handled = handle_specials(ms, ms->node->cmd.args[i], kv.key, kv.value);
 		if (is_handled)
 		{
 			i++;
 			continue ;
 		}
-		ft_envadd_back(&env, ft_envnode_new(key, value));
+		ft_envadd_back(&env, ft_envnode_new(ms, kv.key, kv.value));
 		i++;
 	}
-	state->envp = envll_to_envp(state->env); //FIX: where the fok is this function these days anyway
+	ms->state.envp = envll_to_envp(ms, env); //FIX: where the fok is this function these days anyway
 }
 
-static int	parse_export(char *var, char **key, char **value, char **delimiter)
+static void	parse_export(t_minishell *ms, char *var, t_key_value *kv, char **delimiter)
 {
 	*delimiter = ft_strchr(var, '=');
-	*key = ft_keydup(var, delimiter);
+	kv->key = ft_keydup(ms, var, *delimiter);
 	if (!delimiter)
-		return (0);
-	*value = str_dup(delimiter + 1);
+		return ;
+	kv->value = str_dup(ms, *delimiter + 1);
 }
 
-static bool	handle_specials(t_state *state, char *var, char *key, char *value)
+static bool	handle_specials(t_minishell *ms, char *var, char *key, char *value)
 {
 	bool	is_additive;
 	char	*combin_val;
-	t_env	**existing_key;
+	t_env	*existing_key;
 
 	if (!value)
 	{
-		ft_envadd_back(state->env, ft_envnode_new(key, ""));
+		ft_envadd_back(&ms->state.env, ft_envnode_new(ms, key, ""));
 		return (true);
 	}
 	is_additive = is_pluschar(var, '=');
-	existing_key = envll_findkey(state, key); //NOTE: during testing, make sure this can directly modify value in place
+	existing_key = envll_findkey(&ms->state, key); //NOTE: during testing, make sure this can directly modify value in place
 	if (existing_key)
 	{
 		if (is_additive)
 		{
-			combin_val = str_join(existing_key->value, value);
-			(*existing_key)->value = combin_var;
+			combin_val = str_join(ms, existing_key->key, value);
+			existing_key->value = combin_val;
 			return (true);
 		}
 		if (replace_value(existing_key, value))
@@ -125,8 +129,8 @@ static bool	handle_specials(t_state *state, char *var, char *key, char *value)
 //		-> name="value1 value2"
 
 
-	// EXPORT WITHOUT ARGS: 
+	// EXPORT WITHOUT ARGS:
 	// lists in alphabetical order like: declare -x HOME="/path/"
-	// export accepts variable names starting with _ or alphabet (_ape or ape) but not number. 
+	// export accepts variable names starting with _ or alphabet (_ape or ape) but not number.
 	// Number can be in middle but not first character.
 	// variable names in smaller case come AFTER those in upper case, still in alphabetical order.

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_verification.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:23:27 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/14 15:57:57 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/18 06:58:54 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,7 @@ static t_builtin	verify_builtin(char *cmd)
 static char	*verify_path(t_minishell *ms, char *cmd_name)
 {
 	char	*path;
-	int		i;
 
-	i = 0;
 	path = getenv("PATH");
 	if (!path || cmd_name[0] == '/')
 		return (absolute_path_verif(ms, cmd_name));
@@ -84,12 +82,12 @@ static char	*absolute_path_verif(t_minishell *ms, char *cmd_path)
 
 static char	*env_path_verif(t_minishell *ms, char *path, char *cmd_name)
 {
-	char			**dir_list;
-	char			*full_path;
-	int				i;
+	char	**dir_list;
+	char	*full_path;
+	int		i;
 
 	i = 0;
-	dir_list = ft_split(path, ':');
+	dir_list = str_split(ms, path, ':');
 	while (dir_list[i])
 	{
 		full_path = scan_directory(ms, dir_list[i], cmd_name);
@@ -100,5 +98,3 @@ static char	*env_path_verif(t_minishell *ms, char *path, char *cmd_name)
 	warning(ms, cmd_name);
 	return (NULL);
 }
-
-

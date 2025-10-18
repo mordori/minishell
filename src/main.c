@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/16 19:40:44 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 02:38:20 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include "cleanup.h"
 #include "str_utils.h"
 #include "line_utils.h"
-// #include "executor.h"
+#include "executor.h"
 
 volatile sig_atomic_t	g_signal = 0;
 
@@ -43,8 +43,6 @@ int	main(int argc, char *argv[], char **envp)
 	startup();
 #ifdef DEBUG
 printf("\033[1;33m[DEBUG]\033[0m\n");
-#else
-printf("Remove #ifdef DEBUG directives before submission\n");
 #endif
 	if (MEMORY < 0)
 		error_exit(NULL, "defined memory amount is negative");
@@ -74,8 +72,10 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	ms->pool = arena_create(ms, MEMORY, VOLATILE);
 	if (!ms->vars.base || !ms->pool.base)
 		error_exit(ms, "arena creation failed");
-	ms->state.envp = dup_envp_system(ms, envp);
+	// ms->state.envp = dup_envp_system(ms, envp);
 	//init_nodes(ms);
+	// envp_to_envll(envp, &ms->state);
+	(void)envp;
 	if (isatty(STDIN_FILENO))
 	{
 		ms->mode = INTERACTIVE;
@@ -94,13 +94,13 @@ static inline void	debug_print_args_redirs(t_minishell *ms, t_token **tokens)
 	node = ms->node;
 	printf("\n");
 	int i = 0;
+	int k = 0;
 	while (node)
 	{
 		printf("[%d] ARGS:\t", i);
-		while (tokens[1] && node->cmd.args && *node->cmd.args)
+		while (tokens[1] && node->cmd.args && node->cmd.args[k])
 		{
-			printf("%s, ", *node->cmd.args);
-			node->cmd.args++;
+			printf("%s, ", node->cmd.args[k++]);
 		}
 		printf("\n[%d] REDIRS:\t", i);
 		while (tokens[1] && node->cmd.redirs)
@@ -137,13 +137,13 @@ static inline void	run(t_minishell *ms)
 		tokens = create_tokens(ms->line, ms);
 		if (!tokens || !parse_tokens(ms, tokens))
 			continue ;
-		expand_variables(ms);
+		// expand_variables(ms);
 		setup_io(ms, ms->node);
 #ifdef DEBUG
 debug_print_args_redirs(ms, tokens);
 #endif
-		// if (ms->node->cmd.args)
-		// 	executor(ms);
+		if (ms->node->cmd.args)
+			executor(ms);
 		free(ms->line);
 		ms->line = NULL;
 		close_fds(ms);
@@ -163,7 +163,7 @@ void	store_cwd(t_minishell *ms)
 		else
 			error_exit(ms, "get cwd failed");
 	}
-	ft_memcpy(ms->cwd, cwd, strlen(cwd));
+	ft_memcpy(ms->cwd, cwd, ft_strlen(cwd) + 1);
 }
 
 /**

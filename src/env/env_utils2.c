@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 16:44:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/02 19:25:04 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/17 17:40:05 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env_utils.h"
 
-t_env	**envll_findkey(t_state *state, char *key)
+static bool	is_valid_identifier(const char c);
+
+t_env	*envll_findkey(t_state *state, char *key)
 {
 	t_env	*env;
 
@@ -55,9 +57,9 @@ static bool	is_valid_identifier(const char c)
 	return (ft_isalnum(c) || c == '_' || c == '=');
 }
 
-bool	replace_value(t_env **var, char *value)
+bool	replace_value(t_env *var, char *value)
 {
-	(*var)->value = value;
+	var->value = value;
 	return (true);
 }
 
