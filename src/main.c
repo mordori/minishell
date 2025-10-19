@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/18 18:02:05 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/19 17:01:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,14 @@
 #include "str_utils.h"
 #include "line_utils.h"
 #include "executor.h"
+#include "builtin.h"
 
 volatile sig_atomic_t	g_signal = 0;
 
 static inline void	startup(void);
 static inline void	initialize(t_minishell *ms, char **envp);
 static inline void	run(t_minishell *ms);
-void	store_cwd(t_minishell *ms);
+void				store_cwd(t_minishell *ms);
 
 /**
  * @brief	Entry point to the program.
@@ -72,9 +73,8 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	ms->pool = arena_create(ms, MEMORY, VOLATILE);
 	if (!ms->vars.base || !ms->pool.base)
 		error_exit(ms, "arena creation failed");
-	ms->state.envp = dup_envp_system(ms, envp);
 	envp_to_envll(ms, envp, &ms->state);
-	(void)envp;
+	envll_to_envp(ms, ms->state.env);
 	if (isatty(STDIN_FILENO))
 	{
 		ms->mode = INTERACTIVE;
@@ -121,19 +121,20 @@ static inline void	debug_print_args_redirs(t_minishell *ms, t_token **tokens)
  */
 static inline void	run(t_minishell *ms)
 {
+	char		*line;
 	t_token		**tokens;
 	t_prompt	p;
 
 	set_hostname(ms, &p);
 	while (true)
 	{
+		g_signal = 0;
 		store_cwd(ms);
-		ms->line = get_line(ms, get_prompt(ms, &p));
-		if (!ms->line)
-			break ;
-		arena_reset(&ms->pool);
+		line = get_line(ms, get_prompt(ms, &p));
+		if (!line)
+			exitt(ms);
 		ms->node = alloc_volatile(ms, sizeof(t_node));
-		tokens = create_tokens(ms->line, ms);
+		tokens = create_tokens(line, ms);
 		if (!tokens || !parse_tokens(ms, tokens))
 			continue ;
 		// expand_variables(ms);
@@ -141,11 +142,12 @@ static inline void	run(t_minishell *ms)
 #ifdef DEBUG
 debug_print_args_redirs(ms, tokens);
 #endif
-		if (ms->node->cmd.args)
+		if (ms->node->cmd.args && !g_signal)
 			executor(ms);
-		free(ms->line);
-		ms->line = NULL;
+		if (line && *line)
+			add_history(line);
 		close_fds(ms);
+		arena_reset(&ms->pool);
 	}
 }
 

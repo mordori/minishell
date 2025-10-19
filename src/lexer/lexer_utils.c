@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 00:57:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/13 01:00:31 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/19 05:50:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,12 @@ bool	is_pipe(const char *src)
 			return (false);
 		return (true);
 	}
+	return (false);
+}
+
+bool	is_newline(const char *src)
+{
+	if (!ft_strncmp(src, "\n", 1))
+		return (true);
 	return (false);
 }
