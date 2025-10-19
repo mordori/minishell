@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
 /*   Updated: 2025/10/17 17:23:00 by myli-pen         ###   ########.fr       */
@@ -14,11 +14,8 @@
 
 void	exitt(t_minishell *ms)
 {
-	//FIX: remember to build this as soon as the exits and errors are clearer.
-	//clean(ms);
-	//exit(EXIT_SUCCESS);
-       (void)ms;
-	return ;
+	clean(ms);
+	exit(EXIT_SUCCESS);
 }
 
 /*

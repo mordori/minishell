@@ -20,7 +20,7 @@
 # include "arena.h"
 
 int		envp_to_envll(t_minishell *ms, char **envp, t_state *state);
-void	var_to_node(t_minishell *ms, char *var, t_env *env);
+void	var_to_node(t_minishell *ms, char *var, t_env **env);
 char	**envll_to_envp(t_minishell *ms, t_env *env);
 void	quicksort(t_env *low, t_env *high);
 

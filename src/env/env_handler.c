@@ -22,6 +22,8 @@
 #include "arena.h"
 #include "str_utils.h"
 
+#include <stdio.h> //REMOVE AFTER DEBUG!!!!!!!!!!!!!!
+
 int	envp_to_envll(t_minishell *ms, char **envp, t_state *state)
 {
 	t_env	*env;
@@ -31,26 +33,30 @@ int	envp_to_envll(t_minishell *ms, char **envp, t_state *state)
 	i = 0;
 	while (envp[i])
 	{
-		var_to_node(ms, envp[i], env);
+		var_to_node(ms, envp[i], &env);
 		i++;
 	}
 	state->env = env;
 	return (SUCCESS);
 }
 
-void	var_to_node(t_minishell *ms, char *var, t_env *env)
+void	var_to_node(t_minishell *ms, char *var, t_env **env)
 {
 	char	*key;
 	char	*value;
 	char	*delimiter;
+	t_env	*node;
 
+	node = NULL;
 	delimiter = ft_strchr(var, '=');
 	key = ft_keydup(ms, var, delimiter);
 	value = str_dup(ms, delimiter + 1);
 	if (!value)
-		ft_envadd_back(&env, ft_envnode_new(ms, key, ""));
+		node = ft_envnode_new(ms, key, "");
 	else
-		ft_envadd_back(&env, ft_envnode_new(ms, key, value));
+		node = ft_envnode_new(ms, key, value);
+	printf("Creating env node. Key: %s, Value: %s\n", node->key, node->value); //REMOVE AFTER DEBUG!!!!!!!!!!!!!!
+	ft_envadd_back(env, node);
 }
 
 char	**envll_to_envp(t_minishell *ms, t_env *env)
