@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/17 23:27:49 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 23:42:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,12 +182,12 @@ struct s_node
 
 struct s_state
 {
-	t_mode		mode;
-	int			child_count; //can be parsed from the number of | characters
-	pid_t		pids[30587]; //could just be dynamically allocated instead of ulimit -u limit on Maximum child process number.
-	int			exit_status;
-	t_env		*env;
-	char		**envp;
+	t_mode			mode;
+	int				child_count; //can be parsed from the number of | characters
+	pid_t			pids[30587]; //could just be dynamically allocated instead of ulimit -u limit on Maximum child process number.
+	unsigned int	exit_status;
+	t_env			*env;
+	char			**envp;
 };
 
 struct s_arena
@@ -207,7 +207,7 @@ struct	s_minishell
 	t_node				*node;
 	char				cwd[PATH_MAX];
 	t_shell_mode		mode;
-	int					lineno;
+	unsigned int		lineno;
 };
 
 struct s_prompt

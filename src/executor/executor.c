@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/18 18:13:58 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/19 05:00:37 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "io.h"
 
 //NOTE: NODE CREATION HAPPENS IN INIT_NODES() WHICH IS CALLED IN MAIN.
 //FIX: define init_nodes() in inits.c
@@ -42,6 +43,7 @@ void	execute_simple(t_minishell *ms)
 			warning(ms, NULL);
 		if (child_pid == 0)
 		{
+			dup_io(ms->node);
 			exec_extern(ms);
 		}
 		waitpid(child_pid, &status, 0);

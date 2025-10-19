@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/16 19:45:10 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 23:41:55 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static inline char	*expand_str(t_minishell *ms, char *src)
 			result = str_join(ms, result, "$");
 		if (*str == '?')
 		{
-			result = str_join(ms, result, int_to_str(ms, ms->state.exit_status));
+			result = str_join(ms, result, uint_to_str(ms, ms->state.exit_status));
 			++str;
 		}
 		if (*str == '\"' || *str == '\'')

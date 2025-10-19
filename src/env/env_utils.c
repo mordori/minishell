@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:24:14 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/17 17:37:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 20:28:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*ft_keydup(t_minishell *ms, char *key_src, char *key_end)
 	len = 0;
 	if (!key_end)
 		return (key_src);
-	while (key_src[len] != *key_end)
+	while (key_src[len] && key_src[len] != *key_end)
 		len++;
 	key = alloc_vars(ms, (len + 1) * sizeof(char));
 	while (i < len)
