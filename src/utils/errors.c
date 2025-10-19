@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/15 19:53:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 23:32:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,16 @@ static inline void	print_error(char *msg);
  */
 void	error_exit(t_minishell *ms, char *msg)
 {
+	unsigned int	status;
+
+	status = EXIT_FAILURE;
 	if (ms)
+	{
+		status = ms->state.exit_status;
 		clean(ms);
+	}
 	print_error(msg);
-	exit(EXIT_FAILURE);
+	exit(status);
 }
 
 void	warning_syntax(t_minishell *ms, char *token)

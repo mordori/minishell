@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 22:27:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/08 05:23:22 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/19 04:37:13 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,4 @@ void	clean(t_minishell *ms)
 	arena_destroy(&ms->pool);
 	arena_destroy(&ms->vars);
 	rl_clear_history();
-	if (ms->line)
-		free(ms->line);
-	ms->line = NULL;
 }

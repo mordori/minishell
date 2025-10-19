@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   str_split.c                                        :+:      :+:    :+:   */
+/*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:06:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/18 03:11:46 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/19 06:38:18 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 static inline int		count_words(t_minishell *ms, char const *s);
 static inline size_t	word_length(char const **s);
+static inline bool		is_space(char c);
 
 char	**tokenize(t_minishell *ms, char const *src)
 {
@@ -49,22 +50,28 @@ static inline int	count_words(t_minishell *ms, char const *src)
 	count = 0;
 	while (*src)
 	{
-		while (*src && ft_isspace(*src))
+		while (*src && is_space(*src))
 			++src;
 		if (is_operator(src))
 		{
 			march_operator(&src, &count);
 			continue ;
 		}
-		while (*src)
+		if (*src == '\n')
 		{
-			if (ft_isspace(*src) || is_operator(src))
+			++count;
+			++src;
+			continue ;
+		}
+		while (*src && *src != '\n')
+		{
+			if (is_space(*src) || is_operator(src))
 				break ;
 			if (is_unsupported_char(ms, src) || is_unclosed_quote(ms, &src))
 				return (ERROR);
 			++src;
 		}
-		if (*src || !ft_isspace(*(src - 1)))
+		if (*src || !is_space(*(src - 1)))
 			++count;
 	}
 	return (count);
@@ -75,7 +82,7 @@ static inline size_t	word_length(char const **src)
 	size_t	len;
 
 	len = 0;
-	while (**src && ft_isspace(**src))
+	while (**src && is_space(**src))
 		++(*src);
 	if (is_operator(*src))
 	{
@@ -85,9 +92,14 @@ static inline size_t	word_length(char const **src)
 			add_src_len(src, &len);
 		return (len);
 	}
-	while (**src)
+	if (is_newline(*src))
 	{
-		if (ft_isspace(**src) || is_operator(*src))
+		add_src_len(src, &len);
+		return (len);
+	}
+	while (**src && **src != '\n')
+	{
+		if (is_space(**src) || is_operator(*src))
 			break;
 		if (cmp_strs(get_quotes(), *src, NULL))
 			march_quoted_word(src, **src, &len);
@@ -95,4 +107,9 @@ static inline size_t	word_length(char const **src)
 			add_src_len(src, &len);
 	}
 	return (len);
+}
+
+static inline bool	is_space(char c)
+{
+	return (c == ' ' || c == '\t');
 }

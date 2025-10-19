@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 04:09:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/18 03:11:32 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/19 06:38:39 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ static inline void	set_token_type(t_token *token)
 		token->type = REDIR;
 	else if (is_pipe(token->src))
 		token->type = PIPE;
+	else if (is_newline(token->src))
+		token->type = NEW_LINE;
 	else
 		token->type = WORD;
 }

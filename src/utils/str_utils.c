@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/18 03:33:03 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/18 23:37:58 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,52 +56,20 @@ char	*str_join(t_minishell *ms, const char *s1, const char *s2)
 	return (str);
 }
 
-char	**dup_envp_system(t_minishell *ms, char **envp)
+char	*uint_to_str(t_minishell *ms, unsigned int n)
 {
-	char	**dup;
-	size_t	count;
-	size_t	len;
-	size_t	i;
-
-	if (!envp)
-		return (NULL);
-	arena_reset(&ms->vars);
-	count = 0;
-	while (envp[count])
-		++count;
-	dup = alloc_persistent(ms, &ms->vars, (count + 1) * sizeof(*dup));
-	i = 0;
-	while (i < count)
-	{
-		len = ft_strlen(envp[i]);
-		dup[i] = alloc_persistent(ms, &ms->vars, (len + 1) * sizeof(char));
-		if (!dup[i])
-			break;
-		ft_memcpy(dup[i], envp[i], len + 1);
-		++i;
-	}
-	dup[i] = NULL;
-	return (dup);
-}
-
-char	*int_to_str(t_minishell *ms, int n)
-{
-	char	*str;
-	size_t	digits;
-	int64_t	num;
+	char		*str;
+	size_t		digits;
+	uint64_t	num;
 
 	num = n;
-	if (n < 0)
-		num = -(int64_t)num;
-	digits = ft_countdigits(num, 10) + (n < 0);
+	digits = ft_ucountdigits(num, 10);
 	str = alloc_volatile(ms, digits + 1 * sizeof(char));
 	while (digits--)
 	{
 		str[digits] = '0' + num % 10;
 		num /= 10;
 	}
-	if ((n < 0))
-		str[0] = '-';
 	return (str);
 }
 

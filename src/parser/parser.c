@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:15:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/11 01:24:23 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/19 06:42:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static inline bool	is_valid_syntax(t_token *t, t_token *prev)
 	{
 		if (t->type == REDIR && prev->type == REDIR)
 			return (false);
-		if (t->type == NEW_LINE && prev->type != WORD)
+		if (t->type == NEW_LINE && (prev->type == REDIR || prev->type == PIPE))
 			return (false);
 	}
 	if (t->type == PIPE)
