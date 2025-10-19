@@ -22,8 +22,6 @@
 #include "arena.h"
 #include "str_utils.h"
 
-#include <stdio.h> //REMOVE AFTER DEBUG!!!!!!!!!!!!!!
-
 int	envp_to_envll(t_minishell *ms, char **envp, t_state *state)
 {
 	t_env	*env;
@@ -55,7 +53,6 @@ void	var_to_node(t_minishell *ms, char *var, t_env **env)
 		node = ft_envnode_new(ms, key, "");
 	else
 		node = ft_envnode_new(ms, key, value);
-	printf("Creating env node. Key: %s, Value: %s\n", node->key, node->value); //REMOVE AFTER DEBUG!!!!!!!!!!!!!!
 	ft_envadd_back(env, node);
 }
 

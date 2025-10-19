@@ -19,7 +19,6 @@ void	env(t_minishell *ms)
 	env = ms->state.env;
 	while (env)
 	{
-		printf("Next pointer of env: %p, and value: %s\n", env->next, env->value);
 		if (env->value != NULL)
 			printf("%s=%s\n", env->key, env->value);
 		env = env->next;

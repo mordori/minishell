@@ -33,8 +33,10 @@ static void	display_exporting_vars(t_state *state)
 	t_env		*head;
 	t_env		*last;
 
+	printf("Entering export display function.\n");
 	head = state->env;
-	last = (t_env *) ft_lstlast((t_list *) state->env); //NOTE: the casts here might fuck things up. or at least they are not elegant.
+	last = (t_env *) ft_lstlast((t_list *) state->env);
+	printf("Entering quicksort...\n");
 	quicksort(head, last);
 	while (head)
 	{
@@ -72,7 +74,7 @@ static void	put_var_into_env(t_minishell *ms)
 		ft_envadd_back(&env, ft_envnode_new(ms, kv.key, kv.value));
 		i++;
 	}
-	ms->state.envp = envll_to_envp(ms, env); //FIX: where the fok is this function these days anyway
+	ms->state.envp = envll_to_envp(ms, env);
 }
 
 static void	parse_export(t_minishell *ms, char *var, t_key_value *kv, char **delimiter)
