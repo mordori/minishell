@@ -6,23 +6,14 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:10:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/18 03:13:20 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 01:32:22 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
+#include "parsing.h"
 #include "errors.h"
 #include "libft_str.h"
 #include "str_utils.h"
-
-void	march_operator(char const **src, int *count)
-{
-	++(*src);
-	if (**src && \
-((*(*src - 1) == '>' && **src == '>') || (*(*src - 1) == '<' && **src == '<')))
-		++(*src);
-	++(*count);
-}
 
 void	add_src_len(char const **src, size_t *len)
 {
@@ -52,22 +43,6 @@ bool	is_unclosed_quote(t_minishell *ms, const char **src)
 			warning(ms, "unexpected end of file");
 			return (true);
 		}
-	}
-	return (false);
-}
-
-bool	is_unsupported_char(t_minishell *ms, const char *src)
-{
-	const char	*c;
-
-	if (cmp_strs(get_unsupported_chars(), src, &c))
-	{
-		warning(ms, \
-str_join(ms, \
-str_join(ms, \
-"unsupported meta-character `", c), \
-"'"));
-		return (true);
 	}
 	return (false);
 }

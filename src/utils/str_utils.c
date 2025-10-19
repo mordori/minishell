@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/18 23:37:58 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/19 18:42:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,15 @@
 #include "libft_utils.h"
 #include "arena.h"
 
-char	*str_dup(t_minishell *ms, const char *s)
+char	*str_dup(t_minishell *ms, const char *s, t_arena_type type)
 {
 	if (!s)
 		return (NULL);
-	return (str_sub(ms, s, 0, ft_strlen(s)));
+	return (str_sub(ms, type, s, ft_strlen(s)));
 }
 
 char	*str_sub(\
-t_minishell *ms, const char *src, unsigned int start, size_t len)
+t_minishell *ms, t_arena_type type, const char *src, size_t len)
 {
 	char	*sub;
 	size_t	i;
@@ -32,11 +32,14 @@ t_minishell *ms, const char *src, unsigned int start, size_t len)
 	if (!src)
 		return (NULL);
 	i = 0;
-	if (ft_strlen(src) > start)
-		while (src[start + i] && i < len)
+	if (ft_strlen(src) > 0)
+		while (src[i] && i < len)
 			++i;
-	sub = alloc_volatile(ms, (i + 1) * sizeof(char));
-	ft_memcpy(sub, &src[start], i);
+	if (type == PERSISTENT)
+		sub = alloc_vars(ms, (i + 1) * sizeof(char));
+	else
+		sub = alloc_volatile(ms, (i + 1) * sizeof(char));
+	ft_memcpy(sub, src, i);
 	return (sub);
 }
 
@@ -88,7 +91,7 @@ char	**str_split(t_minishell *ms, char const *s, char c)
 	while (words--)
 	{
 		word_len = ft_word_len(&s, c);
-		strs[i] = str_sub(ms, s - word_len, 0, word_len);
+		strs[i] = str_sub(ms, VOLATILE, s - word_len, word_len);
 		++i;
 	}
 	strs[i] = NULL;

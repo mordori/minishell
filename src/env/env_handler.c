@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 12:14:16 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/18 23:47:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/19 21:31:05 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	var_to_node(t_minishell *ms, char *var, t_env **env)
 
 	delimiter = ft_strchr(var, '=');
 	key = ft_keydup(ms, var, delimiter);
-	value = str_dup(ms, delimiter + 1);
+	value = str_dup(ms, delimiter + 1, PERSISTENT);
 	if (!value)
 		ft_envadd_back(env, ft_envnode_new(ms, key, ""));
 	else
@@ -72,4 +72,14 @@ char	**envll_to_envp(t_minishell *ms, t_env *env)
 	}
 	envp_copy[i] = NULL;
 	return (envp_copy);
+}
+
+char	*get_env_val(t_minishell *ms, char *key)
+{
+	t_env	*env;
+
+	env = envll_findkey(&ms->state, key);
+	if (!env)
+		return (NULL);
+	return (env->value);
 }

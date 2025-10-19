@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/18 19:57:52 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 01:21:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,6 @@ void	setup_io(t_minishell *ms, t_node *node)
 		while (redirs)
 		{
 			r = (t_redir *)redirs->content;
-#ifdef DEBUG
-if (r->type == UNDEFINED)
-	printf("UNDEFINED TOKEN TYPE!");
-#endif
 			if (r->type == IN)
 				if (!set_in_file(ms, node, r->filename))
 					break ;
