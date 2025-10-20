@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#include "builtin.h"
 
 static void	remove_node(t_env *env);
 
@@ -23,14 +23,17 @@ void	unset(t_minishell *ms)
 
 	i = 1;
 	cmd = ms->node->cmd;
-	env = ms->state.env;
 	while (cmd.args[i])
 	{
+		env = ms->state.env;
 		arg = cmd.args[i];
-		while (ms->state.env)
+		while (env)
 		{
 			if (ft_strcmp(arg, env->key) == 0)
+			{
 				remove_node(env);
+				break ;
+			}
 			env = env->next;
 		}
 		i++;

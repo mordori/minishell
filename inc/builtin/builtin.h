@@ -20,6 +20,7 @@
 # include "cleanup.h"
 # include "errors.h"
 # include "str_utils.h"
+# include "libft_str.h"
 # include <stdio.h>
 # include <stdlib.h>
 
