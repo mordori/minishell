@@ -6,14 +6,15 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 20:22:38 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 23:41:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "errors.h"
 #include "libft_str.h"
+#include "str_utils.h"
 #include "cleanup.h"
-#include "try_syscall.h"
+#include "io.h"
 
 static inline void	print_error(char *msg);
 
@@ -46,6 +47,18 @@ void	error_exit(t_minishell *ms, char *msg)
 		errno = 0;
 	}
 	exit(status);
+}
+
+void	eof_warning(t_minishell *ms, char *eof, unsigned int lineno)
+{
+	char	*w;
+
+	w = str_join(\
+ms, "warning: here-document at line ", uint_to_str(ms, lineno));
+	w = str_join(ms, w, " delimited by end-of-file (wanted `");
+	w = str_join(ms, w, eof);
+	w = str_join(ms, w, "')");
+	warning(ms, w);
 }
 
 void	warning_syntax(t_minishell *ms, char *src)

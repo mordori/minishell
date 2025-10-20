@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:10:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 01:32:22 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 23:49:32 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ bool	is_unclosed_quote(t_minishell *ms, const char **src)
 			*src = closing_quote;
 		else
 		{
-			warning(ms, "unexpected end of file");
+			warning(ms, "warning: unexpected end-of-file");
 			return (true);
 		}
 	}

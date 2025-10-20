@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 03:53:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 20:15:17 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 23:23:17 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "errors.h"
 #include "arena.h"
 #include "env.h"
-#include "try_syscall.h"
+#include "io.h"
 
 static inline char	*dup_line(\
 t_minishell *ms, const char *src, unsigned int start, size_t len);

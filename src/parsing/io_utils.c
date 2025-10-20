@@ -6,19 +6,13 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 05:06:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 20:02:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 23:22:14 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "io.h"
-#include "line_utils.h"
 #include "libft_str.h"
-#include "str_utils.h"
 #include "errors.h"
-#include "arena.h"
-#include "try_syscall.h"
-
-static inline void	eof_warning(t_minishell *ms, char *eof);
 
 void	dup_io(t_node *node)
 {
@@ -34,32 +28,38 @@ void	dup_io(t_node *node)
 	}
 }
 
-void	write_heredoc(t_minishell *ms, t_node *node, char *eof)
+ssize_t	try_write(t_minishell *ms, int fd, char *src)
 {
-	char	*line;
-	int		bytes;
+	ssize_t	bytes;
+	ssize_t	len;
+	size_t	ulen;
 
-	bytes = 0;
-	while (true)
-	{
-		line = get_line(ms, PROMPT);
-		if (!line || !ft_strcmp(line, eof) || g_signal)
-			break ;
-		try_write(ms, node->cmd.in, line);
-		try_write(ms, node->cmd.in, "\n");
-	}
-	if (!line)
-		eof_warning(ms, eof);
+	ulen = ft_strlen(src);
+	if (ulen > LONG_MAX)
+		error_exit(ms, "write src is longer than LONG_MAX");
+	len = (ssize_t)ulen;
+	bytes = write(fd, src, len);
+	if (bytes != len)
+		error_exit(ms, NULL);
+	return (bytes);
 }
 
-static inline void	eof_warning(t_minishell *ms, char *eof)
+int	try_open(t_minishell *ms, char *file, int o_flag, int p_flag)
 {
-	char	*w;
+	int	fd;
 
-	w = str_join(\
-ms, "warning: here-document at line ", uint_to_str(ms, ms->lineno));
-	w = str_join(ms, w, " delimited by end-of-file (wanted `");
-	w = str_join(ms, w, eof);
-	w = str_join(ms, w, "')");
-	warning(ms, w);
+	fd = open(file, o_flag, p_flag);
+	if (fd == ERROR)
+		warning(ms, file);
+	return (fd);
+}
+
+ssize_t	try_read(t_minishell *ms, int fd, char *buf, size_t n_bytes)
+{
+	ssize_t	bytes;
+
+	bytes = read(fd, buf, n_bytes);
+	if (bytes == ERROR)
+		error_exit(ms, "read failed");
+	return (bytes);
 }

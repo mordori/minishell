@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 20:24:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 23:42:59 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include "libft_str.h"
 #include "str_utils.h"
 #include "line_utils.h"
-#include "try_syscall.h"
 
 static inline int	set_in_file(t_minishell *ms, t_node *node, char *file);
 static inline int	set_out_file(t_minishell *ms, t_node *node, t_redir *r);
@@ -51,7 +50,7 @@ void	setup_io(t_minishell *ms, t_node *node)
 	}
 }
 
-void	set_pipe(t_minishell *ms, t_node *node)
+static inline void	set_pipe(t_minishell *ms, t_node *node)
 {
 	int	pipefd[2];
 
@@ -74,13 +73,28 @@ void	set_pipe(t_minishell *ms, t_node *node)
 
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 {
-	static char	*file = "/tmp/heredoc.tmp";
+	static char		*file = "/tmp/heredoc.tmp";
+	char			*line;
+	unsigned int	lines;
 
 	if (node->cmd.in > STDOUT_FILENO)
 		close(node->cmd.in);
 	node->cmd.in = try_open(ms, file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
 	if (!g_signal)
-		write_heredoc(ms, node, eof);
+	{
+		lines = 0;
+		while (true)
+		{
+			line = get_line(ms, PROMPT);
+			if (!line || !ft_strcmp(line, eof) || g_signal)
+				break ;
+			try_write(ms, node->cmd.in, line);
+			try_write(ms, node->cmd.in, "\n");
+			++lines;
+		}
+		if (!line)
+			eof_warning(ms, eof, ms->lineno - lines);
+	}
 	close(node->cmd.in);
 	node->cmd.in = try_open(ms, file, O_RDWR, 0);
 	unlink(file);

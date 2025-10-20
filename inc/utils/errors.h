@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:32:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 20:22:43 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 23:41:14 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 
 void	error_exit(t_minishell *ms, char *msg);
 void	warning_syntax(t_minishell *ms, char *token);
+void	eof_warning(t_minishell *ms, char *eof, unsigned int lineno);
 void	warning(t_minishell *ms, char *src);
 
 #endif
