@@ -20,7 +20,6 @@ static bool	handle_specials(t_minishell *ms, char *var, char *key, char *value);
 
 void	export(t_minishell *ms)
 {
-	printf("final node key: %s, value: %s\n", envlast(ms->state.env)->key, envlast(ms->state.env)->value);
 	if (!ms->node->cmd.args[1])
 		display_exporting_vars(&ms->state);
 	else
@@ -69,8 +68,6 @@ static void	put_var_into_env(t_minishell *ms)
 			continue ;
 		}
 		ft_envadd_back(&env, ft_envnode_new(ms, kv.key, kv.value));
-		printf("Added variable: %s=%s\n", kv.key, kv.value);
-		printf("final node key: %s, value: %s\n", envlast(env)->key, envlast(env)->value);
 		i++;
 	}
 	ms->state.envp = envll_to_envp(ms, env);

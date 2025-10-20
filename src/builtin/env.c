@@ -19,7 +19,7 @@ void	env(t_minishell *ms)
 	env = ms->state.env;
 	while (env)
 	{
-		if (env->value != NULL)
+		if (*env->value)
 			printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
