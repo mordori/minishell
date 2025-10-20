@@ -1,34 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_utils.c                                      :+:      :+:    :+:   */
+/*   syntax_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 00:57:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/19 05:50:12 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/19 22:36:52 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
+#include "parsing.h"
 #include "errors.h"
 #include "libft_str.h"
+#include "str_utils.h"
 
-bool	cmp_strs(const char **types, const char *src, const char **out)
+bool	is_space(char c)
 {
-	while (*types)
-	{
-		if (!ft_strncmp(src, *types, ft_strlen(*types)))
-		{
-			if (out)
-				*out = *types;
-			return (true);
-		}
-		++types;
-	}
-	if (out)
-		*out = NULL;
-	return (false);
+	return (c == ' ' || c == '\t');
 }
 
 bool	is_operator(const char *src)
@@ -56,9 +45,18 @@ bool	is_pipe(const char *src)
 	return (false);
 }
 
-bool	is_newline(const char *src)
+bool	is_unsupported_char(t_minishell *ms, const char *src)
 {
-	if (!ft_strncmp(src, "\n", 1))
+	const char	*c;
+
+	if (cmp_strs(get_unsupported_chars(), src, &c))
+	{
+		warning(ms, \
+str_join(ms, \
+str_join(ms, \
+"unsupported meta-character `", c), \
+"'"));
 		return (true);
+	}
 	return (false);
 }

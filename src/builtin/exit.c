@@ -6,21 +6,25 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/18 23:41:43 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 01:19:00 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "cleanup.h"
+#include "errors.h"
 
 void	exitt(t_minishell *ms)
 {
 	int	bytes;
+	int	status;
 
-	bytes = write (1, "exit\n", 5);
-	(void)bytes;
+	bytes = write(1, "exit\n", 5);
+	if (bytes == ERROR)
+		error_exit(ms, "write failed");
+	status = ms->state.exit_status;
 	clean(ms);
-	exit(EXIT_SUCCESS);
+	exit(status);
 }
 
 /*

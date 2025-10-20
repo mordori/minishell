@@ -6,11 +6,11 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/18 23:41:55 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/19 22:28:09 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "parsing.h"
 #include "libft_str.h"
 #include "libft_mem.h"
 #include "str_utils.h"
@@ -67,7 +67,7 @@ static inline char	*expand_str(t_minishell *ms, char *src)
 			i = 0;
 			while (str[i] && str[i] != '\"')
 				++i;
-			result = str_join(ms, result, str_sub(ms, str, 0, i));
+			result = str_join(ms, result, str_sub(ms, VOLATILE, str, i));
 			str += i;
 			if (*str == '\"' || *str == '\'')
 				++str;
@@ -77,14 +77,14 @@ static inline char	*expand_str(t_minishell *ms, char *src)
 			i = 0;
 			while (str[i] && str[i] != '$')
 				++i;
-			env = getenv(str_sub(ms, str, 0, i));
+			env = getenv(str_sub(ms, VOLATILE, str, i));
 			if (env)
 				result = str_join(ms, result, env);
 			str += i;
 		}
 		ptr = ft_strchr(str, '$');
 		if (ptr)
-			result = str_join(ms, result, str_sub(ms, str, 0, ptr - str));
+			result = str_join(ms, result, str_sub(ms, VOLATILE, str, ptr - str));
 		else
 			break ;
 		str = ptr;

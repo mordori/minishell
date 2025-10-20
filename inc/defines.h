@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/18 23:42:16 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/19 21:04:54 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,6 +215,7 @@ struct s_prompt
 	char		*path;
 	char		*home;
 	char		hostname[HOSTNAME_MAX];
+	char		*logname;
 	char		*prompt;
 };
 

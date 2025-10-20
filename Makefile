@@ -6,7 +6,7 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/18 03:13:32 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/19 22:35:42 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,8 +36,7 @@ DIR_DEP		:=dep/
 DIR_BUILT	:=builtin/
 DIR_ENV		:=env/
 DIR_EXE		:=executor/
-DIR_LEX		:=lexer/
-DIR_PAR		:=parser/
+DIR_PAR		:=parsing/
 DIR_UTILS	:=utils/
 
 DIR_LIBFT	:=$(DIR_LIB)libft/
@@ -62,10 +61,9 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EXE), \
 				executor.c cmd_verification.c cmd_processor.c \
 				exec_pipelines.c executor_utils.c\
 				)
-SRCS		+=$(addprefix $(DIR_SRC)$(DIR_LEX), \
-				lexer_utils.c lexer.c tokenization_utils.c tokenization.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
-				expansion.c parser.c io_utils.c io.c)
+				expansion.c parser.c io_utils.c io.c lexer.c \
+				tokenization_utils.c tokenization.c syntax_utils.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				arena_list.c arena_utils.c arena.c cleanup.c defines.c \
 				errors.c str_utils.c line_utils.c builtin_utils.c)
