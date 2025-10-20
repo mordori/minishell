@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 03:53:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/19 21:36:38 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 20:15:17 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "errors.h"
 #include "arena.h"
 #include "env.h"
+#include "try_syscall.h"
 
 static inline char	*dup_line(\
 t_minishell *ms, const char *src, unsigned int start, size_t len);
@@ -123,8 +124,8 @@ p->path), \
 
 void	set_names(t_minishell *ms, t_prompt *p)
 {
-	int	fd;
-	int	len;
+	int		fd;
+	ssize_t	len;
 
 	p->logname = get_env_val(ms, "LOGNAME");
 	if (!p->logname)
@@ -139,10 +140,8 @@ void	set_names(t_minishell *ms, t_prompt *p)
 		}
 		error_exit(ms, "open failed");
 	}
-	len = read(fd, p->hostname, HOSTNAME_MAX);
+	len = try_read(ms, fd, p->hostname, HOSTNAME_MAX);
 	close(fd);
-	if (len < 0)
-		error_exit(ms, "read failed");
 	p->hostname[len - 1] = 0;
 	if (ft_strchr(p->hostname, '.') - p->hostname > 0)
 		p->hostname[ft_strchr(p->hostname, '.') - p->hostname] = 0;

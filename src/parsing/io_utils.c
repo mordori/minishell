@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 05:06:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/19 16:53:16 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 20:02:53 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "str_utils.h"
 #include "errors.h"
 #include "arena.h"
+#include "try_syscall.h"
 
 static inline void	eof_warning(t_minishell *ms, char *eof);
 
@@ -44,16 +45,11 @@ void	write_heredoc(t_minishell *ms, t_node *node, char *eof)
 		line = get_line(ms, PROMPT);
 		if (!line || !ft_strcmp(line, eof) || g_signal)
 			break ;
-		bytes = write(node->cmd.in, line, ft_strlen(line));
-		if (bytes != ERROR)
-			bytes = write(node->cmd.in, "\n", 1);
-		if (bytes == ERROR)
-			break ;
+		try_write(ms, node->cmd.in, line);
+		try_write(ms, node->cmd.in, "\n");
 	}
 	if (!line)
 		eof_warning(ms, eof);
-	if (bytes == ERROR)
-		error_exit(ms, "readline/write failed");
 }
 
 static inline void	eof_warning(t_minishell *ms, char *eof)
