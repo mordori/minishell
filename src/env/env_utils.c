@@ -48,10 +48,15 @@ char	*ft_keydup(t_minishell *ms, char *key_src, char *key_end)
 
 	i = 0;
 	len = 0;
-	if (!key_end)
-		return (key_src);
-	while (key_src[len] && key_src[len] != *key_end)
+	while (key_src[len])
+	{
+		if (key_end)
+		{
+			if (key_src[len] == *key_end)
+				break ;
+		}
 		len++;
+	}
 	key = alloc_vars(ms, (len + 1) * sizeof(char));
 	while (i < len)
 	{
