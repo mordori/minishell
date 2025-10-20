@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:25:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/17 17:40:30 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/19 18:39:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static void	parse_export(t_minishell *ms, char *var, t_key_value *kv, char **del
 	kv->key = ft_keydup(ms, var, *delimiter);
 	if (!delimiter)
 		return ;
-	kv->value = str_dup(ms, *delimiter + 1);
+	kv->value = str_dup(ms, *delimiter + 1, PERSISTENT);
 }
 
 static bool	handle_specials(t_minishell *ms, char *var, char *key, char *value)

@@ -6,18 +6,18 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:06:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/19 06:38:18 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 01:42:01 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
+#include "parsing.h"
 #include "str_utils.h"
 #include "arena.h"
 #include "libft_utils.h"
+#include "libft_str.h"
 
 static inline int		count_words(t_minishell *ms, char const *s);
 static inline size_t	word_length(char const **s);
-static inline bool		is_space(char c);
 
 char	**tokenize(t_minishell *ms, char const *src)
 {
@@ -36,7 +36,7 @@ char	**tokenize(t_minishell *ms, char const *src)
 	while (i < words)
 	{
 		word_len = word_length(&src);
-		strs[i] = str_sub(ms, src - word_len, 0, word_len);
+		strs[i] = str_sub(ms, VOLATILE, src - word_len, word_len);
 		++i;
 	}
 	strs[i] = NULL;
@@ -52,21 +52,17 @@ static inline int	count_words(t_minishell *ms, char const *src)
 	{
 		while (*src && is_space(*src))
 			++src;
-		if (is_operator(src))
-		{
-			march_operator(&src, &count);
-			continue ;
-		}
-		if (*src == '\n')
+		if (is_operator(src) || *src == '\n')
 		{
 			++count;
 			++src;
+			if (*src && \
+((*(src - 1) == '>' && *src == '>') || (*(src - 1) == '<' && *src == '<')))
+				++src;
 			continue ;
 		}
-		while (*src && *src != '\n')
+		while (*src && *src != '\n' && !is_space(*src) && !is_operator(src))
 		{
-			if (is_space(*src) || is_operator(src))
-				break ;
 			if (is_unsupported_char(ms, src) || is_unclosed_quote(ms, &src))
 				return (ERROR);
 			++src;
@@ -84,17 +80,12 @@ static inline size_t	word_length(char const **src)
 	len = 0;
 	while (**src && is_space(**src))
 		++(*src);
-	if (is_operator(*src))
+	if (is_operator(*src) || **src == '\n')
 	{
 		add_src_len(src, &len);
 		if (*src && \
 ((*(*src - 1) == '>' && **src == '>') || (*(*src - 1) == '<' && **src == '<')))
 			add_src_len(src, &len);
-		return (len);
-	}
-	if (is_newline(*src))
-	{
-		add_src_len(src, &len);
 		return (len);
 	}
 	while (**src && **src != '\n')
@@ -109,7 +100,19 @@ static inline size_t	word_length(char const **src)
 	return (len);
 }
 
-static inline bool	is_space(char c)
+bool	cmp_strs(const char **types, const char *src, const char **out)
 {
-	return (c == ' ' || c == '\t');
+	while (*types)
+	{
+		if (!ft_strncmp(src, *types, ft_strlen(*types)))
+		{
+			if (out)
+				*out = *types;
+			return (true);
+		}
+		++types;
+	}
+	if (out)
+		*out = NULL;
+	return (false);
 }

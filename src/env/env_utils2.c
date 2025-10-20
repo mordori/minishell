@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 16:44:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/17 17:40:05 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/19 18:24:23 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_env	*envll_findkey(t_state *state, char *key)
 	env = state->env;
 	while (env)
 	{
-		if (ft_strcmp(env->value, key) == 0)
+		if (ft_strcmp(env->key, key) == 0)
 			return (env);
 		env = env->next;
 	}

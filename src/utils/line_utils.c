@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 03:53:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/19 03:56:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/19 21:36:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "str_utils.h"
 #include "errors.h"
 #include "arena.h"
+#include "env.h"
 
 static inline char	*dup_line(\
 t_minishell *ms, const char *src, unsigned int start, size_t len);
@@ -80,7 +81,7 @@ char	*get_prompt(t_minishell *ms, t_prompt *p)
 {
 	char	*home;
 
-	home = getenv("HOME");
+	home = get_env_val(ms, "HOME");
 	if (!home)
 	{
 		p->home = "";
@@ -110,7 +111,7 @@ str_join(ms, \
 str_join(ms, \
 str_join(ms, \
 "\001\033[38;5;90m\002", \
-getenv("LOGNAME")), \
+p->logname), \
 "@"), \
 p->hostname), \
 "\001\033[0m:\033[38;5;39m\002"), \
@@ -120,14 +121,24 @@ p->path), \
 	return (p->prompt);
 }
 
-void	set_hostname(t_minishell *ms, t_prompt *p)
+void	set_names(t_minishell *ms, t_prompt *p)
 {
 	int	fd;
 	int	len;
 
+	p->logname = get_env_val(ms, "LOGNAME");
+	if (!p->logname)
+		p->logname = "user";
 	fd = open("/etc/hostname", O_RDONLY);
 	if (fd == ERROR)
+	{
+		if (errno == ENOENT)
+		{
+			ft_memcpy(p->hostname, "hostname", 8);
+			return ;
+		}
 		error_exit(ms, "open failed");
+	}
 	len = read(fd, p->hostname, HOSTNAME_MAX);
 	close(fd);
 	if (len < 0)

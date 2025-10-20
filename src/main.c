@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/19 17:01:30 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 02:46:24 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 #include "arena.h"
 #include "errors.h"
 #include "libft_mem.h"
-#include "lexer.h"
-#include "parser.h"
+#include "parsing.h"
 #include "io.h"
 #include "cleanup.h"
 #include "str_utils.h"
@@ -38,7 +37,8 @@ void				store_cwd(t_minishell *ms);
  */
 int	main(int argc, char *argv[], char **envp)
 {
-	t_minishell	ms;
+	t_minishell		ms;
+	unsigned int	status;
 
 	(void)argv;
 	startup();
@@ -51,8 +51,9 @@ printf("\033[1;33m[DEBUG]\033[0m\n");
 		error_exit(NULL, "too many arguments");
 	initialize(&ms, envp);
 	run(&ms);
+	status = ms.state.exit_status;
 	clean(&ms);
-	return (EXIT_SUCCESS);
+	return (status);
 }
 
 void	sig_handler(int sig)
@@ -74,7 +75,7 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	if (!ms->vars.base || !ms->pool.base)
 		error_exit(ms, "arena creation failed");
 	envp_to_envll(ms, envp, &ms->state);
-	envll_to_envp(ms, ms->state.env);
+	ms->state.envp = envll_to_envp(ms, ms->state.env);
 	if (isatty(STDIN_FILENO))
 	{
 		ms->mode = INTERACTIVE;
@@ -125,10 +126,11 @@ static inline void	run(t_minishell *ms)
 	t_token		**tokens;
 	t_prompt	p;
 
-	set_hostname(ms, &p);
+	set_names(ms, &p);
 	while (true)
 	{
 		g_signal = 0;
+		arena_reset(&ms->pool);
 		store_cwd(ms);
 		line = get_line(ms, get_prompt(ms, &p));
 		if (!line)
@@ -144,10 +146,9 @@ debug_print_args_redirs(ms, tokens);
 #endif
 		if (ms->node->cmd.args && !g_signal)
 			executor(ms);
-		if (line && *line)
+		if (line && *line && !g_signal)
 			add_history(line);
 		close_fds(ms);
-		arena_reset(&ms->pool);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 12:17:25 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/18 21:21:10 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/19 21:32:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,6 @@ int		envp_to_envll(t_minishell *ms, char **envp, t_state *state);
 void	var_to_node(t_minishell *ms, char *var, t_env **env);
 char	**envll_to_envp(t_minishell *ms, t_env *env);
 void	quicksort(t_env *low, t_env *high);
+char	*get_env_val(t_minishell *ms, char *key);
 
 #endif
