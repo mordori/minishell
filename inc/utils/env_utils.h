@@ -30,5 +30,6 @@ char	*join_keyvalue(char *key, char *value, char *dest);
 t_env	*envll_findkey(t_state *state, char *key);
 bool	is_valid_key(const char *key, char *delimiter);
 bool	replace_value(t_env *var, char *value);
+t_env	*envlast(t_env *env);
 
 #endif

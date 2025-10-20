@@ -12,8 +12,6 @@
 
 #include "builtin.h"
 #include "builtin_utils.h"
-#include "errors.h"
-#include "str_utils.h"
 
 static void	display_exporting_vars(t_state *state);
 static void	put_var_into_env(t_minishell *ms);
@@ -34,14 +32,14 @@ static void	display_exporting_vars(t_state *state)
 	t_env		*last;
 
 	head = state->env;
-	last = (t_env *) ft_lstlast((t_list *) state->env); //NOTE: the casts here might fuck things up. or at least they are not elegant.
+	last = envlast(state->env);
 	quicksort(head, last);
 	while (head)
 	{
-		if (head->value == NULL)
-			printf("declare -x %s\n", head->key);
-		else
+		if (head->value)
 			printf("declare -x %s=\"%s\"\n", head->key, head->value);
+		else
+			printf("declare -x %s\n", head->key);
 		head = head->next;
 	}
 }
@@ -60,9 +58,13 @@ static void	put_var_into_env(t_minishell *ms)
 	{
 		parse_export(ms, ms->node->cmd.args[i], &kv, &delimiter);
 		if (!is_valid_key(kv.key, delimiter))
-			warning(ms, NULL); //NOTE: BREAK HERE? also ask mika about error message. "Invalid identifier."
+			warning(ms, str_join(ms, kv.key, ": not a valid identifier"));
 		if (!delimiter)
+		{
 			ft_envadd_back(&env, ft_envnode_new(ms, kv.key, NULL));
+			i++;
+			continue ;
+		}
 		is_handled = handle_specials(ms, ms->node->cmd.args[i], kv.key, kv.value);
 		if (is_handled)
 		{
@@ -72,14 +74,15 @@ static void	put_var_into_env(t_minishell *ms)
 		ft_envadd_back(&env, ft_envnode_new(ms, kv.key, kv.value));
 		i++;
 	}
-	ms->state.envp = envll_to_envp(ms, env); //FIX: where the fok is this function these days anyway
+	ms->state.envp = envll_to_envp(ms, env);
 }
 
 static void	parse_export(t_minishell *ms, char *var, t_key_value *kv, char **delimiter)
 {
+	kv->value = NULL; //FIX: might be that also NULL value needs to be in persistent memory
 	*delimiter = ft_strchr(var, '=');
 	kv->key = ft_keydup(ms, var, *delimiter);
-	if (!delimiter)
+	if (!*delimiter)
 		return ;
 	kv->value = str_dup(ms, *delimiter + 1, PERSISTENT);
 }

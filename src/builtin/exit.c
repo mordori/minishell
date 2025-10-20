@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
 /*   Updated: 2025/10/20 01:19:00 by myli-pen         ###   ########.fr       */

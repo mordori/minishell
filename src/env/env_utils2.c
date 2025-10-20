@@ -63,9 +63,11 @@ bool	replace_value(t_env *var, char *value)
 	return (true);
 }
 
-//FIX: the identifier warning thing is something that comes from errno or perror or manually?
-void	warning_identifier(void)
+t_env	*envlast(t_env *env)
 {
-	return ;
-	//warning_input();
+	if (!env)
+		return (NULL);
+	while (env->next)
+		env = env->next;
+	return (env);
 }

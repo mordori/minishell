@@ -43,14 +43,17 @@ void	var_to_node(t_minishell *ms, char *var, t_env **env)
 	char	*key;
 	char	*value;
 	char	*delimiter;
+	t_env	*node;
 
+	node = NULL;
 	delimiter = ft_strchr(var, '=');
 	key = ft_keydup(ms, var, delimiter);
 	value = str_dup(ms, delimiter + 1, PERSISTENT);
 	if (!value)
-		ft_envadd_back(env, ft_envnode_new(ms, key, ""));
+		node = ft_envnode_new(ms, key, "");
 	else
-		ft_envadd_back(env, ft_envnode_new(ms, key, value));
+		node = ft_envnode_new(ms, key, value);
+	ft_envadd_back(env, node);
 }
 
 char	**envll_to_envp(t_minishell *ms, t_env *env)
