@@ -63,7 +63,11 @@ bool	replace_value(t_env *var, char *value)
 	return (true);
 }
 
-void	warning_identifier(void)
+t_env	*envlast(t_env *env)
 {
-	
+	if (!env)
+		return (NULL);
+	while (env->next)
+		env = env->next;
+	return (env);
 }
