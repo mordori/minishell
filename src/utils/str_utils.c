@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   str_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/19 18:42:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/21 16:27:45 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_minishell *ms, t_arena_type type, const char *src, size_t len)
 	return (sub);
 }
 
-char	*str_join(t_minishell *ms, const char *s1, const char *s2)
+char	*str_join(t_minishell *ms, const char *s1, const char *s2, t_arena_type type)
 {
 	char	*str;
 	size_t	len1;
@@ -53,7 +53,10 @@ char	*str_join(t_minishell *ms, const char *s1, const char *s2)
 		return (NULL);
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
-	str = alloc_volatile(ms, (len1 + len2 + 1) * sizeof(char));
+	if (type == PERSISTENT)
+		str = alloc_vars(ms, (len1 + len2 + 1) * sizeof(char));
+	else
+		str = alloc_volatile(ms, (len1 + len2 + 1) * sizeof(char));
 	ft_memcpy(str, s1, len1);
 	ft_memcpy(&str[len1], s2, len2);
 	return (str);

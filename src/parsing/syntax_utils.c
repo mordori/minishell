@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 00:57:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/19 22:36:52 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/21 16:17:13 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ bool	is_unsupported_char(t_minishell *ms, const char *src)
 		warning(ms, \
 str_join(ms, \
 str_join(ms, \
-"unsupported meta-character `", c), \
-"'"));
+"unsupported meta-character `", c, VOLATILE), \
+"'", VOLATILE));
 		return (true);
 	}
 	return (false);

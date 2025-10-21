@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:24:14 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/18 20:28:16 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/21 16:27:46 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,12 @@ char	*ft_keydup(t_minishell *ms, char *key_src, char *key_end)
 		if (key_end)
 		{
 			if (key_src[len] == *key_end)
+			{
+				if (key_src[len - 1] == '+')
+					len--;
 				break ;
+			}
+
 		}
 		len++;
 	}

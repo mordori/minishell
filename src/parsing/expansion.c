@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/19 22:28:09 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/21 16:05:45 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,10 @@ static inline char	*expand_str(t_minishell *ms, char *src)
 	while (str++)
 	{
 		if (!*str)
-			result = str_join(ms, result, "$");
+			result = str_join(ms, result, "$", VOLATILE);
 		if (*str == '?')
 		{
-			result = str_join(ms, result, uint_to_str(ms, ms->state.exit_status));
+			result = str_join(ms, result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
 			++str;
 		}
 		if (*str == '\"' || *str == '\'')
@@ -67,7 +67,7 @@ static inline char	*expand_str(t_minishell *ms, char *src)
 			i = 0;
 			while (str[i] && str[i] != '\"')
 				++i;
-			result = str_join(ms, result, str_sub(ms, VOLATILE, str, i));
+			result = str_join(ms, result, str_sub(ms, VOLATILE, str, i), VOLATILE);
 			str += i;
 			if (*str == '\"' || *str == '\'')
 				++str;
@@ -79,17 +79,17 @@ static inline char	*expand_str(t_minishell *ms, char *src)
 				++i;
 			env = getenv(str_sub(ms, VOLATILE, str, i));
 			if (env)
-				result = str_join(ms, result, env);
+				result = str_join(ms, result, env, VOLATILE);
 			str += i;
 		}
 		ptr = ft_strchr(str, '$');
 		if (ptr)
-			result = str_join(ms, result, str_sub(ms, VOLATILE, str, ptr - str));
+			result = str_join(ms, result, str_sub(ms, VOLATILE, str, ptr - str), VOLATILE);
 		else
 			break ;
 		str = ptr;
 	}
-	result = str_join(ms, result, str);
+	result = str_join(ms, result, str, VOLATILE);
 #ifdef DEBUG
 	printf("%s\n", result);
 #endif

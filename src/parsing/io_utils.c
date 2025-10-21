@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   io_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 05:06:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/19 16:53:16 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/21 16:17:11 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ static inline void	eof_warning(t_minishell *ms, char *eof)
 	char	*w;
 
 	w = str_join(\
-ms, "warning: here-document at line ", uint_to_str(ms, ms->lineno));
-	w = str_join(ms, w, " delimited by end-of-file (wanted `");
-	w = str_join(ms, w, eof);
-	w = str_join(ms, w, "')");
+ms, "warning: here-document at line ", uint_to_str(ms, ms->lineno), VOLATILE);
+	w = str_join(ms, w, " delimited by end-of-file (wanted `", VOLATILE);
+	w = str_join(ms, w, eof, VOLATILE);
+	w = str_join(ms, w, "')", VOLATILE);
 	warning(ms, w);
 }
