@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/19 21:04:54 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 19:53:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ enum e_shell_mode
 struct s_redir
 {
 	t_redir_type	type;
-	char			*filename;
+	char			*file;
 	t_redir			*next;
 };
 

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 00:57:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/19 22:36:52 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 23:49:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ bool	is_unsupported_char(t_minishell *ms, const char *src)
 		warning(ms, \
 str_join(ms, \
 str_join(ms, \
-"unsupported meta-character `", c), \
+"warning: unsupported meta-character `", c), \
 "'"));
 		return (true);
 	}

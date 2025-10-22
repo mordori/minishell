@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 01:21:07 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 23:42:59 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 #include "str_utils.h"
 #include "line_utils.h"
 
-static inline bool	set_in_file(t_minishell *ms, t_node *node, char *filename);
-static inline bool	set_out_file(t_minishell *ms, t_node *node, t_redir *r);
+static inline int	set_in_file(t_minishell *ms, t_node *node, char *file);
+static inline int	set_out_file(t_minishell *ms, t_node *node, t_redir *r);
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof);
 static inline void	set_pipe(t_minishell *ms, t_node *node);;
 
@@ -36,12 +36,12 @@ void	setup_io(t_minishell *ms, t_node *node)
 		{
 			r = (t_redir *)redirs->content;
 			if (r->type == IN)
-				if (!set_in_file(ms, node, r->filename))
+				if (set_in_file(ms, node, r->file) == ERROR)
 					break ;
 			if (r->type == HEREDOC)
-				set_in_heredoc(ms, node, r->filename);
+				set_in_heredoc(ms, node, r->file);
 			if (r->type == OUT || r->type == OUT_APPEND)
-				if (!set_out_file(ms, node, r))
+				if (set_out_file(ms, node, r) == ERROR)
 					break ;
 			redirs = redirs->next;
 		}
@@ -50,7 +50,7 @@ void	setup_io(t_minishell *ms, t_node *node)
 	}
 }
 
-void	set_pipe(t_minishell *ms, t_node *node)
+static inline void	set_pipe(t_minishell *ms, t_node *node)
 {
 	int	pipefd[2];
 
@@ -73,51 +73,52 @@ void	set_pipe(t_minishell *ms, t_node *node)
 
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 {
-	const char	*filename = "/tmp/heredoc.tmp";
+	static char		*file = "/tmp/heredoc.tmp";
+	char			*line;
+	unsigned int	lines;
 
 	if (node->cmd.in > STDOUT_FILENO)
 		close(node->cmd.in);
-	node->cmd.in = open(filename, O_RDWR | O_CREAT | O_TRUNC, RW_______);
-	if (node->cmd.in == ERROR)
-		error_exit(ms, "heredoc create failed");
+	node->cmd.in = try_open(ms, file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
 	if (!g_signal)
-		write_heredoc(ms, node, eof);
+	{
+		lines = 0;
+		while (true)
+		{
+			line = get_line(ms, PROMPT);
+			if (!line || !ft_strcmp(line, eof) || g_signal)
+				break ;
+			try_write(ms, node->cmd.in, line);
+			try_write(ms, node->cmd.in, "\n");
+			++lines;
+		}
+		if (!line)
+			eof_warning(ms, eof, ms->lineno - lines);
+	}
 	close(node->cmd.in);
-	node->cmd.in = open(filename, O_RDWR);
-	if (node->cmd.in == ERROR)
-		error_exit(ms, "heredoc open failed");
-	unlink(filename);
+	node->cmd.in = try_open(ms, file, O_RDWR, 0);
+	unlink(file);
 }
 
-static inline bool	set_in_file(t_minishell *ms, t_node *node, char *filename)
+static inline int	set_in_file(t_minishell *ms, t_node *node, char *file)
 {
 	if (node->cmd.in > STDOUT_FILENO)
 		close(node->cmd.in);
-	node->cmd.in = open(filename, O_RDONLY);
-	if (node->cmd.in == ERROR)
-	{
-		warning(ms, filename);
-		return (false);
-	}
-	return (true);
+	node->cmd.in = try_open(ms, file, O_RDONLY, 0);
+	return (node->cmd.in);
 }
 
-static inline bool	set_out_file(t_minishell *ms, t_node *node, t_redir *r)
+static inline int	set_out_file(t_minishell *ms, t_node *node, t_redir *r)
 {
-	int	flags;
+	int	o_flag;
 
-	flags = O_WRONLY | O_CREAT;
+	o_flag = O_WRONLY | O_CREAT;
 	if (r->type == OUT_APPEND)
-		flags |= O_APPEND;
+		o_flag |= O_APPEND;
 	if (r->type == OUT)
-		flags |= O_TRUNC;
+		o_flag |= O_TRUNC;
 	if (node->cmd.out > STDOUT_FILENO)
 		close(node->cmd.out);
-	node->cmd.out = open(r->filename, flags, RW_RW_RW_);
-	if (node->cmd.out == ERROR)
-	{
-		warning(ms, r->filename);
-		return (false);
-	}
-	return (true);
+	node->cmd.out = try_open(ms, r->file, o_flag, RW_RW_RW_);
+	return (node->cmd.out);
 }
