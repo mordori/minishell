@@ -6,13 +6,11 @@
 /*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/21 17:38:02 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/22 11:32:02 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
-
-#include <stdio.h> //DEBUG!!!!!!!!!!!!!!!!!!!1111
 
 static void	get_previous_path(t_minishell *ms, char **path, bool is_first_cd);
 static void	update_oldpwd(t_minishell *ms);

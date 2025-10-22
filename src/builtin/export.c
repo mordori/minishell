@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:25:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/21 16:27:49 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/22 11:32:05 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static void	put_var_into_env(t_minishell *ms)
 
 static void	parse_export(t_minishell *ms, char *var, t_key_value *kv, char **delimiter)
 {
-	kv->value = NULL; //FIX: might be that also NULL value needs to be in persistent memory
+	kv->value = NULL;
 	*delimiter = ft_strchr(var, '=');
 	kv->key = ft_keydup(ms, var, *delimiter);
 	if (!*delimiter)
@@ -99,7 +99,7 @@ static bool	handle_specials(t_minishell *ms, char *var, char *key, char *value)
 		return (true);
 	}
 	is_additive = is_pluschar(var, '=');
-	existing_var = envll_findkey(&ms->state, key); //NOTE: during testing, make sure this can directly modify value in place
+	existing_var = envll_findkey(&ms->state, key);
 	if (existing_var)
 	{
 		if (is_additive)
@@ -113,27 +113,3 @@ static bool	handle_specials(t_minishell *ms, char *var, char *key, char *value)
 	}
 	return (false);
 }
-
-	//EXPORT WITH ARGS:
-	//export name=value
-//		export	->	declare -x name="value"
-//
-//		export name
-//		-> name
-//
-//		export name=
-//		-> name=""
-//
-//		export name=value1 value2
-//		-> name="value1"
-//		   value2
-//
-//		export name="value1 value2"
-//		-> name="value1 value2"
-
-
-	// EXPORT WITHOUT ARGS:
-	// lists in alphabetical order like: declare -x HOME="/path/"
-	// export accepts variable names starting with _ or alphabet (_ape or ape) but not number.
-	// Number can be in middle but not first character.
-	// variable names in smaller case come AFTER those in upper case, still in alphabetical order.
