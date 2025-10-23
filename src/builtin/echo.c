@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:12 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/17 22:12:17 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/23 16:57:01 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 
 /*
 	* bash takes multiple arguments into echo and joins them with a space
-	* it can also take variables of different types (WIP)
-	* puts a newline instead of space after last arg
+	* puts a newline instead of space after last arg, BUT NOT WITH OPTION -n
 */
+
+//FIXME: ADD SUPPORT FOR OPTION -n !!!!!!!!!!!!!!!!!!!!
 void	echo(t_minishell *ms)
 {
 	char	*string;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipelines.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 16:09:39 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 20:05:56 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,96 +17,82 @@
 //The key insight is: free() in the child does not free memory
 //from the parent, and vice versa.
 
-int	spawn_and_run(t_minishell *ms, int count, int *prev_fd)
+static void	create_pipe(t_minishell *ms, t_node *node);
+static void	io_directions(t_minishell *ms, t_node *node, int prev_read);
+static void	close_parent_pps(t_node *node, int *prev_read);
+
+int	spawn_and_run(t_minishell *ms, int count, int *prev_read)
 {
 	pid_t		child_pid;
 
-	
-	printf("Spawn and run!\n count: %d\n prev_fd: %d\n\n", count, *prev_fd);
-	printf("Current node cmd: %s\n current node pipe_fds: 0: %d 1: %d\n\n", ms->node->cmd.cmd, ms->node->pipe_fds[0], ms->node->pipe_fds[1]);
+	printf("Spawn and run!\n count: %d\n\n\n", count);
+	printf("Current node cmd: %s\n\n", ms->node->cmd.cmd);
 
 	child_pid = -1;
 	if (ms->node->next)
-	{
-		if (create_pipe(ms->node, prev_fd))
-			return (ERROR_PIPELINE);
-	}
+		create_pipe(ms, ms->node);
+
+	printf("Current node pipe_fds: 0: %d 1: %d\n\n", ms->node->pipe_fds[0], ms->node->pipe_fds[1]);
+
+	fork_child(ms, &child_pid);
 	if (child_pid != 0)
 	{
-		if (fork_child(&child_pid))
-			return (ERROR_FORKING);
-		if (child_pid > 0)
-			ms->state.pids[count] = child_pid;
+		if (ms->node->next)
+		{
+			if (close(ms->node->pipe_fds[WRITE]))
+				error_exit(ms, "");
+		}
 	}
-
-	printf("1st PID check: %d, \n", child_pid);
-
+	if (child_pid != 0)
+		ms->state.pids[count] = child_pid;
 	if (child_pid == 0)
 	{
-		if (io_directions(ms->node, *prev_fd))
-			return (ERROR_REDIR);
+		printf("%s PID-%d is headed to io_directions.\n", ms->node->cmd.cmd, child_pid);
+		io_directions(ms, ms->node, *prev_read);
+		printf("%s PID-%d is headed to run_node.\n", ms->node->cmd.cmd, child_pid);
 		run_node(ms);
 	}
-
-	printf("2nd PID check: %d, \n", child_pid);
-
-	if (close_parent_pps(ms->node)) //since everything is piped beforehand, EVERYTHING needs to be closed at appropriate times, also in each child.
-		return (ERROR_PIPELINE);
-
-	printf("\n");
-
+	close_parent_pps(ms->node, prev_read);
 	return (SUCCESS);
 }
 
-int	fork_child(pid_t *child_pid)
+static void	create_pipe(t_minishell *ms, t_node *node)
+{
+	if (pipe(node->pipe_fds))
+		error_exit(ms, "");
+}
+
+void	fork_child(t_minishell *ms, pid_t *child_pid)
 {
 	*child_pid = fork();
 	if (*child_pid == -1)
-		return (ERROR_FORKING);
-	return (SUCCESS);
+		error_exit(ms, "");
 }
 
-int	create_pipe(t_node *node, int *prev_fd)
+static void	io_directions(t_minishell *ms, t_node *node, int prev_read)
 {
-	if (pipe(node->pipe_fds))
-		return (ERROR_PIPELINE);
-	*prev_fd = node->pipe_fds[1];
-	return (SUCCESS);
-}
-
-int	io_directions(t_node *node, int prev_fd)
-{
-	//NOTE: if in or out redir, then plug it in here somewhere
-	if (node->prev)
+	printf("Cmd: %s is in io_directions phase.\n\n", node->cmd.cmd);
+	if (prev_read >= 0)
 	{
-		if (dup2(prev_fd, STDIN_FILENO))
-			return (ERROR_REDIR);
-		if (close(prev_fd))
-			return (ERROR_PIPELINE);
+		if (dup2(prev_read, STDIN_FILENO) == -1)
+			error_exit(ms, "");
+		close(prev_read);
 	}
-	else if (node->prev == NULL)
-	{
-		if (close(prev_fd))
-			return (ERROR_PIPELINE);
-	}
+	else if (node->prev == NULL && prev_read >= 0)
+		close(prev_read);
 	if (node->next)
 	{
-		if (dup2(node->pipe_fds[1], STDOUT_FILENO))
-			return (ERROR_REDIR);
-		if (close(node->pipe_fds[0]))
-			return (ERROR_PIPELINE);
+		if (dup2(node->pipe_fds[WRITE], STDOUT_FILENO) == -1)
+			error_exit(ms, "");
+		close(node->pipe_fds[WRITE]);
+		close(node->pipe_fds[READ]);
 	}
-	return (SUCCESS);
 }
 
-int	close_parent_pps(t_node *node)
+static void	close_parent_pps(t_node *node, int *prev_read)
 {
-	if (close(node->pipe_fds[0]))
-		return (ERROR_PIPELINE);
-	if (node->prev)
-	{
-		if (close(node->prev->pipe_fds[1])) // Or prev->prev ?
-			return (ERROR_PIPELINE);
-	}
-	return (SUCCESS);
+	if (node->prev == NULL)
+		close(*prev_read);
+	if (node->next)
+		*prev_read = node->pipe_fds[READ];
 }

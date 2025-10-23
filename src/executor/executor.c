@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 16:11:22 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 20:06:23 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ void	execute_simple(t_minishell *ms)
 		exec_builtin(ms);
 	else
 	{
-		if (fork_child(&child_pid))
-			warning(ms, NULL);
+		fork_child(ms, &child_pid);
 		if (child_pid == 0)
 		{
 			dup_io(ms->node);
@@ -52,33 +51,30 @@ void	execute_simple(t_minishell *ms)
 		if (WIFEXITED(status))
 		{
 			ms->state.exit_status = WEXITSTATUS(status);
-			if (ms->state.exit_status)
-				warning(ms, NULL);
 		}
 	} //katotaan mita on in ja out ja sitten luetaan/kirjoitetaan
 }
 
 void	execute_pipeline(t_minishell *ms)
 {
-	int	prev_fd;
+	int	prev_read;
 	int	count;
 
 	printf("Execute_pipeline entered.\n\n");
 	count = 0;
-	prev_fd = -1;
+	prev_read = -1;
 	while (ms->node)
 	{
 		command_verification(ms, ms->node);
 		printf("TRAVERSING pipeline loop node to node. Count: %d\n Node->cmd: %s\n Node->args[0]: %s\n\n", count, ms->node->cmd.cmd, ms->node->cmd.args[0]);
 		if (ms->node->pipe_fds[0] != ERROR && ms->node->pipe_fds[1] != ERROR)
 		{
-			ms->state.exit_status = spawn_and_run(ms, count, &prev_fd);
-			if (ms->state.exit_status)
-				warning(ms, NULL);
+			ms->state.exit_status = spawn_and_run(ms, count, &prev_read);
 		}
 		ms->node = ms->node->next;
 		count++;
 	}
+
 	if (wait_pids(&ms->state))
 		warning(ms, NULL);
 }
@@ -107,7 +103,7 @@ int	wait_pids(t_state *state)
 int    ft_log(char *file_name, char *func_name, char *data)
 {
     FILE    *fptr = fopen(file_name, "a");
-    
+
     if (!fptr)
     {
         printf("Could not open log file in log-director.");

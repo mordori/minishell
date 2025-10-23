@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/20 01:19:00 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/23 16:50:54 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "cleanup.h"
 #include "errors.h"
 
-void	exitt(t_minishell *ms)
+void	exi(t_minishell *ms)
 {
 	int	bytes;
 	int	status;
