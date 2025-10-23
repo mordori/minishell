@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipelines.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 20:05:56 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 21:33:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,17 @@ static void	close_parent_pps(t_node *node, int *prev_read);
 int	spawn_and_run(t_minishell *ms, int count, int *prev_read)
 {
 	pid_t		child_pid;
-
-	printf("Spawn and run!\n count: %d\n\n\n", count);
-	printf("Current node cmd: %s\n\n", ms->node->cmd.cmd);
+#ifdef DEBUG
+printf("Spawn and run!\n count: %d\n\n\n", count);
+printf("Current node cmd: %s\n\n", ms->node->cmd.cmd);
+#endif
 
 	child_pid = -1;
 	if (ms->node->next)
 		create_pipe(ms, ms->node);
-
-	printf("Current node pipe_fds: 0: %d 1: %d\n\n", ms->node->pipe_fds[0], ms->node->pipe_fds[1]);
-
+#ifdef DEBUG
+printf("Current node pipe_fds: 0: %d 1: %d\n\n", ms->node->pipe_fds[0], ms->node->pipe_fds[1]);
+#endif
 	fork_child(ms, &child_pid);
 	if (child_pid != 0)
 	{
@@ -47,9 +48,13 @@ int	spawn_and_run(t_minishell *ms, int count, int *prev_read)
 		ms->state.pids[count] = child_pid;
 	if (child_pid == 0)
 	{
-		printf("%s PID-%d is headed to io_directions.\n", ms->node->cmd.cmd, child_pid);
+#ifdef DEBUG
+printf("%s PID-%d is headed to io_directions.\n", ms->node->cmd.cmd, child_pid);
+#endif
 		io_directions(ms, ms->node, *prev_read);
-		printf("%s PID-%d is headed to run_node.\n", ms->node->cmd.cmd, child_pid);
+#ifdef DEBUG
+printf("%s PID-%d is headed to run_node.\n", ms->node->cmd.cmd, child_pid);
+#endif
 		run_node(ms);
 	}
 	close_parent_pps(ms->node, prev_read);
@@ -71,7 +76,9 @@ void	fork_child(t_minishell *ms, pid_t *child_pid)
 
 static void	io_directions(t_minishell *ms, t_node *node, int prev_read)
 {
-	printf("Cmd: %s is in io_directions phase.\n\n", node->cmd.cmd);
+#ifdef DEBUG
+printf("Cmd: %s is in io_directions phase.\n\n", node->cmd.cmd);
+#endif
 	if (prev_read >= 0)
 	{
 		if (dup2(prev_read, STDIN_FILENO) == -1)

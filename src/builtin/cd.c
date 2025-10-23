@@ -6,11 +6,12 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 20:37:26 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/23 21:07:48 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
+#include "io.h"
 
 static void	get_previous_path(t_minishell *ms, char **path, bool is_first_cd);
 static void	update_oldpwd(t_minishell *ms);
@@ -44,7 +45,7 @@ static void	get_previous_path(t_minishell *ms, char **path, bool is_first_cd)
 		*path = getenv("OLDPWD");
 	else
 		*path = envll_findkey(&ms->state, "OLDPWD")->value;
-	printf("%s\n", *path);
+	try_write_endl(ms, ms->node->pipe_fds[1], *path);
 }
 
 static void	update_oldpwd(t_minishell *ms)

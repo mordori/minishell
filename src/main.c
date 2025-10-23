@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/23 20:56:50 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/23 21:12:01 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void	store_pwd(t_minishell *ms)
 	char	*cwd;
 	char	buf[PATH_MAX];
 
-	cwd = getcwd(buf, sizeof(ms->pwd));
+	cwd = getcwd(buf, sizeof(buf));
 	if (!cwd)
 	{
 		if (errno == ENOENT && ms->pwd[0])
