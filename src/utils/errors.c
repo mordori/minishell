@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 23:41:07 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/22 13:30:41 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,10 @@ void	eof_warning(t_minishell *ms, char *eof, unsigned int lineno)
 	char	*w;
 
 	w = str_join(\
-ms, "warning: here-document at line ", uint_to_str(ms, lineno));
-	w = str_join(ms, w, " delimited by end-of-file (wanted `");
-	w = str_join(ms, w, eof);
-	w = str_join(ms, w, "')");
+ms, "warning: here-document at line ", uint_to_str(ms, lineno), VOLATILE);
+	w = str_join(ms, w, " delimited by end-of-file (wanted `", VOLATILE);
+	w = str_join(ms, w, eof, VOLATILE);
+	w = str_join(ms, w, "')", VOLATILE);
 	warning(ms, w);
 }
 

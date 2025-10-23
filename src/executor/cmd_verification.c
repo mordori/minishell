@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:23:27 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/18 18:14:45 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 16:07:23 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,11 @@ static char			*verify_path(t_minishell *ms, char *cmd_name);
 static char			*env_path_verif(t_minishell *ms, char *path, char *cmd_name);
 static char			*absolute_path_verif(t_minishell *ms, char *path);
 
-void	command_verification(t_minishell *ms)
+void	command_verification(t_minishell *ms, t_node *node)
 {
-	t_node		*node;
 	t_cmd		*cmd;
 	char		*cmd_name;
 
-	node = ms->node;
 	if (node)
 	{
 		cmd = &node->cmd;
@@ -42,7 +40,6 @@ void	command_verification(t_minishell *ms)
 		}
 		else
 			cmd->cmd = cmd->args[0];
-		node = node->next;
 	}
 }
 

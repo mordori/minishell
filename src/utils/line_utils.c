@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   line_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 03:53:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 23:23:17 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/22 13:21:12 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,13 +112,13 @@ str_join(ms, \
 str_join(ms, \
 str_join(ms, \
 "\001\033[38;5;90m\002", \
-p->logname), \
-"@"), \
-p->hostname), \
-"\001\033[0m:\033[38;5;39m\002"), \
-p->home), \
-p->path), \
-"\001\033[0m\002$ ");
+p->logname, VOLATILE), \
+"@", VOLATILE), \
+p->hostname, VOLATILE), \
+"\001\033[0m:\033[38;5;39m\002", VOLATILE), \
+p->home, VOLATILE), \
+p->path, VOLATILE), \
+"\001\033[0m\002$ ", VOLATILE);
 	return (p->prompt);
 }
 

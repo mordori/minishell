@@ -6,14 +6,14 @@
 /*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:58:00 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/18 18:20:23 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 15:17:21 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor_utils.h"
-#include "libft_mem.h"
 
 static char	*gen_fullpath(t_minishell *ms, char *dirpath, char *filename);
+static bool	fmatch(struct stat *b, struct dirent **f, char **p, void **meta);
 
 char	*scan_directory(t_minishell *ms, char *directory, char *cmd_name)
 {
@@ -21,30 +21,59 @@ char	*scan_directory(t_minishell *ms, char *directory, char *cmd_name)
 	struct dirent	*file;
 	struct stat		buffer;
 	char			*full_path;
+	void			*metadata[4];
 
+	full_path = NULL;
 	file = NULL;
+	metadata[MS] = ms;
+	metadata[DIR_PATH] = directory;
+	metadata[CMD_NAME] = cmd_name;
 	ft_memset(&buffer, 0, sizeof(buffer));
 	dirstream = opendir(directory);
 	if (!dirstream)
-		return (NULL);
-		//FIXME: ERROR HANDLING: FAILED TO OPEN DIRECTORY.
+		return (NULL); //FIXME: ERROR HANDLING: FAILED TO OPEN DIRECTORY.
+	metadata[DIRSTREAM] = dirstream;
 	file = readdir(dirstream);
-	while (file) //NOTE: readdir returns NULL if nothing's left in dir.
+	while (file)
 	{
-		full_path = gen_fullpath(ms, directory, file->d_name);
-		stat(full_path, &buffer);
-		if ((buffer.st_mode & S_IFMT) == S_IFREG)
-		{
-			if (ft_strcmp(file->d_name, cmd_name) == 0)
-			{
-				closedir(dirstream);
-				return (full_path);
-			}
-		}
-		file = readdir(dirstream);
+		if (fmatch(&buffer, &file, &full_path, metadata))
+			return (full_path);
 	}
 	closedir(dirstream);
 	return (NULL);
+}
+
+static bool	fmatch(struct stat *b, struct dirent **f, char **p, void **meta)
+{
+	*p = gen_fullpath(meta[MS], meta[DIR_PATH], (*f)->d_name);
+	stat(*p, b);
+	if ((b->st_mode & S_IFMT) == S_IFREG)
+	{
+		if (ft_strcmp((*f)->d_name, meta[CMD_NAME]) == 0)
+		{
+			closedir(meta[DIRSTREAM]);
+			return (true);
+		}
+	}
+	*f = readdir(meta[DIRSTREAM]);
+	return (false);
+}
+
+void	check_fds(int *fds)
+{
+	(void) fds;
+	//struct stat	buffer;
+	//int			i;
+	
+	//fstat(fd[i], &buffer); for checking if FDs are open or closed. Requires 
+}
+
+void	set_mode(t_minishell *ms)
+{
+	if (!ms->node->next)
+		ms->state.mode = SIMPLE;
+	else if (ms->node->next)
+		ms->state.mode = PIPELINE;
 }
 
 static char	*gen_fullpath(t_minishell *ms, char *dirpath, char *filename)

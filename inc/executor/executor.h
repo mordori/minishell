@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 10:33:34 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/17 18:03:56 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/23 15:35:28 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ int		executor(t_minishell *ms);
 void	execute_simple(t_minishell *ms);
 void	execute_pipeline(t_minishell *ms);
 int		wait_pids(t_state *state);
+//DEBUG
+int    ft_log(char *file_name, char *func_name, char *data);
 
 //cmd_processor.c
 void	run_node(t_minishell *ms);
@@ -36,7 +38,7 @@ void	exec_builtin(t_minishell *ms);
 void	exec_extern(t_minishell *ms);
 
 //cmd_verification.c
-void	command_verification(t_minishell *ms);
+void	command_verification(t_minishell *ms, t_node *node);
 
 //exec_pipelines.c
 int		spawn_and_run(t_minishell *ms, int count, int *prev_fd);

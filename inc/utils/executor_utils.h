@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:28:15 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/18 17:42:09 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 15:17:25 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,19 @@
 
 # include "defines.h"
 # include "libft_str.h"
+# include "libft_mem.h"
 # include "str_utils.h"
 # include "arena.h"
 # include <dirent.h>
 # include <sys/stat.h>
 
+# define MS         0
+# define DIR_PATH   1
+# define CMD_NAME   2
+# define DIRSTREAM  3
+
 char	*scan_directory(t_minishell *ms, char *directory, char *cmd_name);
+void	set_mode(t_minishell *ms);
+void	check_fds(int *fds);
 
 #endif

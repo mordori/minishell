@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   io_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 05:06:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 23:22:14 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/22 13:32:50 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,6 @@ ssize_t	try_read(t_minishell *ms, int fd, char *buf, size_t n_bytes)
 
 	bytes = read(fd, buf, n_bytes);
 	if (bytes == ERROR)
-		error_exit(ms, "read failed");
+		error_exit(ms, "readline/write failed");
 	return (bytes);
 }
