@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 13:52:41 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/17 17:26:20 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/23 16:55:33 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,15 @@ void	echo(t_minishell *ms);
 void	pwd(t_minishell *ms);
 
 //export.c
-void	export(t_minishell *ms);
+void	expo(t_minishell *ms);
 
 //unset.c
-void	unset(t_minishell *ms);
+void	unse(t_minishell *ms);
 
 //env.c
 void	env(t_minishell *ms);
 
 //exit.c
-void	exitt(t_minishell *ms);
+void	exi(t_minishell *ms);
 
 #endif
