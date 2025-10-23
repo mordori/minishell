@@ -6,18 +6,13 @@
 /*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 05:06:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/21 16:17:11 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/22 13:32:50 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "io.h"
-#include "line_utils.h"
 #include "libft_str.h"
-#include "str_utils.h"
 #include "errors.h"
-#include "arena.h"
-
-static inline void	eof_warning(t_minishell *ms, char *eof);
 
 void	dup_io(t_node *node)
 {
@@ -33,37 +28,38 @@ void	dup_io(t_node *node)
 	}
 }
 
-void	write_heredoc(t_minishell *ms, t_node *node, char *eof)
+ssize_t	try_write(t_minishell *ms, int fd, char *src)
 {
-	char	*line;
-	int		bytes;
+	ssize_t	bytes;
+	ssize_t	len;
+	size_t	ulen;
 
-	bytes = 0;
-	while (true)
-	{
-		line = get_line(ms, PROMPT);
-		if (!line || !ft_strcmp(line, eof) || g_signal)
-			break ;
-		bytes = write(node->cmd.in, line, ft_strlen(line));
-		if (bytes != ERROR)
-			bytes = write(node->cmd.in, "\n", 1);
-		if (bytes == ERROR)
-			break ;
-	}
-	if (!line)
-		eof_warning(ms, eof);
-	if (bytes == ERROR)
-		error_exit(ms, "readline/write failed");
+	ulen = ft_strlen(src);
+	if (ulen > LONG_MAX)
+		error_exit(ms, "write src is longer than LONG_MAX");
+	len = (ssize_t)ulen;
+	bytes = write(fd, src, len);
+	if (bytes != len)
+		error_exit(ms, NULL);
+	return (bytes);
 }
 
-static inline void	eof_warning(t_minishell *ms, char *eof)
+int	try_open(t_minishell *ms, char *file, int o_flag, int p_flag)
 {
-	char	*w;
+	int	fd;
 
-	w = str_join(\
-ms, "warning: here-document at line ", uint_to_str(ms, ms->lineno), VOLATILE);
-	w = str_join(ms, w, " delimited by end-of-file (wanted `", VOLATILE);
-	w = str_join(ms, w, eof, VOLATILE);
-	w = str_join(ms, w, "')", VOLATILE);
-	warning(ms, w);
+	fd = open(file, o_flag, p_flag);
+	if (fd == ERROR)
+		warning(ms, file);
+	return (fd);
+}
+
+ssize_t	try_read(t_minishell *ms, int fd, char *buf, size_t n_bytes)
+{
+	ssize_t	bytes;
+
+	bytes = read(fd, buf, n_bytes);
+	if (bytes == ERROR)
+		error_exit(ms, "readline/write failed");
+	return (bytes);
 }

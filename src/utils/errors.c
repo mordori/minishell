@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/18 23:32:16 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/22 13:30:41 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "errors.h"
 #include "libft_str.h"
+#include "str_utils.h"
 #include "cleanup.h"
+#include "io.h"
 
 static inline void	print_error(char *msg);
 
@@ -37,48 +39,62 @@ void	error_exit(t_minishell *ms, char *msg)
 		status = ms->state.exit_status;
 		clean(ms);
 	}
-	print_error(msg);
+	if (msg)
+		print_error(msg);
+	else if (errno)
+	{
+		perror("minishell");
+		errno = 0;
+	}
 	exit(status);
 }
 
-void	warning_syntax(t_minishell *ms, char *token)
+void	eof_warning(t_minishell *ms, char *eof, unsigned int lineno)
 {
-	int	bytes;
+	char	*w;
 
-	bytes = write(STDERR_FILENO, "\033[1;33m", 8);
-	if (bytes != ERROR)
-		bytes = write(\
-STDERR_FILENO, "\033[1;33mminishell: syntax error near unxpected token `", 54);
-	if (token && bytes != ERROR)
-		bytes = write(STDERR_FILENO, token, ft_strlen(token));
-	if (bytes != ERROR)
-		bytes = write(STDERR_FILENO, "\'\n\033[0m", 7);
-	if (bytes == ERROR)
-		error_exit(ms, "write failed");
+	w = str_join(\
+ms, "warning: here-document at line ", uint_to_str(ms, lineno), VOLATILE);
+	w = str_join(ms, w, " delimited by end-of-file (wanted `", VOLATILE);
+	w = str_join(ms, w, eof, VOLATILE);
+	w = str_join(ms, w, "')", VOLATILE);
+	warning(ms, w);
 }
 
-void	warning(t_minishell *ms, char *msg)
+void	warning_syntax(t_minishell *ms, char *src)
 {
-	int	bytes;
+	char	*msg;
 
-	bytes = write(STDERR_FILENO, "\033[1;33m", 8);
-	if (bytes != ERROR)
-		bytes = write(STDERR_FILENO, "minishell: ", 12);
-	if (errno && bytes != ERROR)
+	msg = "undefined source";
+	if (src)
+		msg = src;
+	try_write(ms, STDERR_FILENO, "\033[1;33m");
+	try_write(ms, STDERR_FILENO, \
+"minishell: syntax error near unxpected token `");
+	try_write(ms, STDERR_FILENO, msg);
+	try_write(ms, STDERR_FILENO, "\'\n\033[0m");
+}
+
+void	warning(t_minishell *ms, char *src)
+{
+	char	*msg;
+
+	msg = "undefined source";
+	if (src)
+		msg = src;
+	try_write(ms, STDERR_FILENO, "\033[1;33m");
+	try_write(ms, STDERR_FILENO, "minishell: ");
+	if (errno)
 	{
 		perror(msg);
 		errno = 0;
 	}
-	else if (msg && bytes != ERROR)
+	else
 	{
-		bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
-		if (bytes != ERROR)
-			bytes = write(STDERR_FILENO, "\n", 1);
+		try_write(ms, STDERR_FILENO, msg);
+		try_write(ms, STDERR_FILENO, "\n");
 	}
-	if (bytes != ERROR)
-		bytes = write(STDERR_FILENO, "\033[0m", 5);
-	if (bytes == ERROR)
-		error_exit(ms, "write failed");
+	try_write(ms, STDERR_FILENO, "\033[0m");
 }
 
 /**
@@ -93,19 +109,22 @@ static inline void	print_error(char *msg)
 	int	bytes;
 
 	bytes = write(STDERR_FILENO, "\033[1;31m", 8);
-	if (errno && bytes != ERROR)
-	{
-		perror("minishell");
-		errno = 0;
-	}
-	else if (bytes != ERROR)
-	{
-		bytes = write(STDERR_FILENO, "minishell: fatal error: ", 24);
-		if (bytes != ERROR && msg)
-			bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
-		if (bytes != ERROR)
-			bytes = write(STDERR_FILENO, "\n", 1);
-	}
 	if (bytes != ERROR)
-		bytes = write(STDERR_FILENO, "\033[0m", 5);
+	{
+		if (errno)
+		{
+			perror("minishell");
+			errno = 0;
+		}
+		else
+		{
+			bytes = write(STDERR_FILENO, "minishell: fatal error: ", 24);
+			if (bytes != ERROR && msg)
+				bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
+			if (bytes != ERROR)
+				bytes = write(STDERR_FILENO, "\n", 1);
+		}
+		if (bytes != ERROR)
+			bytes = write(STDERR_FILENO, "\033[0m", 5);
+	}
 }

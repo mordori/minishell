@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 00:57:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/21 16:17:13 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/22 13:29:18 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ bool	is_unsupported_char(t_minishell *ms, const char *src)
 		warning(ms, \
 str_join(ms, \
 str_join(ms, \
-"unsupported meta-character `", c, VOLATILE), \
+"warning: unsupported meta-character `", c, VOLATILE), \
 "'", VOLATILE));
 		return (true);
 	}

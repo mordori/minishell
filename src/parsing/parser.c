@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:15:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/19 22:28:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 20:02:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,6 @@ t_minishell *ms, t_node *head, t_token **tokens)
 		redir->type = OUT_APPEND;
 	else if (!ft_strcmp(prev->src, "<<"))
 		redir->type = HEREDOC;
-	redir->filename = t->src;
+	redir->file = t->src;
 	lstadd_back(&head->cmd.redirs, lstnew(ms, redir));
 }

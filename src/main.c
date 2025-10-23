@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 02:46:24 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 20:02:13 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ static inline void	debug_print_args_redirs(t_minishell *ms, t_token **tokens)
 		printf("\n[%d] REDIRS:\t", i);
 		while (tokens[1] && node->cmd.redirs)
 		{
-			printf("%s, ", ((t_redir *)node->cmd.redirs->content)->filename);
+			printf("%s, ", ((t_redir *)node->cmd.redirs->content)->file);
 			node->cmd.redirs = node->cmd.redirs->next;
 		}
 		printf("\n\n");
@@ -135,6 +135,8 @@ static inline void	run(t_minishell *ms)
 		line = get_line(ms, get_prompt(ms, &p));
 		if (!line)
 			exitt(ms);
+		if (*line && !g_signal)
+			add_history(line);
 		ms->node = alloc_volatile(ms, sizeof(t_node));
 		tokens = create_tokens(line, ms);
 		if (!tokens || !parse_tokens(ms, tokens))
@@ -146,8 +148,6 @@ debug_print_args_redirs(ms, tokens);
 #endif
 		if (ms->node->cmd.args && !g_signal)
 			executor(ms);
-		if (line && *line && !g_signal)
-			add_history(line);
 		close_fds(ms);
 	}
 }
@@ -187,5 +187,5 @@ static inline void	startup(void)
 "╲__╱__╱__╱ ╲________╱╲__╱_____╱ ╲________╱╲___", \
 "_____╱╲___╱____╱╲________╱╲________╱╲________╱ \n") \
 < 0)
-		error_exit(NULL, "startup message failed");
+		error_exit(NULL, NULL);
 }

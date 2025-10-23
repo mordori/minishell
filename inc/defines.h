@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/22 11:31:58 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 15:17:27 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ enum e_shell_mode
 struct s_redir
 {
 	t_redir_type	type;
-	char			*filename;
+	char			*file;
 	t_redir			*next;
 };
 

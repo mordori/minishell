@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/18 18:20:01 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 16:14:58 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 void	run_node(t_minishell *ms)
 {
 	//FIXME: parent's custom signal handling back to default
+	printf("Cmd: %s is in run_node phase.\n", ms->node->cmd.cmd);
 	if (ms->node->cmd.builtin)
 		exec_builtin(ms);
 	else
@@ -36,6 +37,7 @@ void	exec_extern(t_minishell *ms)
 	char	**args;
 	char	**envp;
 
+	printf("Cmd: %s is in exec_extern phase.\n", ms->node->cmd.cmd);
 	command = ms->node->cmd.cmd;
 	args = ms->node->cmd.args;
 	envp = ms->state.envp;

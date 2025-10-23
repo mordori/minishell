@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
+#    By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/19 22:35:42 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/10/22 16:23:35 by jvalkama         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_ENV), \
 				env_handler.c env_utils.c env_utils2.c quicksort.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EXE), \
 				executor.c cmd_verification.c cmd_processor.c \
-				exec_pipelines.c executor_utils.c\
+				exec_pipelines.c executor_utils.c \
 				)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
 				expansion.c parser.c io_utils.c io.c lexer.c \

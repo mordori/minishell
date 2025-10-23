@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 19:13:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/15 19:27:23 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/20 20:00:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "str_utils.h"
 #include "libft_str.h"
 #include "errors.h"
+#include "try_syscall.h"
 
 static inline char	*join_lines(t_minishell *ms, char *line, const char *buf);
 static inline char	*extract_line(t_minishell *ms, const char *buf);
@@ -39,9 +40,7 @@ int	get_next_line(t_minishell *ms, int fd, char **line)
 		return (GNL_ERROR);
 	while (!ft_strchr(buf, '\n'))
 	{
-		bytes = read(fd, buf, BUFFER_SIZE);
-		if (bytes == ERROR)
-			error_exit(ms, "write failed");
+		bytes = try_read(ms, fd, buf);
 		if (bytes == 0)
 			break ;
 		buf[bytes] = '\0';
