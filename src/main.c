@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 20:02:13 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/23 16:55:30 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ static inline void	run(t_minishell *ms)
 		store_cwd(ms);
 		line = get_line(ms, get_prompt(ms, &p));
 		if (!line)
-			exitt(ms);
+			exi(ms);
 		if (*line && !g_signal)
 			add_history(line);
 		ms->node = alloc_volatile(ms, sizeof(t_node));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_processor.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 16:14:58 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 20:06:20 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	run_node(t_minishell *ms)
 
 void	exec_builtin(t_minishell *ms)
 {
-	static t_fun	*dt[8] = {NULL, &echo, &cd, &pwd, &export, &unset, &env, &exitt};
+	static t_fun	*dt[8] = {NULL, &echo, &cd, &pwd, &expo, &unse, &env, &exi};
 
 	dt[ms->node->cmd.builtin](ms);
 }
