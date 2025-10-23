@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 23:42:59 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/23 20:51:41 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,7 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 			line = get_line(ms, PROMPT);
 			if (!line || !ft_strcmp(line, eof) || g_signal)
 				break ;
-			try_write(ms, node->cmd.in, line);
-			try_write(ms, node->cmd.in, "\n");
+			try_write_endl(ms, node->cmd.in, line);
 			++lines;
 		}
 		if (!line)

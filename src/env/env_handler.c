@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 12:14:16 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/19 21:31:05 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/23 17:29:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,6 @@ char	*get_env_val(t_minishell *ms, char *key)
 
 	env = envll_findkey(&ms->state, key);
 	if (!env)
-		return (NULL);
+		return ("");
 	return (env->value);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   line_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 03:53:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/22 13:21:12 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 20:27:39 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,14 +86,14 @@ char	*get_prompt(t_minishell *ms, t_prompt *p)
 	if (!home)
 	{
 		p->home = "";
-		p->path = ms->cwd;
+		p->path = ms->pwd;
 	}
-	else if (!ft_strncmp(ms->cwd, home, ft_strlen(home)))
+	else if (!ft_strncmp(ms->pwd, home, ft_strlen(home)))
 	{
 		p->home = "~";
-		p->path = ms->cwd + ft_strlen(home);
+		p->path = ms->pwd + ft_strlen(home);
 	}
-	else if (!ft_strncmp(ms->cwd, "/home", 5))
+	else if (!ft_strncmp(ms->pwd, "/home", 5))
 	{
 		p->home = "/home";
 		p->path = "";
@@ -128,7 +128,7 @@ void	set_names(t_minishell *ms, t_prompt *p)
 	ssize_t	len;
 
 	p->logname = get_env_val(ms, "LOGNAME");
-	if (!p->logname)
+	if (!*p->logname)
 		p->logname = "user";
 	fd = open("/etc/hostname", O_RDONLY);
 	if (fd == ERROR)
