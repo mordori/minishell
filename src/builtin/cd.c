@@ -3,49 +3,64 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 21:07:48 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/24 16:43:27 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "io.h"
 
-static void	get_previous_path(t_minishell *ms, char **path, bool is_first_cd);
+static int	get_previous_path(t_minishell *ms, char **path, bool is_first_cd);
 static void	update_oldpwd(t_minishell *ms);
 
-void	cd(t_minishell *ms)
+int	cd(t_minishell *ms)
 {
-	char		*path;
-	static bool	is_first_cd = true;
+	char			*path;
+	static bool		is_first_cd = true;
 
 	path = ms->node->cmd.args[1];
 	if (!path)
 	{
-		path = getenv("HOME");
-		if (!path)
+		if (!envll_findkey(&ms->state, "HOME"))
 		{
-			ms->state.exit_status = ERROR_BUILTIN;
-			return ;
+			warning(ms, "cd: HOME not set");
+			return (ERROR_BUILTIN);
 		}
+		path = envll_findkey(&ms->state, "HOME")->value;
 	}
 	if (*path == '-')
-		get_previous_path(ms, &path, is_first_cd);
-	update_oldpwd(ms);
+	{
+		if (get_previous_path(ms, &path, is_first_cd))
+			return (ERROR_BUILTIN);
+	}
+	if (envll_findkey(&ms->state, "OLDPWD"))
+		update_oldpwd(ms);
 	if (chdir(path))
-		ms->state.exit_status = ERROR_BUILTIN;
+		warning(ms, str_join(ms, "cd: ", path, VOLATILE));
 	is_first_cd = false;
+	return (SUCCESS);
 }
 
-static void	get_previous_path(t_minishell *ms, char **path, bool is_first_cd)
+static int	get_previous_path(t_minishell *ms, char **path, bool is_first_cd)
 {
+	*path = NULL;
 	if (is_first_cd)
 		*path = getenv("OLDPWD");
 	else
-		*path = envll_findkey(&ms->state, "OLDPWD")->value;
+	{
+		if (envll_findkey(&ms->state, "OLDPWD"))
+			*path = envll_findkey(&ms->state, "OLDPWD")->value;
+	}
+	if (!*path)
+	{
+		warning(ms, "cd: OLDPWD not set");
+		return (ERROR_BUILTIN);
+	}
 	try_write_endl(ms, ms->node->pipe_fds[1], *path);
+	return (SUCCESS);
 }
 
 static void	update_oldpwd(t_minishell *ms)

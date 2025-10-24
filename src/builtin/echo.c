@@ -3,41 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:12 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 23:18:07 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/24 16:43:23 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "io.h"
 
-/*
-	* bash takes multiple arguments into echo and joins them with a space
-	* puts a newline instead of space after last arg, BUT NOT WITH OPTION -n
-*/
+static void	is_newline_off(t_minishell *ms, int *i, bool *is_nl_off);
 
-//FIXME: ADD SUPPORT FOR OPTION -n !!!!!!!!!!!!!!!!!!!!
-void	echo(t_minishell *ms)
+int	echo(t_minishell *ms)
 {
 	char	*string;
-	bool	in_between;
+	bool	is_inbetween;
+	bool	is_nl_off;
 	int		i;
 	int		fd;
 
 	i = 1;
 	fd = ms->node->pipe_fds[1];
-	in_between = false;
+	is_inbetween = false;
+	is_newline_off(ms, &i, &is_nl_off);
 	while (ms->node->cmd.args[i])
 	{
-		if (in_between)
+		if (is_inbetween)
 			try_write(ms, fd, " ");
 		string = ms->node->cmd.args[i];
 		try_write(ms, fd, string);
-		if (!in_between)
-			in_between = true;
+		if (!is_inbetween)
+			is_inbetween = true;
 		i++;
 	}
-	try_write(ms, fd, "\n");
+	if (!is_nl_off)
+		try_write(ms, fd, "\n");
+	return (SUCCESS);
+}
+
+static void	is_newline_off(t_minishell *ms, int *i, bool *is_nl_off)
+{
+	*is_nl_off = false;
+	if (ft_strcmp(ms->node->cmd.args[*i], "-n") == 0)
+	{
+		*is_nl_off = true;
+		(*i)++;
+	}
 }

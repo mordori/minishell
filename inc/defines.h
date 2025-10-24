@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   defines.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/23 20:45:49 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/24 15:28:24 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ typedef struct s_redir			t_redir;
 typedef struct s_prompt			t_prompt;
 typedef struct s_key_value		t_key_value;
 
-typedef void	t_fun(t_minishell *);
+typedef int	t_fun(t_minishell *);
 
 enum e_builtin_type
 {
@@ -180,13 +180,12 @@ struct s_node
 	t_node		*next;
 	t_node		*prev;
 	int			pipe_fds[2];
+	pid_t		pid;
 };
 
 struct s_state
 {
 	t_mode			mode;
-	int				child_count; //can be parsed from the number of | characters
-	pid_t			pids[1000]; //could just be dynamically allocated instead of ulimit -u limit on Maximum child process number.
 	unsigned int	exit_status;
 	t_env			*env;
 	char			**envp;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:58:00 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 15:17:21 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/24 12:49:05 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,14 @@ void	check_fds(int *fds)
 	(void) fds;
 	//struct stat	buffer;
 	//int			i;
-	
-	//fstat(fd[i], &buffer); for checking if FDs are open or closed. Requires 
+
+	//fstat(fd[i], &buffer); for checking if FDs are open or closed. Requires
+}
+
+void	node_scrollback(t_minishell *ms)
+{
+	while (ms->node->prev)
+		ms->node = ms->node->prev;
 }
 
 void	set_mode(t_minishell *ms)

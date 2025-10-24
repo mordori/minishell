@@ -3,44 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 21:05:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/24 16:52:01 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "io.h"
-
-//NOTE: NODE CREATION HAPPENS IN INIT_NODES() WHICH IS CALLED IN MAIN.
-//FIX: define init_nodes() in inits.c
 
 int	executor(t_minishell *ms)
 {
 	set_mode(ms);
-#ifdef DEBUG
-printf("Mode: %d\n\n", ms->state.mode);
-#endif
 	if (ms->state.mode == SIMPLE)
-		execute_simple(ms);
+	{
+		if (execute_simple(ms))
+			return (ERROR_GENERAL);
+	}
 	else if (ms->state.mode == PIPELINE)
-		execute_pipeline(ms);
+	{
+		if(execute_pipeline(ms))
+			return (ERROR_PIPELINE);
+	}
 	return(SUCCESS);
 }
 
-//NOTE: ms is needed at least by the builtin export, if it triggers 'invalid identificator' -error
-
-void	execute_simple(t_minishell *ms)
+int	execute_simple(t_minishell *ms)
 {
 	pid_t	child_pid;
 	int		status;
 
-	command_verification(ms, ms->node);
+	if (command_verification(ms, ms->node))
+		return (ERROR_CMD_NOTFOUND);
 	if (ms->node->pipe_fds[0] == ERROR || ms->node->pipe_fds[1] == ERROR)
-		return ;
+		return (ERROR);
 	if (ms->node->cmd.builtin)
-		exec_builtin(ms);
+		return (exec_builtin(ms));
 	else
 	{
 		fork_child(ms, &child_pid);
@@ -53,51 +51,48 @@ void	execute_simple(t_minishell *ms)
 		if (WIFEXITED(status))
 		{
 			ms->state.exit_status = WEXITSTATUS(status);
+			if (ms->state.exit_status)
+				error_exit(ms, NULL);
 		}
-	} //katotaan mita on in ja out ja sitten luetaan/kirjoitetaan
+	}
+	return (SUCCESS);
 }
 
-void	execute_pipeline(t_minishell *ms)
+int	execute_pipeline(t_minishell *ms)
 {
 	int	prev_read;
-	int	count;
-#ifdef DEBUG
-printf("Execute_pipeline entered.\n\n");
-#endif
-	count = 0;
+
 	prev_read = -1;
 	while (ms->node)
 	{
-		command_verification(ms, ms->node);
-#ifdef DEBUG
-printf("TRAVERSING pipeline loop node to node. Count: %d\n Node->cmd: %s\n Node->args[0]: %s\n\n", count, ms->node->cmd.cmd, ms->node->cmd.args[0]);
-#endif
+		if (command_verification(ms, ms->node))
+			return (ERROR_PIPELINE);
 		if (ms->node->pipe_fds[0] != ERROR && ms->node->pipe_fds[1] != ERROR)
-		{
-			ms->state.exit_status = spawn_and_run(ms, count, &prev_read);
-		}
+			ms->state.exit_status = spawn_and_run(ms, &prev_read);
+		if (ms->state.exit_status)
+			return (ERROR_PIPELINE);
+		if (!ms->node->next)
+			break;
 		ms->node = ms->node->next;
-		count++;
 	}
-
-	if (wait_pids(&ms->state))
+	node_scrollback(ms);
+	if (wait_pids(ms))
 		warning(ms, NULL);
+	return (SUCCESS);
 }
 
-int	wait_pids(t_state *state)
+int	wait_pids(t_minishell *ms)
 {
 	int	status;
-	int	i;
 
-	i = 0;
-	while (i < state->child_count)
+	while (ms->node)
 	{
-		waitpid(state->pids[i], &status, 0); //FIX: declaration from sys/types.h in defines.h doesnt seem to reach here. so There's also sys/wait.h in executor.h now.
+		waitpid(ms->node->pid, &status, 0);
 		if (WIFEXITED(status))
-			state->exit_status = WEXITSTATUS(status);
-		if (state->exit_status)
-			return (state->exit_status);
-		i++;
+			ms->state.exit_status = WEXITSTATUS(status);
+		if (ms->state.exit_status)
+			return (ms->state.exit_status);
+		ms->node = ms->node->next;
 	}
 	return (SUCCESS);
 }

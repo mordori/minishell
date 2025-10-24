@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:28:15 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 15:17:25 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/24 12:49:12 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,6 @@
 char	*scan_directory(t_minishell *ms, char *directory, char *cmd_name);
 void	set_mode(t_minishell *ms);
 void	check_fds(int *fds);
+void	node_scrollback(t_minishell *ms);
 
 #endif

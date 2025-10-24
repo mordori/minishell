@@ -3,23 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_verification.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:23:27 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 16:07:23 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/24 16:50:22 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-
-//FIXME: to do: ft_strjoin and ft_split called in scan_directory are not memarena-friendly rn.
 
 static t_builtin	verify_builtin(char *cmd);
 static char			*verify_path(t_minishell *ms, char *cmd_name);
 static char			*env_path_verif(t_minishell *ms, char *path, char *cmd_name);
 static char			*absolute_path_verif(t_minishell *ms, char *path);
 
-void	command_verification(t_minishell *ms, t_node *node)
+int	command_verification(t_minishell *ms, t_node *node)
 {
 	t_cmd		*cmd;
 	char		*cmd_name;
@@ -34,13 +32,15 @@ void	command_verification(t_minishell *ms, t_node *node)
 			cmd->cmd = verify_path(ms, cmd_name);
 			if (!cmd->cmd)
 			{
-				ms->state.exit_status = ERROR;
-				return ;
+				warning(ms, str_join(\
+					ms, "Command not found: ", cmd->args[0], VOLATILE));
+				return (ERROR_CMD_NOTFOUND);
 			}
 		}
 		else
 			cmd->cmd = cmd->args[0];
 	}
+	return (SUCCESS);
 }
 
 static t_builtin	verify_builtin(char *cmd)
