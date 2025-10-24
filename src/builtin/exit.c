@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 21:17:04 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/23 23:18:44 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	exi(t_minishell *ms)
 {
 	int	status;
 
-       try_write_endl(ms, STDOUT_FILENO, "exit");
+	try_write_endl(ms, STDOUT_FILENO, "exit");
 	status = ms->state.exit_status;
 	clean(ms);
 	exit(status);

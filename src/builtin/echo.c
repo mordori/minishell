@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:12 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 21:39:32 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/23 23:18:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,5 @@ void	echo(t_minishell *ms)
 			in_between = true;
 		i++;
 	}
-	try_write_endl(ms, fd, "");
+	try_write(ms, fd, "\n");
 }
