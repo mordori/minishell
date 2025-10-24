@@ -3,18 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 21:05:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/24 11:10:36 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "io.h"
-
-//NOTE: NODE CREATION HAPPENS IN INIT_NODES() WHICH IS CALLED IN MAIN.
-//FIX: define init_nodes() in inits.c
 
 int	executor(t_minishell *ms)
 {
@@ -28,8 +24,6 @@ printf("Mode: %d\n\n", ms->state.mode);
 		execute_pipeline(ms);
 	return(SUCCESS);
 }
-
-//NOTE: ms is needed at least by the builtin export, if it triggers 'invalid identificator' -error
 
 void	execute_simple(t_minishell *ms)
 {
@@ -54,7 +48,7 @@ void	execute_simple(t_minishell *ms)
 		{
 			ms->state.exit_status = WEXITSTATUS(status);
 		}
-	} //katotaan mita on in ja out ja sitten luetaan/kirjoitetaan
+	}
 }
 
 void	execute_pipeline(t_minishell *ms)
@@ -74,30 +68,45 @@ printf("TRAVERSING pipeline loop node to node. Count: %d\n Node->cmd: %s\n Node-
 #endif
 		if (ms->node->pipe_fds[0] != ERROR && ms->node->pipe_fds[1] != ERROR)
 		{
-			ms->state.exit_status = spawn_and_run(ms, count, &prev_read);
+			ms->state.exit_status = spawn_and_run(ms, &prev_read);
 		}
+		if (!ms->node->next)
+			break;
 		ms->node = ms->node->next;
 		count++;
 	}
-
-	if (wait_pids(&ms->state))
+#ifdef DEBUG
+printf("Parent headed to node_scrollback.\n");
+#endif
+	node_scrollback(ms);
+#ifdef DEBUG
+printf("Parent headed to wait_pids for reaping.\n");
+#endif
+	if (wait_pids(ms))
 		warning(ms, NULL);
 }
 
-int	wait_pids(t_state *state)
+int	wait_pids(t_minishell *ms)
 {
 	int	status;
-	int	i;
 
-	i = 0;
-	while (i < state->child_count)
+#ifdef DEBUG
+printf("REAPING entered.\n");
+#endif
+	while (ms->node)
 	{
-		waitpid(state->pids[i], &status, 0); //FIX: declaration from sys/types.h in defines.h doesnt seem to reach here. so There's also sys/wait.h in executor.h now.
+#ifdef DEBUG
+printf("Reaping PID: %d.\n", ms->node->pid);
+#endif
+		waitpid(ms->node->pid, &status, 0);
 		if (WIFEXITED(status))
-			state->exit_status = WEXITSTATUS(status);
-		if (state->exit_status)
-			return (state->exit_status);
-		i++;
+			ms->state.exit_status = WEXITSTATUS(status);
+#ifdef DEBUG
+printf("PID-%d exited with status %d.\n", ms->node->pid, ms->state.exit_status);
+#endif
+		if (ms->state.exit_status)
+			return (ms->state.exit_status);
+		ms->node = ms->node->next;
 	}
 	return (SUCCESS);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   defines.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/23 20:45:49 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/24 10:25:32 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,13 +180,12 @@ struct s_node
 	t_node		*next;
 	t_node		*prev;
 	int			pipe_fds[2];
+	pid_t		pid;
 };
 
 struct s_state
 {
 	t_mode			mode;
-	int				child_count; //can be parsed from the number of | characters
-	pid_t			pids[1000]; //could just be dynamically allocated instead of ulimit -u limit on Maximum child process number.
 	unsigned int	exit_status;
 	t_env			*env;
 	char			**envp;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipelines.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 21:33:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/24 11:07:28 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ static void	create_pipe(t_minishell *ms, t_node *node);
 static void	io_directions(t_minishell *ms, t_node *node, int prev_read);
 static void	close_parent_pps(t_node *node, int *prev_read);
 
-int	spawn_and_run(t_minishell *ms, int count, int *prev_read)
+int	spawn_and_run(t_minishell *ms, int *prev_read)
 {
 	pid_t		child_pid;
 #ifdef DEBUG
-printf("Spawn and run!\n count: %d\n\n\n", count);
+printf("Spawn and run!\n");
 printf("Current node cmd: %s\n\n", ms->node->cmd.cmd);
 #endif
 
@@ -33,7 +33,7 @@ printf("Current node cmd: %s\n\n", ms->node->cmd.cmd);
 	if (ms->node->next)
 		create_pipe(ms, ms->node);
 #ifdef DEBUG
-printf("Current node pipe_fds: 0: %d 1: %d\n\n", ms->node->pipe_fds[0], ms->node->pipe_fds[1]);
+printf("Node %s pipe_fds: 0: %d 1: %d\n\n", ms->node->cmd.cmd, ms->node->pipe_fds[0], ms->node->pipe_fds[1]);
 #endif
 	fork_child(ms, &child_pid);
 	if (child_pid != 0)
@@ -45,7 +45,7 @@ printf("Current node pipe_fds: 0: %d 1: %d\n\n", ms->node->pipe_fds[0], ms->node
 		}
 	}
 	if (child_pid != 0)
-		ms->state.pids[count] = child_pid;
+		ms->node->pid = child_pid;
 	if (child_pid == 0)
 	{
 #ifdef DEBUG

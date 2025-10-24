@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_verification.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:23:27 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 16:07:23 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/24 10:49:01 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-
-//FIXME: to do: ft_strjoin and ft_split called in scan_directory are not memarena-friendly rn.
 
 static t_builtin	verify_builtin(char *cmd);
 static char			*verify_path(t_minishell *ms, char *cmd_name);
