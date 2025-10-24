@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_processor.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 21:30:04 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/24 16:43:30 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,37 +16,31 @@
 void	run_node(t_minishell *ms)
 {
 	//FIXME: parent's custom signal handling back to default
-#ifdef DEBUG
-printf("Cmd: %s is in run_node phase.\n", ms->node->cmd.cmd);
-#endif
 	if (ms->node->cmd.builtin)
 		exec_builtin(ms);
 	else
 		exec_extern(ms);
-	//clean_exit();  // FIXME: for builtins: free everything? Even FDs need to be closed according to many ppl.
+	if (ms->state.exit_status)
+		error_exit(ms, NULL);
 }
 
-void	exec_builtin(t_minishell *ms)
+int	exec_builtin(t_minishell *ms)
 {
 	static t_fun	*dt[8] = {NULL, &echo, &cd, &pwd, &expo, &unse, &env, &exi};
 
-	dt[ms->node->cmd.builtin](ms);
+	return (dt[ms->node->cmd.builtin](ms));
 }
 
-void	exec_extern(t_minishell *ms)
+int	exec_extern(t_minishell *ms)
 {
 	char	*command;
 	char	**args;
 	char	**envp;
 
-#ifdef DEBUG
-printf("Cmd: %s is in exec_extern phase.\n", ms->node->cmd.cmd);
-#endif
 	command = ms->node->cmd.cmd;
 	args = ms->node->cmd.args;
 	envp = ms->state.envp;
-	execve(command, args, envp); //execve should automatically clean up all memory, even heap
-	//if (errno) //return to run_node if execve failed
-	//	warning(ms, command);
-	return ;
+	execve(command, args, envp);
+	ms->state.exit_status = errno;
+	return (ERROR);
 }

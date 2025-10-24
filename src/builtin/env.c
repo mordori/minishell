@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:07:03 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 21:27:39 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/24 16:43:21 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "io.h"
 
-void	env(t_minishell *ms)
+int	env(t_minishell *ms)
 {
 	t_env	*env;
 
@@ -28,4 +28,5 @@ void	env(t_minishell *ms)
 		}
 		env = env->next;
 	}
+	return (SUCCESS);
 }

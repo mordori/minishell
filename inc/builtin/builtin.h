@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 13:52:41 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/24 12:44:42 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/24 16:00:40 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,24 +25,24 @@
 # include <stdlib.h>
 
 //cd.c
-void	cd(t_minishell *ms);
+int		cd(t_minishell *ms);
 
 //echo.c
-void	echo(t_minishell *ms);
+int		echo(t_minishell *ms);
 
 //pwd.c
-void	pwd(t_minishell *ms);
+int		pwd(t_minishell *ms);
 
 //export.c
-void	expo(t_minishell *ms);
+int		expo(t_minishell *ms);
 
 //unset.c
-void	unse(t_minishell *ms);
+int		unse(t_minishell *ms);
 
 //env.c
-void	env(t_minishell *ms);
+int		env(t_minishell *ms);
 
 //exit.c
-void	exi(t_minishell *ms);
+int		exi(t_minishell *ms);
 
 #endif

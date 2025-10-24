@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/24 12:44:50 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/24 15:28:24 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ typedef struct s_redir			t_redir;
 typedef struct s_prompt			t_prompt;
 typedef struct s_key_value		t_key_value;
 
-typedef void	t_fun(t_minishell *);
+typedef int	t_fun(t_minishell *);
 
 enum e_builtin_type
 {

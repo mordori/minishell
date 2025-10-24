@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:25:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 16:51:03 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/24 16:42:42 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,13 @@ static void	put_var_into_env(t_minishell *ms);
 static void	parse_export(t_minishell *ms, char *var, t_key_value *kv, char **delimiter);
 static bool	handle_specials(t_minishell *ms, char *var, char *key, char *value);
 
-void	expo(t_minishell *ms)
+int	expo(t_minishell *ms)
 {
 	if (!ms->node->cmd.args[1])
 		display_exporting_vars(&ms->state);
 	else
 		put_var_into_env(ms);
+	return (SUCCESS);
 }
 
 static void	display_exporting_vars(t_state *state)

@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:12 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/24 12:51:42 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/24 16:43:23 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 static void	is_newline_off(t_minishell *ms, int *i, bool *is_nl_off);
 
-void	echo(t_minishell *ms)
+int	echo(t_minishell *ms)
 {
 	char	*string;
 	bool	is_inbetween;
@@ -39,6 +39,7 @@ void	echo(t_minishell *ms)
 	}
 	if (!is_nl_off)
 		try_write(ms, fd, "\n");
+	return (SUCCESS);
 }
 
 static void	is_newline_off(t_minishell *ms, int *i, bool *is_nl_off)

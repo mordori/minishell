@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:23:57 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 16:50:58 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/24 16:43:26 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	remove_node(t_env *env);
 
-void	unse(t_minishell *ms)
+int	unse(t_minishell *ms)
 {
 	char	*arg;
 	int		i;
@@ -38,6 +38,7 @@ void	unse(t_minishell *ms)
 		}
 		i++;
 	}
+	return (SUCCESS);
 }
 
 static void	remove_node(t_env *env)
