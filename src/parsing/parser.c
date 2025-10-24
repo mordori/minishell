@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:15:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 20:02:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/23 20:08:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,9 +101,10 @@ static inline void	set_args(t_minishell *ms, t_list *args, t_node *head)
 static inline void	add_redir(\
 t_minishell *ms, t_node *head, t_token **tokens)
 {
-	t_redir	*redir;
-	t_token	*t;
-	t_token	*prev;
+	static size_t	heredocs = 0;
+	t_redir			*redir;
+	t_token			*t;
+	t_token			*prev;
 
 	t = *tokens;
 	prev = *(tokens - 1);
@@ -115,7 +116,12 @@ t_minishell *ms, t_node *head, t_token **tokens)
 	else if (!ft_strcmp(prev->src, ">>"))
 		redir->type = OUT_APPEND;
 	else if (!ft_strcmp(prev->src, "<<"))
+	{
 		redir->type = HEREDOC;
+		++heredocs;
+	}
+	if (heredocs > MAX_HEREDOC)
+		error_exit(ms, "maximum here-document count exceeded");
 	redir->file = t->src;
 	lstadd_back(&head->cmd.redirs, lstnew(ms, redir));
 }

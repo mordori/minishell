@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   io_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 05:06:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/22 13:32:50 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 20:51:31 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,25 @@ ssize_t	try_write(t_minishell *ms, int fd, char *src)
 	len = (ssize_t)ulen;
 	bytes = write(fd, src, len);
 	if (bytes != len)
+		error_exit(ms, NULL);
+	return (bytes);
+}
+
+ssize_t	try_write_endl(t_minishell *ms, int fd, char *src)
+{
+	ssize_t	bytes;
+	ssize_t	len;
+	size_t	ulen;
+
+	ulen = ft_strlen(src);
+	if (ulen > LONG_MAX)
+		error_exit(ms, "write src is longer than LONG_MAX");
+	len = (ssize_t)ulen;
+	bytes = write(fd, src, len);
+	if (bytes != len)
+		error_exit(ms, NULL);
+	bytes = write(fd, "\n", 1);
+	if (bytes != 1)
 		error_exit(ms, NULL);
 	return (bytes);
 }

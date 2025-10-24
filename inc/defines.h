@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   defines.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/23 15:17:27 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 20:45:49 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,12 @@
 #  define MEMORY				1048576UL
 # endif
 
+# ifndef MAX_HEREDOC
+#  define MAX_HEREDOC			16
+# endif
 # ifndef PATH_MAX
 #  define PATH_MAX				4096
 # endif
-
 # ifndef HOSTNAME_MAX
 #  define HOSTNAME_MAX			64
 # endif
@@ -205,7 +207,7 @@ struct	s_minishell
 	char				*line;
 	t_state				state;
 	t_node				*node;
-	char				cwd[PATH_MAX];
+	char				pwd[PATH_MAX];
 	t_shell_mode		mode;
 	unsigned int		lineno;
 };

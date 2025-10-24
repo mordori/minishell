@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 20:06:23 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 21:05:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@
 int	executor(t_minishell *ms)
 {
 	set_mode(ms);
-	printf("Mode: %d\n\n", ms->state.mode);
+#ifdef DEBUG
+printf("Mode: %d\n\n", ms->state.mode);
+#endif
 	if (ms->state.mode == SIMPLE)
 		execute_simple(ms);
 	else if (ms->state.mode == PIPELINE)
@@ -59,14 +61,17 @@ void	execute_pipeline(t_minishell *ms)
 {
 	int	prev_read;
 	int	count;
-
-	printf("Execute_pipeline entered.\n\n");
+#ifdef DEBUG
+printf("Execute_pipeline entered.\n\n");
+#endif
 	count = 0;
 	prev_read = -1;
 	while (ms->node)
 	{
 		command_verification(ms, ms->node);
-		printf("TRAVERSING pipeline loop node to node. Count: %d\n Node->cmd: %s\n Node->args[0]: %s\n\n", count, ms->node->cmd.cmd, ms->node->cmd.args[0]);
+#ifdef DEBUG
+printf("TRAVERSING pipeline loop node to node. Count: %d\n Node->cmd: %s\n Node->args[0]: %s\n\n", count, ms->node->cmd.cmd, ms->node->cmd.args[0]);
+#endif
 		if (ms->node->pipe_fds[0] != ERROR && ms->node->pipe_fds[1] != ERROR)
 		{
 			ms->state.exit_status = spawn_and_run(ms, count, &prev_read);
@@ -97,6 +102,7 @@ int	wait_pids(t_state *state)
 	return (SUCCESS);
 }
 
+#ifdef DEBUG
 //DEBUG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #include <stdio.h>
 
@@ -117,3 +123,4 @@ int    ft_log(char *file_name, char *func_name, char *data)
     return (0);
 }
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#endif

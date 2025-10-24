@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/21 16:05:45 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 17:53:20 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "str_utils.h"
 #include "arena_list.h"
 #include "arena.h"
+#include "env.h"
 
 #ifdef DEBUG
 #include <stdio.h>
@@ -44,7 +45,7 @@ static inline char	*expand_str(t_minishell *ms, char *src)
 	char	*ptr;
 	char	*result;
 	size_t	i;
-	char	*env;
+	char	*var;
 
 	str = ft_strchr(src, '$');
 	if (!str)
@@ -77,9 +78,9 @@ static inline char	*expand_str(t_minishell *ms, char *src)
 			i = 0;
 			while (str[i] && str[i] != '$')
 				++i;
-			env = getenv(str_sub(ms, VOLATILE, str, i));
-			if (env)
-				result = str_join(ms, result, env, VOLATILE);
+
+			var = get_env_val(ms, str_sub(ms, VOLATILE, str, i));
+			result = str_join(ms, result, var, VOLATILE);
 			str += i;
 		}
 		ptr = ft_strchr(str, '$');
@@ -100,7 +101,7 @@ static inline char	**expand_args(t_minishell *ms, char **raw_args)
 {
 	while (*raw_args)
 	{
-		expand_str(ms, *raw_args);
+		*raw_args = expand_str(ms, *raw_args);
 		++raw_args;
 	}
 	return (raw_args);

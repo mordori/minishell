@@ -3,25 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/23 16:50:54 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 23:18:44 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "cleanup.h"
 #include "errors.h"
+#include "io.h"
 
 void	exi(t_minishell *ms)
 {
-	int	bytes;
 	int	status;
 
-	bytes = write(1, "exit\n", 5);
-	if (bytes == ERROR)
-		error_exit(ms, "write failed");
+	try_write_endl(ms, STDOUT_FILENO, "exit");
 	status = ms->state.exit_status;
 	clean(ms);
 	exit(status);

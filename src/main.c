@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/23 16:55:30 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 21:12:01 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ volatile sig_atomic_t	g_signal = 0;
 static inline void	startup(void);
 static inline void	initialize(t_minishell *ms, char **envp);
 static inline void	run(t_minishell *ms);
-void				store_cwd(t_minishell *ms);
+void				store_pwd(t_minishell *ms);
 
 /**
  * @brief	Entry point to the program.
@@ -86,35 +86,6 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	signal(SIGINT, sig_handler);
 }
 
-#ifdef DEBUG
-static inline void	debug_print_args_redirs(t_minishell *ms, t_token **tokens)
-{
-	t_node	*node;
-
-	node = ms->node;
-	printf("\n");
-	int i = 0;
-	int k = 0;
-	while (node)
-	{
-		printf("[%d] ARGS:\t", i);
-		while (tokens[1] && node->cmd.args && node->cmd.args[k])
-		{
-			printf("%s, ", node->cmd.args[k++]);
-		}
-		printf("\n[%d] REDIRS:\t", i);
-		while (tokens[1] && node->cmd.redirs)
-		{
-			printf("%s, ", ((t_redir *)node->cmd.redirs->content)->file);
-			node->cmd.redirs = node->cmd.redirs->next;
-		}
-		printf("\n\n");
-		node = node->next;
-		++i;
-	}
-}
-#endif
-
 /**
  * @brief	WIP
  *
@@ -131,7 +102,7 @@ static inline void	run(t_minishell *ms)
 	{
 		g_signal = 0;
 		arena_reset(&ms->pool);
-		store_cwd(ms);
+		store_pwd(ms);
 		line = get_line(ms, get_prompt(ms, &p));
 		if (!line)
 			exi(ms);
@@ -141,18 +112,15 @@ static inline void	run(t_minishell *ms)
 		tokens = create_tokens(line, ms);
 		if (!tokens || !parse_tokens(ms, tokens))
 			continue ;
-		// expand_variables(ms);
+		expand_variables(ms);
 		setup_io(ms, ms->node);
-#ifdef DEBUG
-debug_print_args_redirs(ms, tokens);
-#endif
 		if (ms->node->cmd.args && !g_signal)
 			executor(ms);
 		close_fds(ms);
 	}
 }
 
-void	store_cwd(t_minishell *ms)
+void	store_pwd(t_minishell *ms)
 {
 	char	*cwd;
 	char	buf[PATH_MAX];
@@ -160,12 +128,12 @@ void	store_cwd(t_minishell *ms)
 	cwd = getcwd(buf, sizeof(buf));
 	if (!cwd)
 	{
-		if (errno == ENOENT && ms->cwd[0])
+		if (errno == ENOENT && ms->pwd[0])
 			return ;
 		else
 			error_exit(ms, "get cwd failed");
 	}
-	ft_memcpy(ms->cwd, cwd, ft_strlen(cwd) + 1);
+	ft_memcpy(ms->pwd, cwd, ft_strlen(cwd) + 1);
 }
 
 /**

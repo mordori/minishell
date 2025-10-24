@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/22 13:30:41 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/23 19:55:02 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ static inline void	print_error(char *msg)
 		}
 		else
 		{
-			bytes = write(STDERR_FILENO, "minishell: fatal error: ", 24);
+			bytes = write(STDERR_FILENO, "minishell: ", 11);
 			if (bytes != ERROR && msg)
 				bytes = write(STDERR_FILENO, msg, ft_strlen(msg));
 			if (bytes != ERROR)

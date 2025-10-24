@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 22:27:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/19 04:37:13 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/23 16:51:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	close_fds(t_minishell *ms)
 	t_node	*node;
 
 	node = ms->node;
+	// while (node->prev)
+	// 	node = node->prev;
 	while (node)
 	{
 		if (node->cmd.in > STDOUT_FILENO)
