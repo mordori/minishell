@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   str_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/22 13:56:44 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/25 06:10:00 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ t_minishell *ms, t_arena_type type, const char *src, size_t len)
 		while (src[i] && i < len)
 			++i;
 	if (type == PERSISTENT)
-		sub = alloc_vars(ms, (i + 1) * sizeof(char));
+		sub = alloc_vars(ms, i + 1);
 	else
-		sub = alloc_volatile(ms, (i + 1) * sizeof(char));
+		sub = alloc_volatile(ms, i + 1);
 	ft_memcpy(sub, src, i);
 	return (sub);
 }
@@ -54,9 +54,9 @@ char	*str_join(t_minishell *ms, const char *s1, const char *s2, t_arena_type typ
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
 	if (type == PERSISTENT)
-		str = alloc_vars(ms, (len1 + len2 + 1) * sizeof(char));
+		str = alloc_vars(ms, len1 + len2 + 1);
 	else
-		str = alloc_volatile(ms, (len1 + len2 + 1) * sizeof(char));
+		str = alloc_volatile(ms, len1 + len2 + 1);
 	ft_memcpy(str, s1, len1);
 	ft_memcpy(&str[len1], s2, len2);
 	return (str);
@@ -70,7 +70,7 @@ char	*uint_to_str(t_minishell *ms, unsigned int n)
 
 	num = n;
 	digits = ft_ucountdigits(num, 10);
-	str = alloc_volatile(ms, digits + 1 * sizeof(char));
+	str = alloc_volatile(ms, digits + 1);
 	while (digits--)
 	{
 		str[digits] = '0' + num % 10;

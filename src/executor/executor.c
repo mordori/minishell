@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/24 16:52:01 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/25 04:37:32 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ int	execute_pipeline(t_minishell *ms)
 	node_scrollback(ms);
 	if (wait_pids(ms))
 		warning(ms, NULL);
+	//node_scrollback(ms);
 	return (SUCCESS);
 }
 

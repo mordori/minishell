@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+         #
+#    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/22 16:23:35 by jvalkama         ###   ########.fr        #
+#    Updated: 2025/10/26 08:35:02 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:=minishell
 
-MEMORY		?=1048576
+MEMORY		?=2097152
 CONF		:=.config
 BUILD_TYPE	:=RELEASE
 
