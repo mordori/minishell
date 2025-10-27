@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/24 16:52:01 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/27 12:57:55 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	execute_simple(t_minishell *ms)
 		return (exec_builtin(ms));
 	else
 	{
-		fork_child(ms, &child_pid);
+		try_fork(ms, &child_pid);
 		if (child_pid == 0)
 		{
 			dup_io(ms->node);

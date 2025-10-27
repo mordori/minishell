@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/24 16:43:30 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/27 12:52:36 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,17 @@ void	run_node(t_minishell *ms)
 {
 	//FIXME: parent's custom signal handling back to default
 	if (ms->node->cmd.builtin)
-		exec_builtin(ms);
+	{
+		if (exec_builtin(ms))
+			error_exit(ms, NULL);
+		clean(ms);
+		exit(0);
+	}
 	else
-		exec_extern(ms);
-	if (ms->state.exit_status)
-		error_exit(ms, NULL);
+	{
+		if (exec_extern(ms))
+			error_exit(ms, NULL);
+	}
 }
 
 int	exec_builtin(t_minishell *ms)
