@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   quicksort.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 18:10:23 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/17 17:42:24 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/27 18:59:31 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 
 static t_env	*partition(t_env *low, t_env *high);
-static void	swap(t_env *a, t_env *b);
+static void		swap(t_env *a, t_env *b);
 
 void	quicksort(t_env *low, t_env *high)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/23 21:12:01 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/27 19:22:08 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,9 @@ static inline void	run(t_minishell *ms)
 	t_token		**tokens;
 	t_prompt	p;
 
-	set_names(ms, &p);
 	while (true)
 	{
+		set_names(ms, &p);
 		g_signal = 0;
 		arena_reset(&ms->pool);
 		store_pwd(ms);

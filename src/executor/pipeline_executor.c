@@ -6,11 +6,12 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 12:50:12 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/27 17:20:36 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "io.h"
 
 //due to fork(), both parent and child initially share
 //the same heap (via COW), but each is responsible for its own cleanup.
@@ -51,7 +52,8 @@ int	spawn_and_run(t_minishell *ms, int *prev_read)
 static void	try_pipe(t_minishell *ms, t_node *node)
 {
 	if (pipe(node->pipe_fds))
-		error_exit(ms, "");
+	 	error_exit(ms, "");
+	//set_pipe(ms, node); //set_pipe starts pipes from 2nd node, but pipeline loop starts from 1st, and logic is built up from 1st node pipe excluding last node.
 }
 
 void	try_fork(t_minishell *ms, pid_t *child_pid)

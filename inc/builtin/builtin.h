@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 13:52:41 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 11:14:25 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/27 19:22:15 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include "defines.h"
 # include "libft_list.h"
-# include "env_utils.h"
 # include "env.h"
 # include "cleanup.h"
 # include "errors.h"

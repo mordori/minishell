@@ -6,11 +6,11 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 16:44:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/24 14:58:15 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/27 19:05:02 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "env_utils.h"
+#include "env.h"
 
 static bool	is_valid_identifier(const char c);
 
