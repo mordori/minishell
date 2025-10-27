@@ -1,47 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin.h                                          :+:      :+:    :+:   */
+/*   executor_utils.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/25 13:52:41 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 19:22:15 by jvalkama         ###   ########.fr       */
+/*   Created: 2025/10/01 14:28:15 by jvalkama          #+#    #+#             */
+/*   Updated: 2025/10/27 12:48:04 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUILTIN_H
-# define BUILTIN_H
+#ifndef EXECUTOR_UTILS_H
+# define EXECUTOR_UTILS_H
 
 # include "defines.h"
-# include "libft_list.h"
-# include "env.h"
-# include "cleanup.h"
-# include "errors.h"
-# include "str_utils.h"
 # include "libft_str.h"
-# include <stdio.h>
-# include <stdlib.h>
+# include "libft_mem.h"
+# include "str_utils.h"
+# include "arena.h"
+# include "errors.h"
+# include <dirent.h>
+# include <sys/stat.h>
 
-//cd.c
-int		cd(t_minishell *ms);
+# define MS         0
+# define DIR_PATH   1
+# define CMD_NAME   2
+# define DIRSTREAM  3
 
-//echo.c
-int		echo(t_minishell *ms);
-
-//pwd.c
-int		pwd(t_minishell *ms);
-
-//export.c
-int		expo(t_minishell *ms);
-
-//unset.c
-int		unse(t_minishell *ms);
-
-//env.c
-int		env(t_minishell *ms);
-
-//exit.c
-int		exi(t_minishell *ms);
+void	set_mode(t_minishell *ms);
+void	check_fds(int *fds);
+void	node_scrollback(t_minishell *ms);
 
 #endif

@@ -3,22 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:24:14 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/22 18:24:07 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/27 19:22:01 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "env_utils.h"
+#include "env.h"
 
-t_env	*ft_envnode_new(t_minishell *ms, char *key, char *value)
+t_env	*ft_envnode_new(t_minishell *ms, char *key, char *valu, t_arena_type t)
 {
 	t_env	*node;
 
-	node = alloc_vars(ms, sizeof(t_env));
+	node = NULL;
+	if (t == PERSISTENT)
+		node = alloc_vars(ms, sizeof(t_env));
+	else if (t == VOLATILE)
+		node = alloc_volatile(ms, sizeof(t_env));
 	node->key = key;
-	node->value = value;
+	node->value = valu;
 	node->next = NULL;
 	node->prev = NULL;
 	return (node);
@@ -58,7 +62,6 @@ char	*ft_keydup(t_minishell *ms, char *key_src, char *key_end)
 					len--;
 				break ;
 			}
-
 		}
 		len++;
 	}

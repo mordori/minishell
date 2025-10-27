@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   io.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 05:09:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/23 20:51:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/27 17:07:13 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ int		try_open(t_minishell *ms, char *file, int o_flag, int p_flag);
 ssize_t	try_write(t_minishell *ms, int fd, char *src);
 ssize_t	try_write_endl(t_minishell *ms, int fd, char *src);
 ssize_t	try_read(t_minishell *ms, int fd, char *buf, size_t n_bytes);
+void	set_pipe(t_minishell *ms, t_node *node);
 
 #endif
