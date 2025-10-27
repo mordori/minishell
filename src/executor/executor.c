@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/25 04:37:32 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/27 18:04:08 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,7 @@ int	execute_simple(t_minishell *ms)
 		}
 		waitpid(child_pid, &status, 0);
 		if (WIFEXITED(status))
-		{
 			ms->state.exit_status = WEXITSTATUS(status);
-			if (ms->state.exit_status)
-				error_exit(ms, NULL);
-		}
 	}
 	return (SUCCESS);
 }

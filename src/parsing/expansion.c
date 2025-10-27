@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/27 01:37:36 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/27 20:18:47 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@
 #include <stdio.h>
 #endif
 
-static inline void	expand_str(t_minishell *ms, char **src);
 static inline void	expand_args(t_minishell *ms, char **args);
-static inline void	join_var_name(t_minishell *ms, char **str, char **result);
-static inline void	join_var(t_minishell *ms, char **str, char **result, char c);
+static inline void	join_var_name(t_minishell *ms, char **str, char **result, t_expand_mode mode);
+static inline void	join_var(t_minishell *ms, char **str, char **result, char quote, t_expand_mode mode);
 static inline void	expand_redirs(t_minishell *ms, t_list *redirs);
+static inline char	*remove_quotes(t_minishell *ms, char *str);
 
 void	expand_variables(t_minishell *ms)
 {
@@ -44,10 +44,14 @@ void	expand_variables(t_minishell *ms)
 
 static inline void	expand_args(t_minishell *ms, char **raw_args)
 {
-	while (*raw_args)
+	char	**args;
+
+	args = raw_args;
+	while (*args)
 	{
-		expand_str(ms, raw_args);
-		++raw_args;
+		expand_str(ms, args, EXPAND_DEFAULT);
+		remove_quotes(ms, args);
+		++args;
 	}
 }
 
@@ -60,12 +64,13 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 	while (redirs)
 	{
 		r = (t_redir *)redirs->content;
-		expand_str(ms, &r->file);
+		if (r->type != HEREDOC)
+			expand_str(ms, &r->file, EXPAND_DEFAULT);
 		redirs = redirs->next;
 	}
 }
 
-static inline void	expand_str(t_minishell *ms, char **src)
+void	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 {
 	char	*str;
 	char	*ptr;
@@ -91,9 +96,9 @@ static inline void	expand_str(t_minishell *ms, char **src)
 		else if (*str == '$')
 			result = str_join(ms, result, uint_to_str(ms, (unsigned int)getpid()), VOLATILE);
 		else if (*str == '\"' || *str == '\'')
-			join_var_name(ms, &str, &result);
+			join_var_name(ms, &str, &result, mode);
 		else
-			join_var(ms, &str, &result, quote);
+			join_var(ms, &str, &result, quote, mode);
 		++str;
 		ptr = ft_strchr(str, '$');
 		if (ptr)
@@ -108,7 +113,7 @@ static inline void	expand_str(t_minishell *ms, char **src)
 	*src = result;
 }
 
-static inline void	join_var_name(t_minishell *ms, char **str, char **result)
+static inline void	join_var_name(t_minishell *ms, char **str, char **result, t_expand_mode mode)
 {
 	size_t	i;
 	char	c;
@@ -119,11 +124,13 @@ static inline void	join_var_name(t_minishell *ms, char **str, char **result)
 	while ((*str)[i] != c)
 		++i;
 	name = str_sub(ms, VOLATILE, (*str), i + 1);
+	if (mode == EXPAND_HEREDOC)
+		*result = str_join(ms, *result, "$", VOLATILE);
 	*result = str_join(ms, *result, name, VOLATILE);
 	*str += i;
 }
 
-static inline void	join_var(t_minishell *ms, char **str, char **result, char quote)
+static inline void	join_var(t_minishell *ms, char **str, char **result, char quote, t_expand_mode mode)
 {
 	size_t	i;
 	char	*val;
@@ -132,12 +139,12 @@ static inline void	join_var(t_minishell *ms, char **str, char **result, char quo
 	i = 0;
 	while ((*str)[i] && (*str)[i] != quote && (*str)[i] != '$')
 		++i;
-	if (!quote || quote == '\"')
+	if (!quote || quote == '\"' || mode == EXPAND_HEREDOC)
 	{
 		name = str_sub(ms, VOLATILE, *str, i);
 		val = get_env_val(ms, name);
 	}
-	if (quote == '\'')
+	else if (quote == '\'')
 	{
 		(*str)--;
 		++i;
@@ -146,6 +153,53 @@ static inline void	join_var(t_minishell *ms, char **str, char **result, char quo
 	if ((*str)[i] == quote)
 		quote = 0;
 	*result = str_join(ms, *result, val, VOLATILE);
-
 	*str += i - 1;
+}
+
+char	*find_quote(char *str)
+{
+	char	*single_q;
+	char	*double_q;
+
+	single_q = ft_strchr(str, '\'');
+	double_q = ft_strchr(str, '\"');
+	if (!single_q && !double_q)
+		return (NULL);
+	if (single_q && single_q < double_q)
+		return (single_q);
+	else
+		return (double_q);
+}
+
+static inline void	remove_quotes(t_minishell *ms, char **src)
+{
+	char	*result;
+	char	*ptr;
+	char	*str;
+	char	q;
+	size_t	i;
+
+	ptr = find_quote(str);
+	if (!ptr)
+		return (str);
+	result = alloc_volatile(ms, ptr - str + 1);
+	ft_memcpy(result, str, ptr - str);
+	q = *ptr;
+	while (*str)
+	{
+		i = 0;
+		while (str[i] != q)
+			++i;
+		result = str_join(ms, result, str_sub(ms, VOLATILE, str, i), VOLATILE);
+		str += i + 1;
+		ptr = find_quote(str);
+		if (!ptr)
+			break;
+		q = *ptr;
+		result = str_join(ms, result, str_sub(ms, VOLATILE, str, ptr - str), VOLATILE);
+		str = ptr;
+	}
+	result = str_join(ms, result, str, VOLATILE);
+	printf("%s\n", result);
+	*src = result;
 }

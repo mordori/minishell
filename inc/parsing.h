@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 01:32:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/27 18:38:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,6 @@ bool	is_operator(const char *src);
 bool	is_redirection(const char *src);
 bool	is_pipe(const char *src);
 bool	is_unsupported_char(t_minishell *ms, const char *src);
+void	expand_str(t_minishell *ms, char **src, t_expand_mode mode);
 
 #endif

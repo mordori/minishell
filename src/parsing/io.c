@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/23 20:51:41 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/27 18:48:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "libft_str.h"
 #include "str_utils.h"
 #include "line_utils.h"
+#include "parsing.h"
 
 static inline int	set_in_file(t_minishell *ms, t_node *node, char *file);
 static inline int	set_out_file(t_minishell *ms, t_node *node, t_redir *r);
@@ -88,6 +89,8 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 			line = get_line(ms, PROMPT);
 			if (!line || !ft_strcmp(line, eof) || g_signal)
 				break ;
+			if (!ft_strchr(eof, '\"') && !ft_strchr(eof, '\''))
+				expand_str(ms, &line, EXPAND_HEREDOC);
 			try_write_endl(ms, node->cmd.in, line);
 			++lines;
 		}
