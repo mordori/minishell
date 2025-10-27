@@ -1,21 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_verification.c                                 :+:      :+:    :+:   */
+/*   cmd_verifier.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:23:27 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/25 04:38:43 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/28 00:05:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "verifier_utils.h"
 
 static t_builtin	verify_builtin(char *cmd);
-static char			*verify_path(t_minishell *ms, char *cmd_name);
-static char			*env_path_verif(t_minishell *ms, char *path, char *cmd_name);
-static char			*absolute_path_verif(t_minishell *ms, char *path);
+static char			*verify_extern(t_minishell *ms, char *cmd_name);
 
 int	command_verification(t_minishell *ms, t_node *node)
 {
@@ -29,7 +28,7 @@ int	command_verification(t_minishell *ms, t_node *node)
 		cmd->builtin = verify_builtin(cmd_name);
 		if (!cmd->builtin)
 		{
-			cmd->cmd = verify_path(ms, cmd_name);
+			cmd->cmd = verify_extern(ms, cmd_name);
 			if (!cmd->cmd)
 			{
 				errno = 0;
@@ -60,40 +59,12 @@ static t_builtin	verify_builtin(char *cmd)
 	return (FALSE);
 }
 
-static char	*verify_path(t_minishell *ms, char *cmd_name)
+static char	*verify_extern(t_minishell *ms, char *cmd_name)
 {
 	char	*path;
 
 	path = getenv("PATH");
-	if (!path || cmd_name[0] == '/')
-		return (absolute_path_verif(ms, cmd_name));
-	return (env_path_verif(ms, path, cmd_name));
-}
-
-static char	*absolute_path_verif(t_minishell *ms, char *cmd_path)
-{
-	if (access(cmd_path, F_OK) == SUCCESS)
-		return (cmd_path);
-	(void)ms;
-	//warning(ms, cmd_path);
-	return (NULL);
-}
-
-static char	*env_path_verif(t_minishell *ms, char *path, char *cmd_name)
-{
-	char	**dir_list;
-	char	*full_path;
-	int		i;
-
-	i = 0;
-	dir_list = str_split(ms, path, ':');
-	while (dir_list[i])
-	{
-		full_path = scan_directory(ms, dir_list[i], cmd_name);
-		if (full_path)
-			return (full_path);
-		i++;
-	}
-	//warning(ms, cmd_name);
-	return (NULL);
+	if (!path || cmd_name[0] == '/' || cmd_name[0] == '.')
+		return (path_verif(ms, cmd_name));
+	return (environ_verif(ms, path, cmd_name));
 }

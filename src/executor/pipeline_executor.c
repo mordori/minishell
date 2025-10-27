@@ -1,23 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_pipelines.c                                   :+:      :+:    :+:   */
+/*   pipeline_executor.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/24 15:11:18 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/27 17:20:36 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "io.h"
 
 //due to fork(), both parent and child initially share
 //the same heap (via COW), but each is responsible for its own cleanup.
 //The key insight is: free() in the child does not free memory
 //from the parent, and vice versa.
 
-static void	create_pipe(t_minishell *ms, t_node *node);
+static void	try_pipe(t_minishell *ms, t_node *node);
 static void	io_directions(t_minishell *ms, t_node *node, int prev_read);
 static void	close_parent_pps(t_node *node, int *prev_read);
 
@@ -27,8 +28,8 @@ int	spawn_and_run(t_minishell *ms, int *prev_read)
 
 	child_pid = -1;
 	if (ms->node->next)
-		create_pipe(ms, ms->node);
-	fork_child(ms, &child_pid);
+		try_pipe(ms, ms->node);
+	try_fork(ms, &child_pid);
 	if (child_pid != 0)
 	{
 		if (ms->node->next)
@@ -48,13 +49,14 @@ int	spawn_and_run(t_minishell *ms, int *prev_read)
 	return (SUCCESS);
 }
 
-static void	create_pipe(t_minishell *ms, t_node *node)
+static void	try_pipe(t_minishell *ms, t_node *node)
 {
 	if (pipe(node->pipe_fds))
-		error_exit(ms, "");
+	 	error_exit(ms, "");
+	//set_pipe(ms, node); //set_pipe starts pipes from 2nd node, but pipeline loop starts from 1st, and logic is built up from 1st node pipe excluding last node.
 }
 
-void	fork_child(t_minishell *ms, pid_t *child_pid)
+void	try_fork(t_minishell *ms, pid_t *child_pid)
 {
 	*child_pid = fork();
 	if (*child_pid == -1)

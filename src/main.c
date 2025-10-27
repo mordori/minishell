@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/26 10:17:37 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/28 00:01:22 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,9 @@ static inline void	run(t_minishell *ms)
 	t_token		**tokens;
 	t_prompt	p;
 
-	set_names(ms, &p);
 	while (true)
 	{
+		set_names(ms, &p);
 		g_signal = 0;
 		arena_reset(&ms->pool);
 		store_pwd(ms);

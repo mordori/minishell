@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/27 23:53:34 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/28 00:06:19 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 static inline int	set_in_file(t_minishell *ms, t_node *node, char *file);
 static inline int	set_out_file(t_minishell *ms, t_node *node, t_redir *r);
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof);
-static inline void	set_pipe(t_minishell *ms, t_node *node);;
 
 void	setup_io(t_minishell *ms, t_node *node)
 {
@@ -51,7 +50,7 @@ void	setup_io(t_minishell *ms, t_node *node)
 	}
 }
 
-static inline void	set_pipe(t_minishell *ms, t_node *node)
+void	set_pipe(t_minishell *ms, t_node *node)
 {
 	int	pipefd[2];
 
