@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:12 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 16:53:10 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/27 22:54:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ int	echo(t_minishell *ms)
 	return (SUCCESS);
 }
 
-#include "stdio.h"
 static void	is_newline_off(t_minishell *ms, int *i, bool *is_nl_off)
 {
 	*is_nl_off = false;

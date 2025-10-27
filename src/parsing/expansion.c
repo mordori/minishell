@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/27 20:18:47 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/27 23:56:40 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,7 @@
 #endif
 
 static inline void	expand_args(t_minishell *ms, char **args);
-static inline void	join_var_name(t_minishell *ms, char **str, char **result, t_expand_mode mode);
-static inline void	join_var(t_minishell *ms, char **str, char **result, char quote, t_expand_mode mode);
 static inline void	expand_redirs(t_minishell *ms, t_list *redirs);
-static inline char	*remove_quotes(t_minishell *ms, char *str);
 
 void	expand_variables(t_minishell *ms)
 {
@@ -50,7 +47,7 @@ static inline void	expand_args(t_minishell *ms, char **raw_args)
 	while (*args)
 	{
 		expand_str(ms, args, EXPAND_DEFAULT);
-		remove_quotes(ms, args);
+		*args = remove_quotes(ms, *args);
 		++args;
 	}
 }
@@ -65,7 +62,10 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 	{
 		r = (t_redir *)redirs->content;
 		if (r->type != HEREDOC)
+		{
 			expand_str(ms, &r->file, EXPAND_DEFAULT);
+			r->file = remove_quotes(ms, r->file);
+		}
 		redirs = redirs->next;
 	}
 }
@@ -113,93 +113,31 @@ void	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 	*src = result;
 }
 
-static inline void	join_var_name(t_minishell *ms, char **str, char **result, t_expand_mode mode)
-{
-	size_t	i;
-	char	c;
-	char	*name;
-
-	c = **str;
-	i = 0;
-	while ((*str)[i] != c)
-		++i;
-	name = str_sub(ms, VOLATILE, (*str), i + 1);
-	if (mode == EXPAND_HEREDOC)
-		*result = str_join(ms, *result, "$", VOLATILE);
-	*result = str_join(ms, *result, name, VOLATILE);
-	*str += i;
-}
-
-static inline void	join_var(t_minishell *ms, char **str, char **result, char quote, t_expand_mode mode)
-{
-	size_t	i;
-	char	*val;
-	char	*name;
-
-	i = 0;
-	while ((*str)[i] && (*str)[i] != quote && (*str)[i] != '$')
-		++i;
-	if (!quote || quote == '\"' || mode == EXPAND_HEREDOC)
-	{
-		name = str_sub(ms, VOLATILE, *str, i);
-		val = get_env_val(ms, name);
-	}
-	else if (quote == '\'')
-	{
-		(*str)--;
-		++i;
-		val = str_sub(ms, VOLATILE, *str, i);
-	}
-	if ((*str)[i] == quote)
-		quote = 0;
-	*result = str_join(ms, *result, val, VOLATILE);
-	*str += i - 1;
-}
-
-char	*find_quote(char *str)
-{
-	char	*single_q;
-	char	*double_q;
-
-	single_q = ft_strchr(str, '\'');
-	double_q = ft_strchr(str, '\"');
-	if (!single_q && !double_q)
-		return (NULL);
-	if (single_q && single_q < double_q)
-		return (single_q);
-	else
-		return (double_q);
-}
-
-static inline void	remove_quotes(t_minishell *ms, char **src)
+char	*remove_quotes(t_minishell *ms, char *src)
 {
 	char	*result;
 	char	*ptr;
-	char	*str;
-	char	q;
 	size_t	i;
 
-	ptr = find_quote(str);
+	ptr = find_quote(src);
 	if (!ptr)
-		return (str);
-	result = alloc_volatile(ms, ptr - str + 1);
-	ft_memcpy(result, str, ptr - str);
-	q = *ptr;
-	while (*str)
+		return (src);
+	result = alloc_volatile(ms, ptr - src + 1);
+	ft_memcpy(result, src, ptr - src);
+	src = ptr + 1;
+	while (*src)
 	{
 		i = 0;
-		while (str[i] != q)
+		while (src[i] != *ptr)
 			++i;
-		result = str_join(ms, result, str_sub(ms, VOLATILE, str, i), VOLATILE);
-		str += i + 1;
-		ptr = find_quote(str);
+		result = str_join(ms, result, str_sub(ms, VOLATILE, src, i), VOLATILE);
+		src += i + 1;
+		ptr = find_quote(src);
 		if (!ptr)
 			break;
-		q = *ptr;
-		result = str_join(ms, result, str_sub(ms, VOLATILE, str, ptr - str), VOLATILE);
-		str = ptr;
+		result = str_join(ms, result, str_sub(ms, VOLATILE, src, ptr - src), VOLATILE);
+		src = ptr;
 	}
-	result = str_join(ms, result, str, VOLATILE);
-	printf("%s\n", result);
-	*src = result;
+	result = str_join(ms, result, src, VOLATILE);
+	return (result);
 }

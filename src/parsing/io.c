@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/27 18:48:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/27 23:53:34 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,12 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 	static char		*file = "/tmp/heredoc.tmp";
 	char			*line;
 	unsigned int	lines;
+	bool			is_quoted;
 
 	if (node->cmd.in > STDOUT_FILENO)
 		close(node->cmd.in);
 	node->cmd.in = try_open(ms, file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
+	is_quoted = ft_strchr(eof, '\"') || ft_strchr(eof, '\'');
 	if (!g_signal)
 	{
 		lines = 0;
@@ -89,7 +91,7 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 			line = get_line(ms, PROMPT);
 			if (!line || !ft_strcmp(line, eof) || g_signal)
 				break ;
-			if (!ft_strchr(eof, '\"') && !ft_strchr(eof, '\''))
+			if (!is_quoted)
 				expand_str(ms, &line, EXPAND_HEREDOC);
 			try_write_endl(ms, node->cmd.in, line);
 			++lines;
