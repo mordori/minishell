@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:12 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 12:38:51 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/28 00:02:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ int	echo(t_minishell *ms)
 static void	is_newline_off(t_minishell *ms, int *i, bool *is_nl_off)
 {
 	*is_nl_off = false;
+	if (!ms->node->cmd.args[*i])
+		return ;
 	if (ft_strcmp(ms->node->cmd.args[*i], "-n") == 0)
 	{
 		*is_nl_off = true;

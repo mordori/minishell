@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 13:21:41 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/28 00:06:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,7 @@ int	execute_simple(t_minishell *ms)
 		}
 		waitpid(child_pid, &status, 0);
 		if (WIFEXITED(status))
-		{
 			ms->state.exit_status = WEXITSTATUS(status);
-			if (ms->state.exit_status)
-				error_exit(ms, NULL);
-		}
 	}
 	return (SUCCESS);
 }
@@ -78,6 +74,7 @@ int	execute_pipeline(t_minishell *ms)
 	node_scrollback(ms);
 	if (wait_pids(ms))
 		warning(ms, NULL);
+	//node_scrollback(ms);
 	return (SUCCESS);
 }
 

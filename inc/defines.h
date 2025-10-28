@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   defines.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/24 15:28:24 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/27 18:38:25 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@
 #  define MEM_UNIT				1024UL
 # endif
 # ifndef MEMORY
-#  define MEMORY				1048576UL
+#  define MEMORY				2097152UL
 # endif
 
 # ifndef MAX_HEREDOC
@@ -73,6 +73,7 @@ typedef enum e_errors			t_errors;
 typedef enum e_redir_type		t_redir_type;
 typedef enum e_arena_type		t_arena_type;
 typedef enum e_shell_mode		t_shell_mode;
+typedef enum e_expand_mode		t_expand_mode;
 
 typedef struct s_env			t_env;
 typedef struct s_token			t_token;
@@ -132,6 +133,12 @@ enum e_shell_mode
 {
 	AUTONOMOUS,
 	INTERACTIVE
+};
+
+enum e_expand_mode
+{
+	EXPAND_DEFAULT,
+	EXPAND_HEREDOC
 };
 
 struct s_redir

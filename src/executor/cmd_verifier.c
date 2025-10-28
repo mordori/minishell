@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_verifier.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:23:27 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 13:08:02 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/28 00:05:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ int	command_verification(t_minishell *ms, t_node *node)
 			cmd->cmd = verify_extern(ms, cmd_name);
 			if (!cmd->cmd)
 			{
+				errno = 0;
 				warning(ms, str_join(\
-					ms, "Command not found: ", cmd->args[0], VOLATILE));
+					ms, cmd->args[0], ": command not found", VOLATILE));
 				return (ERROR_CMD_NOTFOUND);
 			}
 		}

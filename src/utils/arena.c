@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arena.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 22:05:05 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/24 14:38:11 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/25 06:14:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_arena	arena_create(t_minishell *ms, size_t capacity, t_arena_type type)
 		error_exit(ms, "arena capacity is less than 1 KiB");
 	if (!ft_is_pot(capacity))
 		error_exit(ms, "arena capacity is not a power of 2");
-	arena.base = ft_calloc(sizeof(char), capacity);
+	arena.base = ft_calloc(capacity, 1);
 	arena.capacity = capacity;
 	arena.head = 0;
 	arena.type = type;
@@ -70,22 +70,16 @@ void	arena_reset(t_arena *arena)
 	size_t	i;
 	size_t	bit;
 	size_t	e;
-	size_t	mem;
 
-	mem = arena->capacity;
 	bit = 0;
-	while ((mem & 1) == 0)
-	{
+	while (((arena->capacity >> bit) & 1) == 0)
 		++bit;
-		mem >>= 1;
-	}
 	arena->base[0] = 0;
 	e = 0;
 	while (e < bit)
 	{
-		i = 1UL << e;
+		i = 1UL << e++;
 		ft_memcpy(&arena->base[i], arena->base, i);
-		++e;
 	}
 	arena->head = 0;
 }
