@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/28 12:37:04 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/28 14:27:47 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 //The key insight is: free() in the child does not free memory
 //from the parent, and vice versa.
 
-static void	try_pipe(t_minishell *ms, t_node *node);
 static void	io_directions(t_minishell *ms, t_node *node, int prev_read);
 static void	close_parent_pps(t_node *node, int *prev_read);
 
@@ -28,7 +27,7 @@ int	spawn_and_run(t_minishell *ms, t_node *node, int *prev_read)
 
 	child_pid = -1;
 	if (node->next)
-		try_pipe(ms, node);
+		set_pipe(ms, node);
 	try_fork(ms, &child_pid);
 	if (child_pid != 0)
 	{
@@ -47,13 +46,6 @@ int	spawn_and_run(t_minishell *ms, t_node *node, int *prev_read)
 	}
 	close_parent_pps(node, prev_read);
 	return (SUCCESS);
-}
-
-static void	try_pipe(t_minishell *ms, t_node *node)
-{
-	if (pipe(node->pipe_fds))
-	 	error_exit(ms, "");
-	//set_pipe(ms, node); //set_pipe starts pipes from 2nd node, but pipeline loop starts from 1st, and logic is built up from 1st node pipe excluding last node.
 }
 
 void	try_fork(t_minishell *ms, pid_t *child_pid)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   io.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/28 01:58:31 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/28 14:26:01 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	set_pipe(t_minishell *ms, t_node *node)
 {
 	int	pipefd[2];
 
-	if (node != ms->node)
+	if (node->next)
 	{
 		if (pipe(pipefd) == ERROR)
 			error_exit(ms, "pipe failed");
