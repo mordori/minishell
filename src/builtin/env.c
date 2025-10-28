@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:07:03 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/24 16:43:21 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/28 11:29:57 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,14 @@ int	env(t_minishell *ms)
 	env = ms->state.env;
 	while (env)
 	{
-		if (*env->value)
+		if (env->value != NULL)
 		{
-			try_write(ms, ms->node->pipe_fds[1], env->key);
-			try_write(ms, ms->node->pipe_fds[1], "=");
-			try_write_endl(ms, ms->node->pipe_fds[1], env->value);
+			if (*env->value)
+			{
+				try_write(ms, ms->node->pipe_fds[1], env->key);
+				try_write(ms, ms->node->pipe_fds[1], "=");
+				try_write_endl(ms, ms->node->pipe_fds[1], env->value);
+			}
 		}
 		env = env->next;
 	}
