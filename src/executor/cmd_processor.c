@@ -6,45 +6,45 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 12:52:36 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/28 12:36:03 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "errors.h"
 
-void	run_node(t_minishell *ms)
+void	run_node(t_minishell *ms, t_node *node)
 {
 	//FIXME: parent's custom signal handling back to default
-	if (ms->node->cmd.builtin)
+	if (node->cmd.builtin)
 	{
-		if (exec_builtin(ms))
+		if (exec_builtin(ms, node))
 			error_exit(ms, NULL);
 		clean(ms);
 		exit(0);
 	}
 	else
 	{
-		if (exec_extern(ms))
+		if (exec_extern(ms, node))
 			error_exit(ms, NULL);
 	}
 }
 
-int	exec_builtin(t_minishell *ms)
+int	exec_builtin(t_minishell *ms, t_node *node)
 {
 	static t_fun	*dt[8] = {NULL, &echo, &cd, &pwd, &expo, &unse, &env, &exi};
 
-	return (dt[ms->node->cmd.builtin](ms));
+	return (dt[node->cmd.builtin](ms));
 }
 
-int	exec_extern(t_minishell *ms)
+int	exec_extern(t_minishell *ms, t_node *node)
 {
 	char	*command;
 	char	**args;
 	char	**envp;
 
-	command = ms->node->cmd.cmd;
-	args = ms->node->cmd.args;
+	command = node->cmd.cmd;
+	args = node->cmd.args;
 	envp = ms->state.envp;
 	execve(command, args, envp);
 	ms->state.exit_status = errno;

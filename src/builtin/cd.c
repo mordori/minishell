@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/24 16:43:27 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/28 11:12:13 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 static int	get_previous_path(t_minishell *ms, char **path, bool is_first_cd);
 static void	update_oldpwd(t_minishell *ms);
+static int	get_home(t_minishell *ms, char **path);
 
 int	cd(t_minishell *ms)
 {
@@ -24,12 +25,8 @@ int	cd(t_minishell *ms)
 	path = ms->node->cmd.args[1];
 	if (!path)
 	{
-		if (!envll_findkey(&ms->state, "HOME"))
-		{
-			warning(ms, "cd: HOME not set");
+		if (get_home(ms, &path))
 			return (ERROR_BUILTIN);
-		}
-		path = envll_findkey(&ms->state, "HOME")->value;
 	}
 	if (*path == '-')
 	{
@@ -46,6 +43,12 @@ int	cd(t_minishell *ms)
 
 static int	get_previous_path(t_minishell *ms, char **path, bool is_first_cd)
 {
+	if (*(*path + 1) == '-')
+	{
+		if (get_home(ms, path))
+			return (ERROR_BUILTIN);
+		return (SUCCESS);
+	}
 	*path = NULL;
 	if (is_first_cd)
 		*path = getenv("OLDPWD");
@@ -72,4 +75,15 @@ static void	update_oldpwd(t_minishell *ms)
 		envll_findkey(&ms->state, "OLDPWD"), \
 		str_dup(ms, current_pwd, PERSISTENT));
 	free(current_pwd);
+}
+
+static int	get_home(t_minishell *ms, char **path)
+{
+		if (!envll_findkey(&ms->state, "HOME"))
+		{
+			warning(ms, "cd: HOME not set");
+			return (ERROR_BUILTIN);
+		}
+		*path = envll_findkey(&ms->state, "HOME")->value;
+		return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 12:40:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 12:54:18 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/28 11:18:38 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,5 @@ char	*environ_verif(t_minishell *ms, char *path, char *cmd_name)
 			return (full_path);
 		i++;
 	}
-	warning(ms, cmd_name);
 	return (NULL);
 }

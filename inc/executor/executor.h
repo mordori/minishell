@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 10:33:34 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 11:17:10 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/28 12:36:51 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,15 @@ int		wait_pids(t_minishell *ms);
 int    ft_log(char *file_name, char *func_name, char *data);
 
 //cmd_processor.c
-void	run_node(t_minishell *ms);
-int		exec_builtin(t_minishell *ms);
-int		exec_extern(t_minishell *ms);
+void	run_node(t_minishell *ms, t_node *node);
+int		exec_builtin(t_minishell *ms, t_node *node);
+int		exec_extern(t_minishell *ms, t_node *node);
 
 //cmd_verification.c
 int		command_verification(t_minishell *ms, t_node *node);
 
 //exec_pipelines.c
-int		spawn_and_run(t_minishell *ms, int *prev_read);
+int		spawn_and_run(t_minishell *ms, t_node *node, int *prev_read);
 void	try_fork(t_minishell *ms, pid_t *child_pid);
 
 //redirections.c
