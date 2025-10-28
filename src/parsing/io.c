@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/28 00:06:19 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/28 01:58:31 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 		close(node->cmd.in);
 	node->cmd.in = try_open(ms, file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
 	is_quoted = ft_strchr(eof, '\"') || ft_strchr(eof, '\'');
+	eof = remove_quotes(ms, eof);
 	if (!g_signal)
 	{
 		lines = 0;
