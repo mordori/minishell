@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 17:20:36 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/28 12:37:04 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,30 +22,30 @@ static void	try_pipe(t_minishell *ms, t_node *node);
 static void	io_directions(t_minishell *ms, t_node *node, int prev_read);
 static void	close_parent_pps(t_node *node, int *prev_read);
 
-int	spawn_and_run(t_minishell *ms, int *prev_read)
+int	spawn_and_run(t_minishell *ms, t_node *node, int *prev_read)
 {
 	pid_t		child_pid;
 
 	child_pid = -1;
-	if (ms->node->next)
-		try_pipe(ms, ms->node);
+	if (node->next)
+		try_pipe(ms, node);
 	try_fork(ms, &child_pid);
 	if (child_pid != 0)
 	{
-		if (ms->node->next)
+		if (node->next)
 		{
-			if (close(ms->node->pipe_fds[WRITE]))
+			if (close(node->pipe_fds[WRITE]))
 				error_exit(ms, "");
 		}
 	}
 	if (child_pid != 0)
-		ms->node->pid = child_pid;
+		node->pid = child_pid;
 	if (child_pid == 0)
 	{
-		io_directions(ms, ms->node, *prev_read);
-		run_node(ms);
+		io_directions(ms, node, *prev_read);
+		run_node(ms, node);
 	}
-	close_parent_pps(ms->node, prev_read);
+	close_parent_pps(node, prev_read);
 	return (SUCCESS);
 }
 

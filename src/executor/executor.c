@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/28 11:13:46 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/28 12:38:05 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,14 @@ int	execute_simple(t_minishell *ms)
 	if (ms->node->pipe_fds[0] == ERROR || ms->node->pipe_fds[1] == ERROR)
 		return (ERROR);
 	if (ms->node->cmd.builtin)
-		return (exec_builtin(ms));
+		return (exec_builtin(ms, ms->node));
 	else
 	{
 		try_fork(ms, &child_pid);
 		if (child_pid == 0)
 		{
 			dup_io(ms->node);
-			exec_extern(ms);
+			exec_extern(ms, ms->node);
 		}
 		waitpid(child_pid, &status, 0);
 		if (WIFEXITED(status))
@@ -56,22 +56,24 @@ int	execute_simple(t_minishell *ms)
 
 int	execute_pipeline(t_minishell *ms)
 {
-	int	prev_read;
+	int		prev_read;
+	t_node	*node;
 
+	node = ms->node;
 	prev_read = -1;
-	while (ms->node)
+	while (node)
 	{
-		if (command_verification(ms, ms->node))
+		if (command_verification(ms, node))
 			return (ERROR_PIPELINE);
-		if (ms->node->pipe_fds[0] != ERROR && ms->node->pipe_fds[1] != ERROR)
-			ms->state.exit_status = spawn_and_run(ms, &prev_read);
+		if (node->pipe_fds[0] != ERROR && node->pipe_fds[1] != ERROR)
+			ms->state.exit_status = spawn_and_run(ms, node, &prev_read);
 		if (ms->state.exit_status)
 			return (ERROR_PIPELINE);
-		if (!ms->node->next)
+		if (!node->next)
 			break;
-		ms->node = ms->node->next;
+		node = node->next;
 	}
-	node_scrollback(ms);
+	//node_scrollback(ms);
 	if (wait_pids(ms))
 		warning(ms, NULL);
 	//node_scrollback(ms);
@@ -80,16 +82,18 @@ int	execute_pipeline(t_minishell *ms)
 
 int	wait_pids(t_minishell *ms)
 {
-	int	status;
+	int		status;
+	t_node	*tmp_node;
 
-	while (ms->node)
+	tmp_node = ms->node;
+	while (tmp_node)
 	{
-		waitpid(ms->node->pid, &status, 0);
+		waitpid(tmp_node->pid, &status, 0);
 		if (WIFEXITED(status))
 			ms->state.exit_status = WEXITSTATUS(status);
 		if (ms->state.exit_status)
 			return (ms->state.exit_status);
-		ms->node = ms->node->next;
+		tmp_node = tmp_node->next;
 	}
 	return (SUCCESS);
 }
