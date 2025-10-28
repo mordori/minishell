@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/27 18:38:25 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/28 21:57:15 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@
 # ifndef PATH_MAX
 #  define PATH_MAX				4096
 # endif
-# ifndef HOSTNAME_MAX
-#  define HOSTNAME_MAX			64
+# ifndef NAME_MAX
+#  define NAME_MAX			64
 # endif
 
 # define RW_RW_RW_				0666
@@ -222,8 +222,8 @@ struct s_prompt
 {
 	char		*path;
 	char		*home;
-	char		hostname[HOSTNAME_MAX];
-	char		*logname;
+	char		hostname[NAME_MAX];
+	char		logname[NAME_MAX];
 	char		*prompt;
 };
 

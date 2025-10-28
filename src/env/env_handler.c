@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_handler.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 12:14:16 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 19:05:09 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/28 21:20:05 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,15 @@ char	**envll_to_envp(t_minishell *ms, t_env *env)
 
 	i = 0;
 	var_count = count_variables(env);
-	envp_copy = alloc_vars(ms, (var_count + 1) * sizeof(void *));
+	envp_copy = alloc_vars(ms, (var_count + 1) * sizeof(*envp_copy));
 	while (i < var_count)
 	{
-		env_var = alloc_vars(ms, \
-			ft_strlen((env->key) + ft_strlen(env->value) + 2) * sizeof(char));
+		env_var = alloc_vars(\
+ms, ft_strlen(env->key) + ft_strlen(env->value) + 2);
 		join_keyvalue(env->key, env->value, env_var);
 		envp_copy[i] = env_var;
 		i++;
+		env = env->next;
 	}
 	envp_copy[i] = NULL;
 	return (envp_copy);

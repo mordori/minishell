@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   io.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/28 14:26:01 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/10/29 00:23:09 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	setup_io(t_minishell *ms, t_node *node)
 					break ;
 			redirs = redirs->next;
 		}
-		set_pipe(ms, node);
+		//set_pipe(ms, node);
 		node = node->next;
 	}
 }

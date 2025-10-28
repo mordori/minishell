@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/27 23:56:40 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/29 00:48:54 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,37 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 	}
 }
 
+bool	expand(t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode)
+{
+	char	*ptr;
+
+	if (!**str)
+	{
+		*result = str_join(ms, *result, "$", VOLATILE);
+		return (false);
+	}
+	if (**str == '?')
+		*result = str_join(ms, *result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
+	else if (**str == '$')
+		*result = str_join(ms, *result, uint_to_str(ms, (unsigned int)getpid()), VOLATILE);
+	else if (**str == '\"' || **str == '\'')
+		join_var_name(ms, str, result, mode);
+	else
+		join_var(ms, str, result, *quote, mode);
+	++(*str);
+	ptr = ft_strchr(*str, '$');
+	if (!ptr)
+		return (false);
+	*result = str_join(ms, *result, str_sub(ms, VOLATILE, *str, ptr - *str), VOLATILE);
+	if (!*quote && ptr - *str > 2 && (*(ptr - 1) == '\'' || *(ptr - 1) == '\"'))
+		*quote = *(ptr - 1);
+	*str = ptr;
+	return (true);
+}
+
 void	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 {
 	char	*str;
-	char	*ptr;
 	char	*result;
 	size_t	i;
 	char	quote;
@@ -89,25 +116,8 @@ void	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 		quote = (*src)[i - 1];
 	while (str++)
 	{
-		if (!*str)
-			result = str_join(ms, result, "$", VOLATILE);
-		if (*str == '?')
-			result = str_join(ms, result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
-		else if (*str == '$')
-			result = str_join(ms, result, uint_to_str(ms, (unsigned int)getpid()), VOLATILE);
-		else if (*str == '\"' || *str == '\'')
-			join_var_name(ms, &str, &result, mode);
-		else
-			join_var(ms, &str, &result, quote, mode);
-		++str;
-		ptr = ft_strchr(str, '$');
-		if (ptr)
-			result = str_join(ms, result, str_sub(ms, VOLATILE, str, ptr - str), VOLATILE);
-		else
-			break ;
-		if (!quote && ptr - str > 2 && (*(ptr - 1) == '\'' || *(ptr - 1) == '\"'))
-			quote = *(ptr - 1);
-		str = ptr;
+		if (!expand(ms, &str, &result, &quote, mode))
+			break;
 	}
 	result = str_join(ms, result, str, VOLATILE);
 	*src = result;
