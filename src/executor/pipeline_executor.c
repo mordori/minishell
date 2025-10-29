@@ -50,6 +50,8 @@ void	try_fork(t_minishell *ms, pid_t *child_pid)
 		error_exit(ms, "");
 }
 
+#include <stdio.h>
+
 static void	io_directions(t_minishell *ms, t_node *node, int prev_read)
 {
 	if (prev_read >= 0)
@@ -66,6 +68,25 @@ static void	io_directions(t_minishell *ms, t_node *node, int prev_read)
 			error_exit(ms, "");
 		close(node->pipe_fds[WRITE]);
 		close(node->pipe_fds[READ]);
+	}
+	
+	if (node->next == NULL)
+	{
+		#ifdef DEBUG
+		printf("pipeline's final cmd.\n");
+		printf("pipe write fd: %d\n", node->pipe_fds[WRITE]);
+		printf("pipe read fd: %d\n", node->pipe_fds[READ]);
+		printf("cmd.out fd: %d\n", node->cmd.out);
+		printf("cmd.in fd: %d\n", node->cmd.in);
+		int flags = fcntl(node->cmd.out, F_GETFL);
+    	if (flags == -1)
+     	   printf("flags: %d\n", flags);
+	    int access_mode = flags & O_ACCMODE;
+		printf("access mode: %d\n", access_mode);
+		#endif
+
+		if (dup2(node->cmd.out, STDOUT_FILENO) == -1)
+			error_exit(ms, "");
 	}
 }
 
