@@ -13,11 +13,6 @@
 #include "executor.h"
 #include "io.h"
 
-//due to fork(), both parent and child initially share
-//the same heap (via COW), but each is responsible for its own cleanup.
-//The key insight is: free() in the child does not free memory
-//from the parent, and vice versa.
-
 static void	io_directions(t_minishell *ms, t_node *node, int prev_read);
 static void	close_parent_pps(t_node *node, int *prev_read);
 

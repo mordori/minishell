@@ -45,7 +45,8 @@ int	execute_simple(t_minishell *ms)
 		if (child_pid == 0)
 		{
 			dup_io(ms->node);
-			exec_extern(ms, ms->node);
+			if (exec_extern(ms, ms->node))
+				error_exit(ms, NULL);
 		}
 		waitpid(child_pid, &status, 0);
 		if (WIFEXITED(status))
