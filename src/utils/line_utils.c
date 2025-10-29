@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 03:53:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/23 20:27:39 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/28 22:04:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,14 +122,16 @@ p->path, VOLATILE), \
 	return (p->prompt);
 }
 
-void	set_names(t_minishell *ms, t_prompt *p)
+void	set_prompt_names(t_minishell *ms, t_prompt *p)
 {
 	int		fd;
 	ssize_t	len;
+	char	*name;
 
-	p->logname = get_env_val(ms, "LOGNAME");
-	if (!*p->logname)
-		p->logname = "user";
+	name = get_env_val(ms, "LOGNAME");
+	if (!*name)
+		name = "user";
+	ft_memcpy(p->logname, name, NAME_MAX);
 	fd = open("/etc/hostname", O_RDONLY);
 	if (fd == ERROR)
 	{
@@ -140,7 +142,7 @@ void	set_names(t_minishell *ms, t_prompt *p)
 		}
 		error_exit(ms, "open failed");
 	}
-	len = try_read(ms, fd, p->hostname, HOSTNAME_MAX);
+	len = try_read(ms, fd, p->hostname, NAME_MAX);
 	close(fd);
 	p->hostname[len - 1] = 0;
 	if (ft_strchr(p->hostname, '.') - p->hostname > 0)

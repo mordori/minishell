@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 23:33:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/27 23:57:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/10/29 00:48:47 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	*find_quote(char *str)
 	double_q = ft_strchr(str, '\"');
 	if (!single_q && !double_q)
 		return (NULL);
-	if (single_q && single_q < double_q)
+	if (single_q && (!double_q || single_q < double_q))
 		return (single_q);
 	else
 		return (double_q);
