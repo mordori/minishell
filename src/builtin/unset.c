@@ -13,7 +13,7 @@
 #include "builtin.h"
 
 static int	remove_vars(t_minishell *ms, t_node *node);
-static void	remove_node(t_env *env);
+static void	remove_node(t_minishell *ms, t_env *env);
 
 int	unse(t_minishell *ms, t_node *node)
 {
@@ -39,7 +39,7 @@ static int	remove_vars(t_minishell *ms, t_node *node)
 		{
 			if (ft_strcmp(arg, env->key) == 0)
 			{
-				remove_node(env);
+				remove_node(ms, env);
 				break ;
 			}
 			env = env->next;
@@ -49,13 +49,15 @@ static int	remove_vars(t_minishell *ms, t_node *node)
 	return (SUCCESS);
 }
 
-static void	remove_node(t_env *env)
+static void	remove_node(t_minishell *ms, t_env *env)
 {
 	t_env	*prior;
 	t_env	*latter;
 
 	prior = env->prev;
 	latter = env->next;
+	if (ms->state.env == env)
+		ms->state.env = latter;
 	if (prior)
 		prior->next = latter;
 	if (latter)
