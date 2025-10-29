@@ -15,10 +15,11 @@
 #include "errors.h"
 #include "io.h"
 
-int	exi(t_minishell *ms)
+int	exi(t_minishell *ms, t_node *node)
 {
 	int	status;
 
+	(void) node;
 	try_write_endl(ms, STDOUT_FILENO, "exit");
 	status = ms->state.exit_status;
 	clean(ms);

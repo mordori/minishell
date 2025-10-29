@@ -13,16 +13,16 @@
 #include "builtin.h"
 #include "io.h"
 
-static int	get_previous_path(t_minishell *ms, char **path, bool is_first_cd);
+static int	get_prev_path(t_minishell *ms, t_node *node, char **path, bool is_first_cd);
 static void	update_oldpwd(t_minishell *ms);
 static int	get_home(t_minishell *ms, char **path);
 
-int	cd(t_minishell *ms)
+int	cd(t_minishell *ms, t_node *node)
 {
 	char			*path;
 	static bool		is_first_cd = true;
 
-	path = ms->node->cmd.args[1];
+	path = node->cmd.args[1];
 	if (!path)
 	{
 		if (get_home(ms, &path))
@@ -30,7 +30,7 @@ int	cd(t_minishell *ms)
 	}
 	if (*path == '-')
 	{
-		if (get_previous_path(ms, &path, is_first_cd))
+		if (get_prev_path(ms, node, &path, is_first_cd))
 			return (ERROR_BUILTIN);
 	}
 	if (envll_findkey(&ms->state, "OLDPWD"))
@@ -41,7 +41,7 @@ int	cd(t_minishell *ms)
 	return (SUCCESS);
 }
 
-static int	get_previous_path(t_minishell *ms, char **path, bool is_first_cd)
+static int	get_prev_path(t_minishell *ms, t_node *node, char **path, bool is_first_cd)
 {
 	if (*(*path + 1) == '-')
 	{
@@ -62,7 +62,7 @@ static int	get_previous_path(t_minishell *ms, char **path, bool is_first_cd)
 		warning(ms, "cd: OLDPWD not set");
 		return (ERROR_BUILTIN);
 	}
-	try_write_endl(ms, ms->node->pipe_fds[1], *path);
+	try_write_endl(ms, node->pipe_fds[1], *path);
 	return (SUCCESS);
 }
 

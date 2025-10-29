@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:25:46 by jvalkama          #+#    #+#             */
 /*   Updated: 2025/10/28 20:37:26 by myli-pen         ###   ########.fr       */
@@ -14,19 +14,19 @@
 #include "builtin_utils.h"
 
 static void	display_exporting_vars(t_state *state);
-static void	put_var_into_env(t_minishell *ms);
+static void	put_var_into_env(t_minishell *ms, t_node *node);
 static void	parse_export(t_minishell *ms, char *var, t_key_value *kv, char **d);
 static bool	handle_specials(t_minishell *ms, char *var, char *key, char *value);
 
-int	expo(t_minishell *ms)
+int	expo(t_minishell *ms, t_node *node)
 {
-	if (!ms->node->cmd.args[1])
+	if (!node->cmd.args[1])
 		display_exporting_vars(&ms->state);
 	else
 	{
 		copy_env_to(VOLATILE, ms);
 		arena_reset(&ms->vars);
-		put_var_into_env(ms);
+		put_var_into_env(ms, node);
 		copy_env_to(PERSISTENT, ms);
 	}
 	return (SUCCESS);
@@ -50,19 +50,19 @@ static void	display_exporting_vars(t_state *state)
 	}
 }
 
-static void	put_var_into_env(t_minishell *ms)
+static void	put_var_into_env(t_minishell *ms, t_node *node)
 {
-	t_key_value	kv;
-	char		*delimiter;
-	bool		is_handled;
-	int			i;
-	t_env		*env;
+	t_key_value		kv;
+	char			*delimiter;
+	bool			is_handled;
+	int				i;
+	t_env			*env;
 
 	i = 1;
 	env = ms->state.env;
-	while (ms->node->cmd.args[i])
+	while (node->cmd.args[i])
 	{
-		parse_export(ms, ms->node->cmd.args[i], &kv, &delimiter);
+		parse_export(ms, node->cmd.args[i], &kv, &delimiter);
 		if (!is_valid_key(kv.key, delimiter))
 			warning(ms, str_join(ms, \
 				kv.key, ": not a valid identifier", VOLATILE));
@@ -73,7 +73,7 @@ static void	put_var_into_env(t_minishell *ms)
 			continue ;
 		}
 		is_handled = handle_specials(ms, \
-			ms->node->cmd.args[i], kv.key, kv.value);
+			node->cmd.args[i], kv.key, kv.value);
 		if (is_handled)
 		{
 			i++;

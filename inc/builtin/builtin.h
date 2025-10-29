@@ -24,24 +24,24 @@
 # include <stdlib.h>
 
 //cd.c
-int		cd(t_minishell *ms);
+int		cd(t_minishell *ms, t_node *node);
 
 //echo.c
-int		echo(t_minishell *ms);
+int		echo(t_minishell *ms, t_node *node);
 
 //pwd.c
-int		pwd(t_minishell *ms);
+int		pwd(t_minishell *ms, t_node *node);
 
 //export.c
-int		expo(t_minishell *ms);
+int		expo(t_minishell *ms, t_node *node);
 
 //unset.c
-int		unse(t_minishell *ms);
+int		unse(t_minishell *ms, t_node *node);
 
 //env.c
-int		env(t_minishell *ms);
+int		env(t_minishell *ms, t_node *node);
 
 //exit.c
-int		exi(t_minishell *ms);
+int		exi(t_minishell *ms, t_node *node);
 
 #endif

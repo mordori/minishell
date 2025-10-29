@@ -105,7 +105,7 @@ static inline void	run(t_minishell *ms)
 		store_pwd(ms);
 		line = get_line(ms, get_prompt(ms, &p));
 		if (!line)
-			exi(ms);
+			exi(ms, NULL);
 		if (*line && !g_signal)
 			add_history(line);
 		ms->node = alloc_volatile(ms, sizeof(t_node));

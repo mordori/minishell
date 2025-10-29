@@ -13,7 +13,7 @@
 #include "builtin.h"
 #include "io.h"
 
-int	pwd(t_minishell *ms)
+int	pwd(t_minishell *ms, t_node *node)
 {
 	char	*pwd;
 	char	buf[PATH_MAX];
@@ -21,15 +21,15 @@ int	pwd(t_minishell *ms)
 	pwd = getcwd(buf, sizeof(buf));
 	if (!pwd)
 	{
-		ms->state.exit_status = ERROR_BUILTIN; //return errno or a bash-style/custom code?
+		ms->state.exit_status = ERROR_BUILTIN;
 		if (errno == ENOENT && ms->pwd[0])
 		{
-			try_write_endl(ms, ms->node->pipe_fds[1], ms->pwd);
+			try_write_endl(ms, node->pipe_fds[1], ms->pwd);
 			return (SUCCESS);
 		}
 		else
 			error_exit(ms, "get cwd failed");
 	}
-	try_write_endl(ms, ms->node->pipe_fds[1], pwd);
+	try_write_endl(ms, node->pipe_fds[1], pwd);
 	return (SUCCESS);
 }

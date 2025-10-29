@@ -13,9 +13,9 @@
 #include "builtin.h"
 #include "io.h"
 
-static void	is_newline_off(t_minishell *ms, int *i, bool *is_nl_off);
+static void	is_newline_off(t_node *node, int *i, bool *is_nl_off);
 
-int	echo(t_minishell *ms)
+int	echo(t_minishell *ms, t_node *node)
 {
 	char	*string;
 	bool	is_inbetween;
@@ -26,12 +26,12 @@ int	echo(t_minishell *ms)
 	i = 1;
 	//fd = ms->node->pipe_fds[1];
 	is_inbetween = false;
-	is_newline_off(ms, &i, &is_nl_off);
-	while (ms->node->cmd.args[i])
+	is_newline_off(node, &i, &is_nl_off);
+	while (node->cmd.args[i])
 	{
 		if (is_inbetween)
 			try_write(ms, 1, " ");
-		string = ms->node->cmd.args[i];
+		string = node->cmd.args[i];
 		try_write(ms, 1, string);
 		if (!is_inbetween)
 			is_inbetween = true;
@@ -42,12 +42,12 @@ int	echo(t_minishell *ms)
 	return (SUCCESS);
 }
 
-static void	is_newline_off(t_minishell *ms, int *i, bool *is_nl_off)
+static void	is_newline_off(t_node *node, int *i, bool *is_nl_off)
 {
 	*is_nl_off = false;
-	if (!ms->node->cmd.args[*i])
+	if (!node->cmd.args[*i])
 		return ;
-	if (ft_strcmp(ms->node->cmd.args[*i], "-n") == 0)
+	if (ft_strcmp(node->cmd.args[*i], "-n") == 0)
 	{
 		*is_nl_off = true;
 		(*i)++;

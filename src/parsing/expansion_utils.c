@@ -42,6 +42,7 @@ void	join_var(t_minishell *ms, char **str, char **result, char quote, t_expand_m
 	char	*name;
 
 	i = 0;
+	val = NULL;
 	while ((*str)[i] && (*str)[i] != quote && (*str)[i] != '$')
 		++i;
 	if (!quote || quote == '\"' || mode == EXPAND_HEREDOC)

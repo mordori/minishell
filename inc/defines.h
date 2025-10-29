@@ -86,7 +86,7 @@ typedef struct s_redir			t_redir;
 typedef struct s_prompt			t_prompt;
 typedef struct s_key_value		t_key_value;
 
-typedef int	t_fun(t_minishell *);
+typedef int	t_fun(t_minishell *, t_node *);
 
 enum e_builtin_type
 {
