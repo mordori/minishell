@@ -15,6 +15,7 @@
 
 static t_builtin	verify_builtin(char *cmd);
 static char			*verify_extern(t_minishell *ms, char *cmd_name);
+//static void			update_lastarg_var(t_minishell *ms, char *last_arg);
 
 int	command_verification(t_minishell *ms, t_node *node)
 {
@@ -39,6 +40,7 @@ int	command_verification(t_minishell *ms, t_node *node)
 		}
 		else
 			cmd->cmd = cmd->args[0];
+		//update_lastarg_var(ms, cmd->cmd);
 	}
 	return (SUCCESS);
 }
@@ -68,3 +70,16 @@ static char	*verify_extern(t_minishell *ms, char *cmd_name)
 		return (path_verif(cmd_name));
 	return (environ_verif(ms, path, cmd_name));
 }
+
+/*
+static void	update_lastarg_var(t_minishell *ms, char *last_arg)
+{
+	t_env	*lastarg_var;
+
+	copy_env_to(VOLATILE, ms);
+	arena_reset(&ms->vars);
+	lastarg_var = envll_findkey(&ms->state, "_");
+	replace_value(lastarg_var, last_arg);
+	copy_env_to(PERSISTENT, ms);
+}
+*/
