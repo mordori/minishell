@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_processor.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
 /*   Updated: 2025/10/28 20:29:13 by myli-pen         ###   ########.fr       */
@@ -34,7 +34,7 @@ int	exec_builtin(t_minishell *ms, t_node *node)
 {
 	static t_fun	*dt[8] = {NULL, &echo, &cd, &pwd, &expo, &unse, &env, &exi};
 
-	return (dt[node->cmd.builtin](ms));
+	return (dt[node->cmd.builtin](ms, node));
 }
 
 int	exec_extern(t_minishell *ms, t_node *node)

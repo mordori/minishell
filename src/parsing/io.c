@@ -45,7 +45,6 @@ void	setup_io(t_minishell *ms, t_node *node)
 					break ;
 			redirs = redirs->next;
 		}
-		//set_pipe(ms, node);
 		node = node->next;
 	}
 }
@@ -63,12 +62,12 @@ void	set_pipe(t_minishell *ms, t_node *node)
 		else
 			close(pipefd[0]);
 		if (node->cmd.out == STDOUT_FILENO)
-			node->cmd.out = pipefd[1];
+			node->cmd.out = pipefd[1]; 
 		else
 			close(pipefd[1]);
 	}
 	node->pipe_fds[0] = node->cmd.in;
-	node->pipe_fds[1] = node->cmd.out;
+	node->pipe_fds[1] = node->cmd.out; 
 }
 
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)

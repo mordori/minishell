@@ -77,11 +77,10 @@ static char	*gen_fullpath(t_minishell *ms, char *dirpath, char *filename)
 	return (full_path);
 }
 
-char	*path_verif(t_minishell *ms, char *cmd_path)
+char	*path_verif(char *cmd_path)
 {
 	if (access(cmd_path, F_OK) == SUCCESS)
 		return (cmd_path);
-	warning(ms, cmd_path);
 	return (NULL);
 }
 

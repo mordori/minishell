@@ -65,6 +65,6 @@ static char	*verify_extern(t_minishell *ms, char *cmd_name)
 
 	path = getenv("PATH");
 	if (!path || cmd_name[0] == '/' || cmd_name[0] == '.')
-		return (path_verif(ms, cmd_name));
+		return (path_verif(cmd_name));
 	return (environ_verif(ms, path, cmd_name));
 }

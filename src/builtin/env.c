@@ -13,7 +13,7 @@
 #include "builtin.h"
 #include "io.h"
 
-int	env(t_minishell *ms)
+int	env(t_minishell *ms, t_node *node)
 {
 	t_env	*env;
 
@@ -24,9 +24,9 @@ int	env(t_minishell *ms)
 		{
 			if (*env->value)
 			{
-				try_write(ms, ms->node->pipe_fds[1], env->key);
-				try_write(ms, ms->node->pipe_fds[1], "=");
-				try_write_endl(ms, ms->node->pipe_fds[1], env->value);
+				try_write(ms, node->pipe_fds[1], env->key);
+				try_write(ms, node->pipe_fds[1], "=");
+				try_write_endl(ms, node->pipe_fds[1], env->value);
 			}
 		}
 		env = env->next;

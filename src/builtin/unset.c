@@ -12,36 +12,34 @@
 
 #include "builtin.h"
 
-static void	remove_node(t_env *env);
-static int	remove_vars(t_minishell *ms);
+static int	remove_vars(t_minishell *ms, t_node *node);
+static void	remove_node(t_minishell *ms, t_env *env);
 
-int	unse(t_minishell *ms)
+int	unse(t_minishell *ms, t_node *node)
 {
 	copy_env_to(VOLATILE, ms);
 	arena_reset(&ms->vars);
-	remove_vars(ms);
+	remove_vars(ms, node);
 	copy_env_to(PERSISTENT, ms);
 	return (SUCCESS);
 }
 
-static int	remove_vars(t_minishell *ms)
+static int	remove_vars(t_minishell *ms, t_node *node)
 {
 	char	*arg;
 	int		i;
-	t_cmd	cmd;
 	t_env	*env;
 
 	i = 1;
-	cmd = ms->node->cmd;
-	while (cmd.args[i])
+	while (node->cmd.args[i])
 	{
 		env = ms->state.env;
-		arg = cmd.args[i];
+		arg = node->cmd.args[i];
 		while (env)
 		{
 			if (ft_strcmp(arg, env->key) == 0)
 			{
-				remove_node(env);
+				remove_node(ms, env);
 				break ;
 			}
 			env = env->next;
@@ -51,13 +49,15 @@ static int	remove_vars(t_minishell *ms)
 	return (SUCCESS);
 }
 
-static void	remove_node(t_env *env)
+static void	remove_node(t_minishell *ms, t_env *env)
 {
 	t_env	*prior;
 	t_env	*latter;
 
 	prior = env->prev;
 	latter = env->next;
+	if (ms->state.env == env)
+		ms->state.env = latter;
 	if (prior)
 		prior->next = latter;
 	if (latter)

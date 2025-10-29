@@ -45,7 +45,8 @@ int	execute_simple(t_minishell *ms)
 		if (child_pid == 0)
 		{
 			dup_io(ms->node);
-			exec_extern(ms, ms->node);
+			if (exec_extern(ms, ms->node))
+				error_exit(ms, NULL);
 		}
 		waitpid(child_pid, &status, 0);
 		if (WIFEXITED(status))
@@ -83,40 +84,17 @@ int	execute_pipeline(t_minishell *ms)
 int	wait_pids(t_minishell *ms)
 {
 	int		status;
-	t_node	*tmp_node;
+	t_node	*node;
 
-	tmp_node = ms->node;
-	while (tmp_node)
+	node = ms->node;
+	while (node)
 	{
-		waitpid(tmp_node->pid, &status, 0);
+		waitpid(node->pid, &status, 0);
 		if (WIFEXITED(status))
 			ms->state.exit_status = WEXITSTATUS(status);
 		if (ms->state.exit_status)
 			return (ms->state.exit_status);
-		tmp_node = tmp_node->next;
+		node = node->next;
 	}
 	return (SUCCESS);
 }
-
-#ifdef DEBUG
-//DEBUG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#include <stdio.h>
-
-int    ft_log(char *file_name, char *func_name, char *data)
-{
-    FILE    *fptr = fopen(file_name, "a");
-
-    if (!fptr)
-    {
-        printf("Could not open log file in log-director.");
-        return (0);
-    }
-    fprintf(fptr, \
-        "In function: %s\n\nVARIABLE VALUES AT START:%s\n\n\n\n", \
-        func_name, data);
-    fclose(fptr);
-
-    return (0);
-}
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#endif

@@ -18,9 +18,10 @@
        to create an environment variable definition only in the scope of
        the process that executes command.
 */
+
 #include "env.h"
-#include "arena.h"
-#include "str_utils.h"
+
+static char	*update_shell_value(t_minishell *ms);
 
 int	envp_to_envll(t_minishell *ms, char **envp, t_state *state)
 {
@@ -48,12 +49,26 @@ void	var_to_node(t_minishell *ms, char *var, t_env **env)
 	node = NULL;
 	delimiter = ft_strchr(var, '=');
 	key = ft_keydup(ms, var, delimiter);
-	value = str_dup(ms, delimiter + 1, PERSISTENT);
+	if (ft_strcmp(key, "SHELL") == 0)
+		value = update_shell_value(ms);
+	else
+		value = str_dup(ms, delimiter + 1, PERSISTENT);
 	if (!value)
 		node = ft_envnode_new(ms, key, "", PERSISTENT);
 	else
 		node = ft_envnode_new(ms, key, value, PERSISTENT);
 	ft_envadd_back(env, node);
+}
+
+static char	*update_shell_value(t_minishell *ms)
+{
+	char	*pwd;
+	char	buf[PATH_MAX];
+	char	*shell_path;
+
+	pwd = getcwd(buf, sizeof(buf));
+	shell_path = str_dup(ms, str_join(ms, pwd, "/minishell", VOLATILE), PERSISTENT);
+	return (shell_path);
 }
 
 char	**envll_to_envp(t_minishell *ms, t_env *env)
