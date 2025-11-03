@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/03 16:45:05 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/03 18:28:03 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,10 @@ char	**str_split(t_minishell *ms, const char *src, char c)
 	return (strs);
 }
 
-bool	is_charset(const char *src, const char *set)
+bool	is_whitespace(const char *src, const char *set)
 {
+	if (*set)
+		set = get_ifs();
 	while (*set)
 	{
 		if (*src == *set)
@@ -116,12 +118,10 @@ char	*str_trim(char *src, const char *set)
 {
 	size_t	len;
 
-	if (*set)
-		set = get_ifs();
-	while (is_charset(src, set))
+	while (is_whitespace(src, set))
 		++src;
 	len = ft_strlen(src);
-	while (is_charset(src + len, set))
+	while (is_whitespace(src + len, set))
 		--len;
 	src[len] = 0;
 	return (src);

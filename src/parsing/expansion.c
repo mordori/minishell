@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/03 16:47:13 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/03 18:34:33 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static inline void	expand_args(t_minishell *ms, char **raw_args)
 	while (*args)
 	{
 		is_expanded = expand_str(ms, args, EXPAND_DEFAULT);
-		// *args = remove_quotes(ms, *args);
+		*args = remove_quotes(ms, *args);
 		++args;
 	}
 }
@@ -130,6 +130,19 @@ char	*remove_quotes(t_minishell *ms, char *src)
 	char	*result;
 	char	*ptr;
 	size_t	i;
+	char	*whitespace;
+
+	whitespace = get_env_val(ms, "IFS");
+	src = str_trim(src, whitespace);
+
+
+	while (!is_whitespace(src, whitespace))
+	{
+
+	}
+
+
+
 
 	ptr = find_quote(src);
 	if (!ptr)

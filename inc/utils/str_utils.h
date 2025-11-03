@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/03 16:45:09 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/03 18:28:08 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_minishell *ms, t_arena_type type, const char *src, size_t len);
 char	*str_join(t_minishell *ms, const char *s1, const char *s2, t_arena_type type);
 char	*uint_to_str(t_minishell *ms, unsigned int n);
 char	**str_split(t_minishell *ms, char const *s, char c);
+bool	is_whitespace(const char *src, const char *set);
 char	*str_trim(char *src, const char *set);
 
 #endif
