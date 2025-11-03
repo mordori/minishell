@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/03 16:15:00 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/03 17:46:41 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 int	executor(t_minishell *ms)
 {
 	set_mode(ms);
+
 	if (ms->state.mode == SIMPLE)
 	{
 		if (execute_simple(ms))
 			return (ERROR_GENERAL);
+		//update_env_lastcmd(ms, ms->node->cmd.cmd, ms->node->cmd.builtin);
 	}
 	else if (ms->state.mode == PIPELINE)
 	{
@@ -35,7 +37,6 @@ int	execute_simple(t_minishell *ms)
 
 	if (command_verification(ms, ms->node))
 		return (ERROR_CMD_NOTFOUND);
-	update_env_lastcmd(ms, ms->node->cmd.cmd, ms->node->cmd.builtin);
 	if (ms->node->cmd.out == ERROR || ms->node->cmd.out == ERROR)
 		return (ERROR);
 	if (ms->node->cmd.builtin)
@@ -67,7 +68,7 @@ int	execute_pipeline(t_minishell *ms)
 	{
 		if (command_verification(ms, node))
 			return (ERROR_PIPELINE);
-		update_env_lastcmd(ms, node->cmd.cmd, node->cmd.builtin);
+		//update_env_lastcmd(ms, node->cmd.cmd, node->cmd.builtin);
 		if (node->cmd.out != ERROR && node->cmd.out != ERROR)
 			ms->state.exit_status = spawn_and_run(ms, node, &prev_read);
 		if (ms->state.exit_status)
