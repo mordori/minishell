@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/29 00:48:54 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/03 16:47:13 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 
 static inline void	expand_args(t_minishell *ms, char **args);
 static inline void	expand_redirs(t_minishell *ms, t_list *redirs);
+static inline bool	expand(t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode);
 
 void	expand_variables(t_minishell *ms)
 {
@@ -42,12 +43,13 @@ void	expand_variables(t_minishell *ms)
 static inline void	expand_args(t_minishell *ms, char **raw_args)
 {
 	char	**args;
+	bool	is_expanded;
 
 	args = raw_args;
 	while (*args)
 	{
-		expand_str(ms, args, EXPAND_DEFAULT);
-		*args = remove_quotes(ms, *args);
+		is_expanded = expand_str(ms, args, EXPAND_DEFAULT);
+		// *args = remove_quotes(ms, *args);
 		++args;
 	}
 }
@@ -56,6 +58,7 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 {
 	t_list	*redirs;
 	t_redir	*r;
+	bool	is_expanded;
 
 	redirs = raw_redirs;
 	while (redirs)
@@ -63,23 +66,20 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 		r = (t_redir *)redirs->content;
 		if (r->type != HEREDOC)
 		{
-			expand_str(ms, &r->file, EXPAND_DEFAULT);
+			is_expanded = expand_str(ms, &r->file, EXPAND_DEFAULT);
 			r->file = remove_quotes(ms, r->file);
 		}
 		redirs = redirs->next;
 	}
 }
 
-bool	expand(t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode)
+static inline bool	expand(t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode)
 {
 	char	*ptr;
 
-	if (!**str)
-	{
+	if (!**str || (*quote && **str == *quote))
 		*result = str_join(ms, *result, "$", VOLATILE);
-		return (false);
-	}
-	if (**str == '?')
+	else if (**str == '?')
 		*result = str_join(ms, *result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
 	else if (**str == '$')
 		*result = str_join(ms, *result, uint_to_str(ms, (unsigned int)getpid()), VOLATILE);
@@ -87,7 +87,8 @@ bool	expand(t_minishell *ms, char **str, char **result, char *quote, t_expand_mo
 		join_var_name(ms, str, result, mode);
 	else
 		join_var(ms, str, result, *quote, mode);
-	++(*str);
+	if (**str && !(*quote && **str == *quote))
+		++(*str);
 	ptr = ft_strchr(*str, '$');
 	if (!ptr)
 		return (false);
@@ -98,7 +99,7 @@ bool	expand(t_minishell *ms, char **str, char **result, char *quote, t_expand_mo
 	return (true);
 }
 
-void	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
+bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 {
 	char	*str;
 	char	*result;
@@ -107,7 +108,7 @@ void	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 
 	str = ft_strchr(*src, '$');
 	if (!str)
-		return ;
+		return (false);
 	i = str - *src;
 	result = alloc_volatile(ms, i + 1);
 	ft_memcpy(result, *src, i);
@@ -121,6 +122,7 @@ void	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 	}
 	result = str_join(ms, result, str, VOLATILE);
 	*src = result;
+	return (true);
 }
 
 char	*remove_quotes(t_minishell *ms, char *src)

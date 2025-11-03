@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/27 23:35:11 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/03 16:43:13 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool	is_operator(const char *src);
 bool	is_redirection(const char *src);
 bool	is_pipe(const char *src);
 bool	is_unsupported_char(t_minishell *ms, const char *src);
-void	expand_str(t_minishell *ms, char **src, t_expand_mode mode);
+bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode);
 char	*remove_quotes(t_minishell *ms, char *src);
 void	join_var_name(t_minishell *ms, char **str, char **result, t_expand_mode mode);
 void	join_var(t_minishell *ms, char **str, char **result, char quote, t_expand_mode mode);

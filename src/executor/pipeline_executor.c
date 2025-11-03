@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipeline_executor.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/28 14:27:47 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/03 13:40:41 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static void	io_directions(t_minishell *ms, t_node *node, int prev_read)
 		close(node->pipe_fds[WRITE]);
 		close(node->pipe_fds[READ]);
 	}
-	
+
 	if (node->next == NULL)
 	{
 		#ifdef DEBUG
