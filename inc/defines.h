@@ -67,7 +67,7 @@
 extern volatile sig_atomic_t	g_signal;
 
 typedef enum e_builtin_type		t_builtin;
-typedef enum e_mode				t_mode;
+typedef enum e_mode			t_mode;
 typedef enum e_token_type		t_token_type;
 typedef enum e_errors			t_errors;
 typedef enum e_redir_type		t_redir_type;

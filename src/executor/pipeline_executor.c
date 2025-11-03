@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/28 14:27:47 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/03 12:07:32 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,6 @@ void	try_fork(t_minishell *ms, pid_t *child_pid)
 		error_exit(ms, "");
 }
 
-#include <stdio.h>
-
 static void	io_directions(t_minishell *ms, t_node *node, int prev_read)
 {
 	if (prev_read >= 0)
@@ -69,7 +67,7 @@ static void	io_directions(t_minishell *ms, t_node *node, int prev_read)
 		close(node->pipe_fds[WRITE]);
 		close(node->pipe_fds[READ]);
 	}
-	
+
 	if (node->next == NULL)
 	{
 		#ifdef DEBUG
