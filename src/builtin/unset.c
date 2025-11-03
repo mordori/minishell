@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:23:57 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/28 10:50:53 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/03 13:42:45 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ static int	remove_vars(t_minishell *ms, t_node *node)
 		}
 		i++;
 	}
+	ms->state.envp = envll_to_envp(ms, env);
 	return (SUCCESS);
 }
 

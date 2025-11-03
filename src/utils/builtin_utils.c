@@ -6,13 +6,12 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 12:44:17 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/06 17:26:41 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:02:51 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin_utils.h"
 
-// might as well be moved to str_utils2.c once that exists
 bool	is_pluschar(char *var, char delimiter)
 {
 	bool	is_pluschar;

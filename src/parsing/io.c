@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   io.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/29 00:23:09 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/03 14:33:06 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,10 @@ void	set_pipe(t_minishell *ms, t_node *node)
 		else
 			close(pipefd[0]);
 		if (node->cmd.out == STDOUT_FILENO)
-			node->cmd.out = pipefd[1]; 
+			node->cmd.out = pipefd[1];
 		else
 			close(pipefd[1]);
 	}
-	node->pipe_fds[0] = node->cmd.in;
-	node->pipe_fds[1] = node->cmd.out; 
 }
 
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
