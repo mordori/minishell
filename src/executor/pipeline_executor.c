@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/28 14:27:47 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:03:06 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	spawn_and_run(t_minishell *ms, t_node *node, int *prev_read)
 	{
 		if (node->next)
 		{
-			if (close(node->pipe_fds[WRITE]))
+			if (close(node->cmd.out))
 				error_exit(ms, "");
 		}
 	}
@@ -50,8 +50,6 @@ void	try_fork(t_minishell *ms, pid_t *child_pid)
 		error_exit(ms, "");
 }
 
-#include <stdio.h>
-
 static void	io_directions(t_minishell *ms, t_node *node, int prev_read)
 {
 	if (prev_read >= 0)
@@ -60,31 +58,14 @@ static void	io_directions(t_minishell *ms, t_node *node, int prev_read)
 			error_exit(ms, "");
 		close(prev_read);
 	}
-	else if (node->prev == NULL && prev_read >= 0)
-		close(prev_read);
 	if (node->next)
 	{
-		if (dup2(node->pipe_fds[WRITE], STDOUT_FILENO) == -1)
+		if (dup2(node->cmd.out, STDOUT_FILENO) == -1)
 			error_exit(ms, "");
-		close(node->pipe_fds[WRITE]);
-		close(node->pipe_fds[READ]);
+		close(node->cmd.in);
 	}
-	
 	if (node->next == NULL)
 	{
-		#ifdef DEBUG
-		printf("pipeline's final cmd.\n");
-		printf("pipe write fd: %d\n", node->pipe_fds[WRITE]);
-		printf("pipe read fd: %d\n", node->pipe_fds[READ]);
-		printf("cmd.out fd: %d\n", node->cmd.out);
-		printf("cmd.in fd: %d\n", node->cmd.in);
-		int flags = fcntl(node->cmd.out, F_GETFL);
-    	if (flags == -1)
-     	   printf("flags: %d\n", flags);
-	    int access_mode = flags & O_ACCMODE;
-		printf("access mode: %d\n", access_mode);
-		#endif
-
 		if (dup2(node->cmd.out, STDOUT_FILENO) == -1)
 			error_exit(ms, "");
 	}
@@ -95,5 +76,5 @@ static void	close_parent_pps(t_node *node, int *prev_read)
 	if (node->prev == NULL)
 		close(*prev_read);
 	if (node->next)
-		*prev_read = node->pipe_fds[READ];
+		*prev_read = node->cmd.in;
 }

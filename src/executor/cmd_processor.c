@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/28 20:29:13 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/03 16:22:15 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,22 @@ int	exec_extern(t_minishell *ms, t_node *node)
 	execve(command, args, envp);
 	ms->state.exit_status = errno;
 	return (ERROR);
+}
+
+void	update_env_lastcmd(t_minishell *ms, char *cmd, t_builtin builtin)
+{
+	t_env	*shell_v;
+
+	copy_env_to(VOLATILE, ms);
+	arena_reset(&ms->vars);
+	if (builtin)
+	{
+		shell_v = envll_findkey(&ms->state, "SHELL");
+		if (shell_v)
+			cmd = str_join(ms, \
+				str_join(ms, \
+					shell_v->value, "/src/builtin/", VOLATILE), cmd, VOLATILE);
+	}
+	replace_value(envll_findkey(&ms->state, "_"), cmd);
+	copy_env_to(PERSISTENT, ms);
 }

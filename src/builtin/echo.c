@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:12 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/28 00:02:12 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:02:53 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,24 +21,24 @@ int	echo(t_minishell *ms, t_node *node)
 	bool	is_inbetween;
 	bool	is_nl_off;
 	int		i;
-	//int		fd;
+	int		fd;
 
 	i = 1;
-	//fd = ms->node->pipe_fds[1];
+	fd = node->cmd.out;
 	is_inbetween = false;
 	is_newline_off(node, &i, &is_nl_off);
 	while (node->cmd.args[i])
 	{
 		if (is_inbetween)
-			try_write(ms, 1, " ");
+			try_write(ms, fd, " ");
 		string = node->cmd.args[i];
-		try_write(ms, 1, string);
+		try_write(ms, fd, string);
 		if (!is_inbetween)
 			is_inbetween = true;
 		i++;
 	}
 	if (!is_nl_off)
-		try_write(ms, 1, "\n");
+		try_write(ms, fd, "\n");
 	return (SUCCESS);
 }
 

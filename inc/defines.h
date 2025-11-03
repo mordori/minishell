@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   defines.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/28 21:57:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:03:00 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@
 extern volatile sig_atomic_t	g_signal;
 
 typedef enum e_builtin_type		t_builtin;
-typedef enum e_mode				t_mode;
+typedef enum e_mode			t_mode;
 typedef enum e_token_type		t_token_type;
 typedef enum e_errors			t_errors;
 typedef enum e_redir_type		t_redir_type;
@@ -186,7 +186,6 @@ struct s_node
 	t_cmd		cmd;
 	t_node		*next;
 	t_node		*prev;
-	int			pipe_fds[2];
 	pid_t		pid;
 };
 
