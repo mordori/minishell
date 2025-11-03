@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 12:17:25 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 19:22:11 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/03 17:21:21 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include "str_utils.h"
 
 //env_handler.c
-int		envp_to_envll(t_minishell *ms, char **envp, t_state *state);
+int		envp_to_envll(t_minishell *ms, char **envp);
 void	var_to_node(t_minishell *ms, char *var, t_env **env);
 char	**envll_to_envp(t_minishell *ms, t_env *env);
 char	*get_env_val(t_minishell *ms, char *key);
