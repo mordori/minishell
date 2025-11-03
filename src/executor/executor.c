@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/29 00:22:56 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/03 14:39:27 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	execute_simple(t_minishell *ms)
 
 	if (command_verification(ms, ms->node))
 		return (ERROR_CMD_NOTFOUND);
-	if (ms->node->pipe_fds[0] == ERROR || ms->node->pipe_fds[1] == ERROR)
+	if (ms->node->cmd.out == ERROR || ms->node->cmd.out == ERROR)
 		return (ERROR);
 	if (ms->node->cmd.builtin)
 		return (exec_builtin(ms, ms->node));
@@ -66,7 +66,7 @@ int	execute_pipeline(t_minishell *ms)
 	{
 		if (command_verification(ms, node))
 			return (ERROR_PIPELINE);
-		if (node->pipe_fds[0] != ERROR && node->pipe_fds[1] != ERROR)
+		if (node->cmd.out != ERROR && node->cmd.out != ERROR)
 			ms->state.exit_status = spawn_and_run(ms, node, &prev_read);
 		if (ms->state.exit_status)
 			return (ERROR_PIPELINE);

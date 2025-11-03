@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/28 11:12:13 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/03 14:38:24 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int	get_prev_path(t_minishell *ms, t_node *node, char **path, bool is_fir
 		warning(ms, "cd: OLDPWD not set");
 		return (ERROR_BUILTIN);
 	}
-	try_write_endl(ms, node->pipe_fds[1], *path);
+	try_write_endl(ms, node->cmd.out, *path);
 	return (SUCCESS);
 }
 
