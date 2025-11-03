@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/03 16:15:00 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/03 18:27:32 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	executor(t_minishell *ms)
 {
 	set_mode(ms);
+
 	if (ms->state.mode == SIMPLE)
 	{
 		if (execute_simple(ms))

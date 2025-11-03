@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_handler.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 12:14:16 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/28 21:20:05 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/03 17:21:17 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 static char	*update_shell_value(t_minishell *ms);
 
-int	envp_to_envll(t_minishell *ms, char **envp, t_state *state)
+int	envp_to_envll(t_minishell *ms, char **envp)
 {
 	t_env	*env;
 	int		i;
@@ -35,7 +35,7 @@ int	envp_to_envll(t_minishell *ms, char **envp, t_state *state)
 		var_to_node(ms, envp[i], &env);
 		i++;
 	}
-	state->env = env;
+	ms->state.env = env;
 	return (SUCCESS);
 }
 
