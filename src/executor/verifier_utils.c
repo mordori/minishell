@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 12:40:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/28 11:18:38 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/03 16:06:42 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,14 @@ static char	*gen_fullpath(t_minishell *ms, char *dirpath, char *filename)
 	char	*full_path;
 
 	i = 0;
-	len = ft_strlen(dirpath) + ft_strlen(filename) + 1;
+	len = ft_strlen(dirpath) + ft_strlen(filename) + 2;
 	full_path = alloc_volatile(ms, len);
 	while (*dirpath && i < len)
 		full_path[i++] = *dirpath++;
 	full_path[i++] = '/';
 	while (*filename && i < len)
 		full_path[i++] = *filename++;
+	full_path[i] = '\0';
 	return (full_path);
 }
 
