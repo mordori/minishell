@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/03 17:21:07 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/03 18:25:39 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,5 @@ void	update_env_lastcmd(t_minishell *ms, char *cmd, t_builtin builtin)
 	else
 		var_to_node(ms, str_join(ms, "_=", cmd, VOLATILE), &ms->state.env);
 	copy_env_to(PERSISTENT, ms);
+	ms->state.envp = envll_to_envp(ms, ms->state.env);
 }
