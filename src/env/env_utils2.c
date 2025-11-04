@@ -6,13 +6,11 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 16:44:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 19:05:02 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:39:20 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
-
-static bool	is_valid_identifier(const char c);
 
 t_env	*envll_findkey(t_state *state, char *key)
 {
@@ -41,7 +39,7 @@ bool	is_valid_key(const char *key, char *delimiter)
 	i = 0;
 	while (key[i] && is_valid)
 	{
-		if (!is_valid_identifier(key[i]))
+		if (!ft_isalnum(key[i]) && key[i] != '_' && key[i] != '=')
 		{
 			if (key[i] == '+' && key[i + 1] == '\0' && delimiter)
 				break ;
@@ -50,11 +48,6 @@ bool	is_valid_key(const char *key, char *delimiter)
 		i++;
 	}
 	return (is_valid);
-}
-
-static bool	is_valid_identifier(const char c)
-{
-	return (ft_isalnum(c) || c == '_' || c == '=');
 }
 
 bool	replace_value(t_env *var, char *value)
@@ -70,4 +63,17 @@ t_env	*envlast(t_env *env)
 	while (env->next)
 		env = env->next;
 	return (env);
+}
+
+int	count_variables(t_env *env)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (env)
+	{
+		i++;
+		env = env->next;
+	}
+	return (i);
 }

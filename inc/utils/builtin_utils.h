@@ -3,18 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:28:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/17 17:13:57 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:06:29 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTIN_UTILS_H
 # define BUILTIN_UTILS_H
 
-# include "defines.h"
+# include "builtin.h"
 
 bool	is_pluschar(char *var, char delimiter);
+bool	handle_cases(t_minishell *ms, int *i, t_env *env, t_key_value *kv);
 
 #endif

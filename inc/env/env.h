@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 12:17:25 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/03 17:21:21 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:39:22 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	quicksort(t_env *low, t_env *high);
 t_env	*ft_envnode_new(t_minishell *ms, char *key, char *valu, t_arena_type t);
 void	ft_envadd_back(t_env **env_head, t_env *new_node);
 char	*ft_keydup(t_minishell *ms, char *key_src, char *key_end);
-int		count_variables(t_env *env);
 char	*join_keyvalue(char *key, char *value, char *dest);
 
 //env_utils2.c
@@ -42,6 +41,7 @@ t_env	*envll_findkey(t_state *state, char *key);
 bool	is_valid_key(const char *key, char *delimiter);
 bool	replace_value(t_env *var, char *value);
 t_env	*envlast(t_env *env);
+int		count_variables(t_env *env);
 
 //mem_transfer.c
 void	copy_env_to(t_arena_type to_type, t_minishell *ms);
