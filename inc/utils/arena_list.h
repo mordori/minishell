@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   arena_list.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 01:35:52 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/03 17:48:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/04 15:38:43 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef ARENA_LIST_H
 # define ARENA_LIST_H

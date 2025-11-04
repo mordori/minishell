@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/04 15:05:25 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/04 15:34:37 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void	set_pipe(t_minishell *ms, t_node *node)
 			close(pipefd[1]);
 	}
 }
-
 
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 {
