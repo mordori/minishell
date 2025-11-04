@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:24:14 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 19:22:01 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/04 11:08:34 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ char	*join_keyvalue(char *key, char *value, char *dest)
 	dest[i++] = '=';
 	while (value[j])
 	{
-		dest[i]	= value[j];
+		dest[i] = value[j];
 		i++;
 		j++;
 	}

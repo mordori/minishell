@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/03 15:03:00 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/04 11:10:50 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,7 @@ struct s_key_value
 {
 	char	*key;
 	char	*value;
+	char	*delimiter;
 };
 
 

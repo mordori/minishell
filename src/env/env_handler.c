@@ -6,18 +6,9 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 12:14:16 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/03 17:21:17 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:00:33 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
-/*ALSO: Bourne-style shells support the syntax
-
-           NAME=value command
-
-       to create an environment variable definition only in the scope of
-       the process that executes command.
-*/
 
 #include "env.h"
 
@@ -67,7 +58,8 @@ static char	*update_shell_value(t_minishell *ms)
 	char	*shell_path;
 
 	pwd = getcwd(buf, sizeof(buf));
-	shell_path = str_dup(ms, str_join(ms, pwd, "/minishell", VOLATILE), PERSISTENT);
+	shell_path = str_dup(ms, str_join(ms, \
+pwd, "/minishell", VOLATILE), PERSISTENT);
 	return (shell_path);
 }
 
@@ -85,7 +77,10 @@ char	**envll_to_envp(t_minishell *ms, t_env *env)
 	{
 		env_var = alloc_vars(\
 ms, ft_strlen(env->key) + ft_strlen(env->value) + 2);
-		join_keyvalue(env->key, env->value, env_var);
+		if (env->value)
+			join_keyvalue(env->key, env->value, env_var);
+		else
+			join_keyvalue(env->key, "", env_var);
 		envp_copy[i] = env_var;
 		i++;
 		env = env->next;

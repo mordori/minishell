@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 10:33:34 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/03 15:18:37 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/04 11:08:28 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int		execute_simple(t_minishell *ms);
 int		execute_pipeline(t_minishell *ms);
 int		wait_pids(t_minishell *ms);
 //DEBUG
-int    ft_log(char *file_name, char *func_name, char *data);
+int		ft_log(char *file_name, char *func_name, char *data);
 
 //cmd_processor.c
 void	run_node(t_minishell *ms, t_node *node);

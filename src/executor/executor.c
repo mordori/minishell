@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/03 18:27:32 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:02:00 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int	executor(t_minishell *ms)
 {
 	set_mode(ms);
-
 	if (ms->state.mode == SIMPLE)
 	{
 		if (execute_simple(ms))
@@ -23,10 +22,15 @@ int	executor(t_minishell *ms)
 	}
 	else if (ms->state.mode == PIPELINE)
 	{
-		if(execute_pipeline(ms))
+		if (execute_pipeline(ms))
 			return (ERROR_PIPELINE);
 	}
-	return(SUCCESS);
+
+	#ifdef DEBUG
+	printf("pipeline cleared\n");
+	#endif
+
+	return (SUCCESS);
 }
 
 int	execute_simple(t_minishell *ms)
@@ -74,11 +78,21 @@ int	execute_pipeline(t_minishell *ms)
 		if (ms->state.exit_status)
 			return (ERROR_PIPELINE);
 		if (!node->next)
-			break;
+			break ;
 		node = node->next;
 	}
+
+	#ifdef DEBUG
+	printf("pipeline cleared but pids not waited yet\n");
+	#endif
+
 	if (wait_pids(ms))
 		warning(ms, NULL);
+
+	#ifdef DEBUG
+	printf("pids succesfully waited\n");
+	#endif
+
 	return (SUCCESS);
 }
 

@@ -12,15 +12,6 @@
 
 #include "executor_utils.h"
 
-void	check_fds(int *fds)
-{
-	(void) fds;
-	//struct stat	buffer;
-	//int			i;
-
-	//fstat(fd[i], &buffer); for checking if FDs are open or closed
-}
-
 void	node_scrollback(t_minishell *ms)
 {
 	while (ms->node->prev)
