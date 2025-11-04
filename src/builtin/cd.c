@@ -6,14 +6,14 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/04 11:08:27 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:39:19 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "io.h"
 
-static int	get_ppwd(t_minishell *ms, t_node *node, char **path, bool is_1st_cd);
+static int	get_ppwd(t_minishell *ms, t_node *node, char **path, bool is_1st);
 static void	update_ppwd(t_minishell *ms);
 static int	get_home(t_minishell *ms, char **path);
 
@@ -41,7 +41,7 @@ int	cd(t_minishell *ms, t_node *node)
 	return (SUCCESS);
 }
 
-static int	get_ppwd(t_minishell *ms, t_node *node, char **path, bool is_1st_cd)
+static int	get_ppwd(t_minishell *ms, t_node *node, char **path, bool is_1st)
 {
 	if (*(*path + 1) == '-')
 	{
@@ -50,7 +50,7 @@ static int	get_ppwd(t_minishell *ms, t_node *node, char **path, bool is_1st_cd)
 		return (SUCCESS);
 	}
 	*path = NULL;
-	if (is_1st_cd)
+	if (is_1st)
 		*path = getenv("OLDPWD");
 	else
 	{

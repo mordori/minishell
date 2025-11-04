@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/03 14:33:06 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/04 15:05:25 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ void	set_pipe(t_minishell *ms, t_node *node)
 	{
 		if (pipe(pipefd) == ERROR)
 			error_exit(ms, "pipe failed");
-		if (node->cmd.in == STDIN_FILENO)
-			node->cmd.in = pipefd[0];
+		if (node->next->cmd.in == STDIN_FILENO)
+			node->next->cmd.in = pipefd[0];
 		else
 			close(pipefd[0]);
 		if (node->cmd.out == STDOUT_FILENO)
@@ -67,6 +67,7 @@ void	set_pipe(t_minishell *ms, t_node *node)
 			close(pipefd[1]);
 	}
 }
+
 
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 {

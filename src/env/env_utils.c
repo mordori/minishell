@@ -6,11 +6,13 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:24:14 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/04 11:08:34 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:39:13 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
+
+static size_t	keylen(char *key_src, char *key_end);
 
 t_env	*ft_envnode_new(t_minishell *ms, char *key, char *valu, t_arena_type t)
 {
@@ -51,20 +53,7 @@ char	*ft_keydup(t_minishell *ms, char *key_src, char *key_end)
 	char		*key;
 
 	i = 0;
-	len = 0;
-	while (key_src[len])
-	{
-		if (key_end)
-		{
-			if (key_src[len] == *key_end)
-			{
-				if (key_src[len - 1] == '+')
-					len--;
-				break ;
-			}
-		}
-		len++;
-	}
+	len = keylen(key_src, key_end);
 	key = alloc_vars(ms, (len + 1) * sizeof(char));
 	while (i < len)
 	{
@@ -75,17 +64,25 @@ char	*ft_keydup(t_minishell *ms, char *key_src, char *key_end)
 	return (key);
 }
 
-int	count_variables(t_env *env)
+static size_t	keylen(char *key_src, char *key_end)
 {
-	unsigned int	i;
+	size_t		len;
 
-	i = 0;
-	while (env)
+	len = 0;
+	while (key_src[len])
 	{
-		i++;
-		env = env->next;
+		if (key_end)
+		{
+			if (key_src[len] == *key_end)
+			{
+				if (key_src[len - 1] == '+')
+					len--;
+				return (len);
+			}
+		}
+		len++;
 	}
-	return (i);
+	return (len);
 }
 
 char	*join_keyvalue(char *key, char *value, char *dest)

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
+#    By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/10/28 00:01:14 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/11/04 12:29:46 by jvalkama         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,7 +54,7 @@ INCS		:=$(addprefix -I, \
 SRCS		:=$(addprefix $(DIR_SRC), \
 				main.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_BUILT), \
-				cd.c echo.c env.c exit.c export.c pwd.c unset.c)
+				cd.c echo.c env.c exit.c export.c pwd.c unset.c builtin_utils.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_ENV), \
 				env_handler.c env_utils.c env_utils2.c quicksort.c \
 				mem_transfer.c)
@@ -67,7 +67,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
 				expansion_utils.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				arena_list.c arena_utils.c arena.c cleanup.c defines.c \
-				errors.c str_utils.c line_utils.c builtin_utils.c)
+				errors.c str_utils.c line_utils.c)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
 

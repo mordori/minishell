@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/04 12:02:00 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/04 15:06:21 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,6 @@ int	executor(t_minishell *ms)
 		if (execute_pipeline(ms))
 			return (ERROR_PIPELINE);
 	}
-
-	#ifdef DEBUG
-	printf("pipeline cleared\n");
-	#endif
-
 	return (SUCCESS);
 }
 
@@ -63,36 +58,24 @@ int	execute_simple(t_minishell *ms)
 
 int	execute_pipeline(t_minishell *ms)
 {
-	int		prev_read;
 	t_node	*node;
 
 	node = ms->node;
-	prev_read = -1;
 	while (node)
 	{
 		if (command_verification(ms, node))
 			return (ERROR_PIPELINE);
 		update_env_lastcmd(ms, node->cmd.cmd, node->cmd.builtin);
 		if (node->cmd.out != ERROR && node->cmd.out != ERROR)
-			ms->state.exit_status = spawn_and_run(ms, node, &prev_read);
+			ms->state.exit_status = spawn_and_run(ms, node);
 		if (ms->state.exit_status)
 			return (ERROR_PIPELINE);
 		if (!node->next)
 			break ;
 		node = node->next;
 	}
-
-	#ifdef DEBUG
-	printf("pipeline cleared but pids not waited yet\n");
-	#endif
-
 	if (wait_pids(ms))
 		warning(ms, NULL);
-
-	#ifdef DEBUG
-	printf("pids succesfully waited\n");
-	#endif
-
 	return (SUCCESS);
 }
 
@@ -107,8 +90,6 @@ int	wait_pids(t_minishell *ms)
 		waitpid(node->pid, &status, 0);
 		if (WIFEXITED(status))
 			ms->state.exit_status = WEXITSTATUS(status);
-		if (ms->state.exit_status)
-			return (ms->state.exit_status);
 		node = node->next;
 	}
 	return (SUCCESS);
