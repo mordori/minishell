@@ -33,7 +33,7 @@ int	command_verification(t_minishell *ms, t_node *node)
 			{
 				errno = 0;
 				warning(ms, str_join(\
-					ms, cmd->args[0], ": command not found", VOLATILE));
+ms, cmd->args[0], ": command not found", VOLATILE));
 				return (ERROR_CMD_NOTFOUND);
 			}
 		}
@@ -47,7 +47,7 @@ static t_builtin	verify_builtin(char *cmd)
 {
 	t_builtin	type;
 	static char	*types[] = {\
-		NULL, "echo", "cd", "pwd", "export", "unset", "env", "exit"};
+NULL, "echo", "cd", "pwd", "export", "unset", "env", "exit"};
 
 	type = 1;
 	while (type < 8)

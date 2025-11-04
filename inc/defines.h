@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/03 15:03:00 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/04 15:40:47 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@
 extern volatile sig_atomic_t	g_signal;
 
 typedef enum e_builtin_type		t_builtin;
-typedef enum e_mode			t_mode;
+typedef enum e_mode				t_mode;
 typedef enum e_token_type		t_token_type;
 typedef enum e_errors			t_errors;
 typedef enum e_redir_type		t_redir_type;
@@ -86,7 +86,7 @@ typedef struct s_redir			t_redir;
 typedef struct s_prompt			t_prompt;
 typedef struct s_key_value		t_key_value;
 
-typedef int	t_fun(t_minishell *, t_node *);
+typedef int						t_fun(t_minishell *, t_node *);
 
 enum e_builtin_type
 {
@@ -152,8 +152,8 @@ struct s_key_value
 {
 	char	*key;
 	char	*value;
+	char	*delimiter;
 };
-
 
 struct s_env
 {
@@ -187,6 +187,7 @@ struct s_node
 	t_node		*next;
 	t_node		*prev;
 	pid_t		pid;
+	int			pipe_in;
 };
 
 struct s_state
@@ -226,8 +227,8 @@ struct s_prompt
 	char		*prompt;
 };
 
-const char**	get_redirections();
-const char**	get_quotes();
-const char**	get_unsupported_chars();
+const char	**get_redirections(void);
+const char	**get_quotes(void);
+const char	**get_unsupported_chars(void);
 
 #endif
