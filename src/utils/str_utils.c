@@ -103,7 +103,7 @@ char	**str_split(t_minishell *ms, const char *src, char c)
 
 bool	is_whitespace(const char *src, const char *set)
 {
-	if (*set)
+	if (!*set)
 		set = get_ifs();
 	while (*set)
 	{

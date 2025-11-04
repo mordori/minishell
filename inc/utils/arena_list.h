@@ -18,6 +18,6 @@
 
 t_list	*lstnew(t_minishell *ms, void *content);
 bool	lstadd_back(t_list **lst, t_list *new);
-int		lstsize(t_list *lst);
+size_t	lstsize(t_list *lst);
 
 #endif

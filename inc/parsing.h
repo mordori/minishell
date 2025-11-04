@@ -32,7 +32,7 @@ bool	is_redirection(const char *src);
 bool	is_pipe(const char *src);
 bool	is_unsupported_char(t_minishell *ms, const char *src);
 bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode);
-char	*remove_quotes(t_minishell *ms, char *src);
+char	*remove_quotes(t_minishell *ms, char *src, t_list **list);
 void	join_var_name(\
 t_minishell *ms, char **str, char **result, t_expand_mode mode);
 void	join_var(\

@@ -22,7 +22,7 @@
 #include <stdio.h>
 #endif
 
-static inline void	expand_args(t_minishell *ms, char **args);
+static inline void	expand_args(t_minishell *ms, t_node *node, char **args);
 static inline void	expand_redirs(t_minishell *ms, t_list *redirs);
 static inline bool	expand(t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode);
 
@@ -34,24 +34,37 @@ void	expand_variables(t_minishell *ms)
 	while(node)
 	{
 		if (node->cmd.args)
-			expand_args(ms, node->cmd.args);
+			expand_args(ms, node, node->cmd.args);
 		expand_redirs(ms, node->cmd.redirs);
 		node = node->next;
 	}
 }
 
-static inline void	expand_args(t_minishell *ms, char **raw_args)
+static inline void	expand_args(t_minishell *ms, t_node *node, char **raw_args)
 {
 	char	**args;
 	bool	is_expanded;
+	t_list	*list;
+	size_t	size;
 
+	list = NULL;
 	args = raw_args;
 	while (*args)
 	{
 		is_expanded = expand_str(ms, args, EXPAND_DEFAULT);
-		*args = remove_quotes(ms, *args);
+		remove_quotes(ms, *args, &list);
 		++args;
 	}
+	size = lstsize(list);
+	args = alloc_volatile(ms, (size + 1) * sizeof(char *));
+	while (list)
+	{
+		*args = list->content;
+		++args;
+		list = list->next;
+	}
+	args -= size;
+	node->cmd.args = args;
 }
 
 static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
@@ -67,7 +80,7 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 		if (r->type != HEREDOC)
 		{
 			is_expanded = expand_str(ms, &r->file, EXPAND_DEFAULT);
-			r->file = remove_quotes(ms, r->file);
+			// r->file = remove_quotes(ms, r->file);
 		}
 		redirs = redirs->next;
 	}
@@ -125,23 +138,57 @@ bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 	return (true);
 }
 
-char	*remove_quotes(t_minishell *ms, char *src)
+char	*remove_quotes(t_minishell *ms, char *src, t_list **list)
 {
 	char	*result;
 	char	*ptr;
 	size_t	i;
-	char	*whitespace;
+	size_t	k;
+	char	*ifs;
+	char	quote;
+	char	*new;
 
-	whitespace = get_env_val(ms, "IFS");
-	src = str_trim(src, whitespace);
-
-
-	while (!is_whitespace(src, whitespace))
+	ifs = get_env_val(ms, "IFS");
+	src = str_trim(src, ifs);
+	while (*src)
 	{
-
+		i = 0;
+		while (*src && !is_whitespace(src, ifs))
+		{
+			if (*src == '\'' || *src == '\"')
+			{
+				quote = *src++;
+				++i;
+				while (*src && *src != quote)
+				{
+					++i;
+					++src;
+				}
+				quote = 0;
+			}
+			else
+			{
+				++i;
+				++src;
+			}
+		}
+		new = alloc_volatile(ms, i + 1);
+		k = 0;
+		while (i)
+		{
+			if (*(src - i) && (*(src - i) == '\'' || *(src - i) == '\"'))
+			{
+				--i;
+				continue ;
+			}
+			new[k] = *(src - i);
+			++k;
+			--i;
+		}
+		lstadd_back(list, lstnew(ms, new));
+		while (*src && is_whitespace(src, ifs))
+			++src;
 	}
-
-
 
 
 	ptr = find_quote(src);

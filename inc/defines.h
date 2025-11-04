@@ -227,9 +227,9 @@ struct s_prompt
 	char		*prompt;
 };
 
-const char	**get_redirections();
-const char	**get_quotes();
-const char	**get_unsupported_chars();
-const char	*get_ifs();
+const char	**get_redirections(void);
+const char	**get_quotes(void);
+const char	**get_unsupported_chars(void);
+const char	*get_ifs(void);
 
 #endif

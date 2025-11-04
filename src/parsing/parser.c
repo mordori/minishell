@@ -85,7 +85,7 @@ static inline void	set_args(t_minishell *ms, t_list *args, t_node *head)
 
 	if (!args)
 		return ;
-	head->cmd.argc = lstsize(args);
+	head->cmd.argc = (int)lstsize(args);
 	head->cmd.args = alloc_volatile(ms, sizeof(char *) * (head->cmd.argc + 1));
 	temp = args;
 	i = 0;

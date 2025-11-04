@@ -79,7 +79,7 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 		close(node->cmd.in);
 	node->cmd.in = try_open(ms, file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
 	is_quoted = ft_strchr(eof, '\"') || ft_strchr(eof, '\'');
-	eof = remove_quotes(ms, eof);
+	// eof = remove_quotes(ms, eof);
 	if (!g_signal)
 	{
 		lines = 0;
