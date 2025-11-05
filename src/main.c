@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/03 18:27:02 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:35:09 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,9 @@ printf("\033[1;33m[DEBUG]\033[0m\n");
 	return (status);
 }
 
-void	sig_handler(int sig)
+void	sig_handler(int signum)
 {
-	g_signal = sig;
+	g_signal = signum;
 }
 
 /**
@@ -82,7 +82,6 @@ static inline void	initialize(t_minishell *ms, char **envp)
 		rl_catch_signals = 0;
 		rl_event_hook = rl_event;
 	}
-	signal(SIGINT, sig_handler);
 	signal(SIGINT, sig_handler);
 }
 
@@ -114,6 +113,8 @@ static inline void	run(t_minishell *ms)
 			continue ;
 		expand_variables(ms);
 		setup_io(ms, ms->node);
+		if (g_signal)
+			ms->state.exit_status = 127 + g_signal; //THIS NEEDS CORRECT PLACEMENT SO THAT IT PERSISTS.
 		if (ms->node->cmd.args && !g_signal)
 			executor(ms);
 		close_fds(ms);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arena_list.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 01:27:29 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/08 04:58:21 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:39:49 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,3 @@ int	lstsize(t_list *lst)
 	}
 	return (len);
 }
-

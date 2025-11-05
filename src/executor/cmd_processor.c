@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/04 13:44:33 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/04 17:15:27 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 void	run_node(t_minishell *ms, t_node *node)
 {
-	//FIXME: parent's custom signal handling back to default
 	if (node->cmd.builtin)
 	{
 		if (exec_builtin(ms, node))
@@ -47,11 +46,6 @@ int	exec_extern(t_minishell *ms, t_node *node)
 	args = node->cmd.args;
 	envp = ms->state.envp;
 	execve(command, args, envp);
-
-	#ifdef DEBUG
-	printf("execve has returned.\n");
-	#endif
-
 	ms->state.exit_status = errno;
 	return (ERROR);
 }
