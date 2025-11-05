@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/03 18:34:33 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/04 22:39:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	expand_variables(t_minishell *ms)
 static inline void	expand_args(t_minishell *ms, t_node *node, char **raw_args)
 {
 	char	**args;
-	bool	is_expanded;
+	//bool	is_expanded;
 	t_list	*list;
 	size_t	size;
 
@@ -51,7 +51,7 @@ static inline void	expand_args(t_minishell *ms, t_node *node, char **raw_args)
 	args = raw_args;
 	while (*args)
 	{
-		is_expanded = expand_str(ms, args, EXPAND_DEFAULT);
+		expand_str(ms, args, EXPAND_DEFAULT);
 		remove_quotes(ms, *args, &list);
 		++args;
 	}
@@ -71,7 +71,7 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 {
 	t_list	*redirs;
 	t_redir	*r;
-	bool	is_expanded;
+	//bool	is_expanded;
 
 	redirs = raw_redirs;
 	while (redirs)
@@ -79,7 +79,7 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 		r = (t_redir *)redirs->content;
 		if (r->type != HEREDOC)
 		{
-			is_expanded = expand_str(ms, &r->file, EXPAND_DEFAULT);
+			expand_str(ms, &r->file, EXPAND_DEFAULT);
 			// r->file = remove_quotes(ms, r->file);
 		}
 		redirs = redirs->next;
