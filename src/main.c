@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/05 12:11:27 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:35:09 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ static inline void	run(t_minishell *ms)
 	set_prompt_names(ms, &p);
 	while (true)
 	{
-		ms->state.exit_status = 0;
 		g_signal = 0;
 		arena_reset(&ms->pool);
 		store_pwd(ms);
@@ -114,6 +113,8 @@ static inline void	run(t_minishell *ms)
 			continue ;
 		expand_variables(ms);
 		setup_io(ms, ms->node);
+		if (g_signal)
+			ms->state.exit_status = 127 + g_signal; //THIS NEEDS CORRECT PLACEMENT SO THAT IT PERSISTS.
 		if (ms->node->cmd.args && !g_signal)
 			executor(ms);
 		close_fds(ms);

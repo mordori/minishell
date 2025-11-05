@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/05 10:48:33 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:38:45 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,34 +30,11 @@ void	spawn_and_run(t_minishell *ms, t_node *node)
 				error_exit(ms, "");
 		}
 	}
-
-	#ifdef DEBUG
-	#include <stdio.h>
-	printf("child pid: %d\n", child_pid);
-	#endif
-
 	if (child_pid != 0)
 		node->pid = child_pid;
-
-	#ifdef DEBUG
-	#include <stdio.h>
-	printf("read fd: %d of node: %s with pid: %d\n", node->cmd.in, node->cmd.cmd, node->pid);
-	#endif
-
 	if (child_pid == 0)
 	{
-		#ifdef DEBUG
-		#include <stdio.h>
-		printf("1st check read fd: %d of node: %s\n", node->cmd.in, node->cmd.cmd);
-		#endif
-
 		dup_io(node);
-
-		#ifdef DEBUG
-		#include <stdio.h>
-		printf("2nd check read fd: %d of node: %s\n", node->cmd.in, node->cmd.cmd);
-		#endif
-
 		run_node(ms, node);
 	}
 }

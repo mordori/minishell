@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/05 10:48:47 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:38:28 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,29 +80,12 @@ static void	wait_pids(t_minishell *ms)
 	node = ms->node;
 	while (node)
 	{
-
-		#ifdef DEBUG
-		#include <stdio.h>
-		printf("at pid %d\n", node->pid);
-		#endif
-
 		if (node->pid)
 		{
-			#ifdef DEBUG
-			#include <stdio.h>
-			printf("trying to reap pid %d\n", node->pid);
-			#endif
-
 			waitpid(node->pid, &status, 0);
 		}
 		if (WIFEXITED(status))
 		{
-
-			#ifdef DEBUG
-			#include <stdio.h>
-			printf("succesfully reaped pid %d\n", node->pid);
-			#endif
-
 			if (ms->state.exit_status == 0)
 			{
 				ms->state.exit_status = WEXITSTATUS(status);

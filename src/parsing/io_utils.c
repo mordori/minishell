@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 05:06:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/05 10:49:06 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:42:21 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,6 @@
 
 void	dup_io(t_node *node)
 {
-
-	#ifdef DEBUG
-	#include <stdio.h>
-	printf("1st check inside dup_io, read fd: %d, write fd: %d, of node: %s with pid: %d\n", node->cmd.in, node->cmd.out, node->cmd.cmd, node->pid);
-	#endif
-
 	if (node->cmd.in != STDIN_FILENO)
 	{
 		dup2(node->cmd.in, STDIN_FILENO);
@@ -32,12 +26,6 @@ void	dup_io(t_node *node)
 		dup2(node->cmd.out, STDOUT_FILENO);
 		close (node->cmd.out);
 	}
-
-	#ifdef DEBUG
-	#include <stdio.h>
-	printf("2nd check inside dup_io, read fd: %d of node: %s with pid: %d\n", node->cmd.in, node->cmd.cmd, node->pid);
-	#endif
-
 }
 
 ssize_t	try_write(t_minishell *ms, int fd, char *src)
