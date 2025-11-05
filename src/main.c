@@ -113,8 +113,7 @@ static inline void	run(t_minishell *ms)
 		if (!tokens || !parse_tokens(ms, tokens))
 			continue ;
 		expand_variables(ms);
-		setup_io(ms, ms->node);
-		if (ms->node->cmd.args && !g_signal)
+		if (setup_io(ms, ms->node) && ms->node->cmd.args && !g_signal)
 			executor(ms);
 		close_fds(ms);
 	}

@@ -22,11 +22,13 @@ static inline int	set_in_file(t_minishell *ms, t_node *node, char *file);
 static inline int	set_out_file(t_minishell *ms, t_node *node, t_redir *r);
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof);
 
-void	setup_io(t_minishell *ms, t_node *node)
+bool	setup_io(t_minishell *ms, t_node *node)
 {
 	t_redir	*r;
 	t_list	*redirs;
+	bool	status;
 
+	status = true;
 	while (node)
 	{
 		redirs = node->cmd.redirs;
@@ -35,18 +37,27 @@ void	setup_io(t_minishell *ms, t_node *node)
 		while (redirs)
 		{
 			r = (t_redir *)redirs->content;
-			if (r->type == IN)
-				if (set_in_file(ms, node, r->file) == ERROR)
-					break ;
-			if (r->type == HEREDOC)
-				set_in_heredoc(ms, node, r->file);
-			if (r->type == OUT || r->type == OUT_APPEND)
-				if (set_out_file(ms, node, r) == ERROR)
-					break ;
+			if (*r->file == '$' && *(r->file + 1) && (*(r->file + 1) != '$' || *(r->file + 1) != '?'))
+			{
+				status = false;
+				warning(ms, str_join(ms, r->file, ": ambiguous redirect", VOLATILE));
+			}
+			else
+			{
+				if (r->type == IN)
+					if (set_in_file(ms, node, r->file) == ERROR)
+						break ;
+				if (r->type == HEREDOC)
+					set_in_heredoc(ms, node, r->file);
+				if (r->type == OUT || r->type == OUT_APPEND)
+					if (set_out_file(ms, node, r) == ERROR)
+						break ;
+			}
 			redirs = redirs->next;
 		}
 		node = node->next;
 	}
+	return (status);
 }
 
 void	set_pipe(t_minishell *ms, t_node *node)
@@ -79,7 +90,7 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 		close(node->cmd.in);
 	node->cmd.in = try_open(ms, file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
 	is_quoted = ft_strchr(eof, '\"') || ft_strchr(eof, '\'');
-	// eof = remove_quotes(ms, eof);
+	eof = remove_quotes(ms, eof);
 	if (!g_signal)
 	{
 		lines = 0;

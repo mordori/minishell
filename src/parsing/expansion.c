@@ -43,7 +43,6 @@ void	expand_variables(t_minishell *ms)
 static inline void	expand_args(t_minishell *ms, t_node *node, char **raw_args)
 {
 	char	**args;
-	//bool	is_expanded;
 	t_list	*list;
 	size_t	size;
 
@@ -52,14 +51,14 @@ static inline void	expand_args(t_minishell *ms, t_node *node, char **raw_args)
 	while (*args)
 	{
 		expand_str(ms, args, EXPAND_DEFAULT);
-		remove_quotes(ms, *args, &list);
+		split_words(ms, *args, &list);
 		++args;
 	}
 	size = lstsize(list);
 	args = alloc_volatile(ms, (size + 1) * sizeof(char *));
 	while (list)
 	{
-		*args = list->content;
+		*args = remove_quotes(ms, list->content);
 		++args;
 		list = list->next;
 	}
@@ -71,16 +70,23 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 {
 	t_list	*redirs;
 	t_redir	*r;
-	//bool	is_expanded;
+	t_list	*list;
+	char	*raw_file;
 
 	redirs = raw_redirs;
+	list = NULL;
 	while (redirs)
 	{
 		r = (t_redir *)redirs->content;
+		raw_file = r->file;
 		if (r->type != HEREDOC)
 		{
 			expand_str(ms, &r->file, EXPAND_DEFAULT);
-			// r->file = remove_quotes(ms, r->file);
+			split_words(ms, r->file, &list);
+			if (list)
+				r->file = remove_quotes(ms, list->content);
+			if (!list || list->next)
+				r->file = raw_file;
 		}
 		redirs = redirs->next;
 	}
@@ -138,10 +144,8 @@ bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 	return (true);
 }
 
-char	*remove_quotes(t_minishell *ms, char *src, t_list **list)
+void	split_words(t_minishell *ms, char *src, t_list **list)
 {
-	char	*result;
-	char	*ptr;
 	size_t	i;
 	size_t	k;
 	char	*ifs;
@@ -176,11 +180,6 @@ char	*remove_quotes(t_minishell *ms, char *src, t_list **list)
 		k = 0;
 		while (i)
 		{
-			if (*(src - i) && (*(src - i) == '\'' || *(src - i) == '\"'))
-			{
-				--i;
-				continue ;
-			}
 			new[k] = *(src - i);
 			++k;
 			--i;
@@ -189,7 +188,13 @@ char	*remove_quotes(t_minishell *ms, char *src, t_list **list)
 		while (*src && is_whitespace(src, ifs))
 			++src;
 	}
+}
 
+char	*remove_quotes(t_minishell *ms, char *src)
+{
+	char	*result;
+	char	*ptr;
+	size_t	i;
 
 	ptr = find_quote(src);
 	if (!ptr)
