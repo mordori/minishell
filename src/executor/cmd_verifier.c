@@ -6,17 +6,32 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:23:27 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/03 16:06:40 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/05 12:35:26 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "verifier_utils.h"
 
+static int			verifier(t_minishell *ms, t_node *node);
 static t_builtin	verify_builtin(char *cmd);
 static char			*verify_extern(t_minishell *ms, char *cmd_name);
 
 int	command_verification(t_minishell *ms, t_node *node)
+{
+	int		status;
+
+	status = verifier(ms, node);
+	if (status == ERROR_CMD_NOTFOUND)
+	{
+		errno = 0;
+		warning(ms, str_join(\
+ms, node->cmd.args[0], ": command not found", VOLATILE));
+	}
+	return (status);
+}
+
+static int	verifier(t_minishell *ms, t_node *node)
 {
 	t_cmd		*cmd;
 	char		*cmd_name;
@@ -24,18 +39,15 @@ int	command_verification(t_minishell *ms, t_node *node)
 	if (node)
 	{
 		cmd = &node->cmd;
+		if (cmd->args[0] == NULL)
+			return (ERROR_CMD_NOTFOUND);
 		cmd_name = cmd->args[0];
 		cmd->builtin = verify_builtin(cmd_name);
 		if (!cmd->builtin)
 		{
 			cmd->cmd = verify_extern(ms, cmd_name);
 			if (!cmd->cmd)
-			{
-				errno = 0;
-				warning(ms, str_join(\
-ms, cmd->args[0], ": command not found", VOLATILE));
 				return (ERROR_CMD_NOTFOUND);
-			}
 		}
 		else
 			cmd->cmd = cmd->args[0];

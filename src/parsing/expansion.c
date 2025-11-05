@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/29 00:48:54 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/05 12:14:49 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,11 @@ bool	expand(t_minishell *ms, char **str, char **result, char *quote, t_expand_mo
 		return (false);
 	}
 	if (**str == '?')
+	{
+		if (g_signal)
+			ms->state.exit_status = 127 + g_signal;
 		*result = str_join(ms, *result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
+	}
 	else if (**str == '$')
 		*result = str_join(ms, *result, uint_to_str(ms, (unsigned int)getpid()), VOLATILE);
 	else if (**str == '\"' || **str == '\'')
