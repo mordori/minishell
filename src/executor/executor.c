@@ -6,26 +6,25 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/04 15:06:21 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/05 10:48:47 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-int	executor(t_minishell *ms)
+static void	wait_pids(t_minishell *ms);
+
+void	executor(t_minishell *ms)
 {
 	set_mode(ms);
 	if (ms->state.mode == SIMPLE)
 	{
-		if (execute_simple(ms))
-			return (ERROR_GENERAL);
+		ms->state.exit_status = execute_simple(ms);
 	}
 	else if (ms->state.mode == PIPELINE)
 	{
-		if (execute_pipeline(ms))
-			return (ERROR_PIPELINE);
+		ms->state.exit_status = execute_pipeline(ms);
 	}
-	return (SUCCESS);
 }
 
 int	execute_simple(t_minishell *ms)
@@ -53,7 +52,7 @@ int	execute_simple(t_minishell *ms)
 		if (WIFEXITED(status))
 			ms->state.exit_status = WEXITSTATUS(status);
 	}
-	return (SUCCESS);
+	return (ms->state.exit_status);
 }
 
 int	execute_pipeline(t_minishell *ms)
@@ -66,20 +65,14 @@ int	execute_pipeline(t_minishell *ms)
 		if (command_verification(ms, node))
 			return (ERROR_PIPELINE);
 		update_env_lastcmd(ms, node->cmd.cmd, node->cmd.builtin);
-		if (node->cmd.out != ERROR && node->cmd.out != ERROR)
-			ms->state.exit_status = spawn_and_run(ms, node);
-		if (ms->state.exit_status)
-			return (ERROR_PIPELINE);
-		if (!node->next)
-			break ;
+		spawn_and_run(ms, node);
 		node = node->next;
 	}
-	if (wait_pids(ms))
-		warning(ms, NULL);
-	return (SUCCESS);
+	wait_pids(ms);
+	return (ms->state.exit_status);
 }
 
-int	wait_pids(t_minishell *ms)
+static void	wait_pids(t_minishell *ms)
 {
 	int		status;
 	t_node	*node;
@@ -87,10 +80,36 @@ int	wait_pids(t_minishell *ms)
 	node = ms->node;
 	while (node)
 	{
-		waitpid(node->pid, &status, 0);
+
+		#ifdef DEBUG
+		#include <stdio.h>
+		printf("at pid %d\n", node->pid);
+		#endif
+
+		if (node->pid)
+		{
+			#ifdef DEBUG
+			#include <stdio.h>
+			printf("trying to reap pid %d\n", node->pid);
+			#endif
+
+			waitpid(node->pid, &status, 0);
+		}
 		if (WIFEXITED(status))
-			ms->state.exit_status = WEXITSTATUS(status);
+		{
+
+			#ifdef DEBUG
+			#include <stdio.h>
+			printf("succesfully reaped pid %d\n", node->pid);
+			#endif
+
+			if (ms->state.exit_status == 0)
+			{
+				ms->state.exit_status = WEXITSTATUS(status);
+				if (ms->state.exit_status != 0)
+					warning(ms, NULL);
+			}
+		}
 		node = node->next;
 	}
-	return (SUCCESS);
 }

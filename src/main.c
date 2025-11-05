@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/03 18:27:02 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/04 18:46:03 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ static inline void	run(t_minishell *ms)
 	set_prompt_names(ms, &p);
 	while (true)
 	{
+		ms->state.exit_status = 0;
 		g_signal = 0;
 		arena_reset(&ms->pool);
 		store_pwd(ms);
