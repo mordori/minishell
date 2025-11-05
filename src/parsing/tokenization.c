@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:06:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 01:42:01 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:40:55 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static inline size_t	word_length(char const **src)
 	while (**src && **src != '\n')
 	{
 		if (is_space(**src) || is_operator(*src))
-			break;
+			break ;
 		if (cmp_strs(get_quotes(), *src, NULL))
 			march_quoted_word(src, **src, &len);
 		else

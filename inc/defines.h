@@ -187,7 +187,6 @@ struct s_node
 	t_node		*next;
 	t_node		*prev;
 	pid_t		pid;
-	int			pipe_in;
 };
 
 struct s_state
