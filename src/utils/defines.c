@@ -29,7 +29,13 @@ const char	**get_quotes(void)
 const char	**get_unsupported_chars(void)
 {
 	static const char	*characters[] = \
-{"\\", ";", "&&", "&", "||", "*", "(", ")", "{", "}", "~", "#", "`", "!", NULL};
+{">|", ">>|", "\\", ";", "&&", "&", "||", "*", "(", ")", "{", "}", "~", "#", "`", "!", NULL};
 
 	return (characters);
+}
+
+const char	*get_ifs(void)
+{
+	static const char	ifs[] = " \t\n";
+	return (ifs);
 }
