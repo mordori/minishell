@@ -7,3 +7,4 @@ obj/
 libft.a
 minishell
 .config
+minishell_tester/

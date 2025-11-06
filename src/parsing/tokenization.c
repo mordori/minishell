@@ -54,6 +54,8 @@ static inline int	count_words(t_minishell *ms, char const *src)
 			++src;
 		if (is_operator(src) || *src == '\n')
 		{
+			if (is_unsupported_char(ms, src))
+				return (ERROR);
 			++count;
 			++src;
 			if (*src && \

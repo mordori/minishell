@@ -51,7 +51,10 @@ bool	setup_io(t_minishell *ms, t_node *node)
 					set_in_heredoc(ms, node, r->file);
 				if (r->type == OUT || r->type == OUT_APPEND)
 					if (set_out_file(ms, node, r) == ERROR)
+					{
+						status = false;
 						break ;
+					}
 			}
 			redirs = redirs->next;
 		}
@@ -84,10 +87,12 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 	char			*line;
 	unsigned int	lines;
 	bool			is_quoted;
+	char			*file;
 
 	if (node->cmd.in > STDOUT_FILENO)
 		close(node->cmd.in);
-	node->cmd.in = try_open(ms, ms->heredoc_file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
+	file = str_join(ms, "/tmp/", ms->heredoc_file, VOLATILE);
+	node->cmd.in = try_open(ms, file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
 	is_quoted = ft_strchr(eof, '\"') || ft_strchr(eof, '\'');
 	eof = remove_quotes(ms, eof);
 	if (!g_signal)
@@ -107,8 +112,8 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 			eof_warning(ms, eof, ms->lineno - lines);
 	}
 	close(node->cmd.in);
-	node->cmd.in = try_open(ms, ms->heredoc_file, O_RDWR, 0);
-	unlink(ms->heredoc_file);
+	node->cmd.in = try_open(ms, file, O_RDWR, 0);
+	unlink(file);
 }
 
 static inline int	set_in_file(t_minishell *ms, t_node *node, char *file)
