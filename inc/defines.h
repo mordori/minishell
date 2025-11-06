@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/04 15:52:56 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/06 18:21:52 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ struct s_redir
 
 struct s_key_value
 {
-	char	*key;
+	char	*k;
 	char	*value;
 	char	*delimiter;
 };

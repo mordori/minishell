@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/05 17:57:00 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/06 18:19:59 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ static inline void	run(t_minishell *ms)
 		expand_variables(ms);
 		setup_io(ms, ms->node);
 		if (g_signal)
-			ms->state.exit_status = 127 + g_signal;
+			ms->state.exit_status = 128 + g_signal;
 		if (ms->node->cmd.args && !g_signal)
 			executor(ms);
 		close_fds(ms);
