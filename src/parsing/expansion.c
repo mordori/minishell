@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/04 22:39:07 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/06 01:39:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,6 @@ static inline bool	expand(t_minishell *ms, char **str, char **result, char *quot
 		*result = str_join(ms, *result, "$", VOLATILE);
 	else if (**str == '?')
 		*result = str_join(ms, *result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
-	else if (**str == '$')
-		*result = str_join(ms, *result, uint_to_str(ms, (unsigned int)getpid()), VOLATILE);
 	else if (**str == '\"' || **str == '\'')
 		join_var_name(ms, str, result, mode);
 	else

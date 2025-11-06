@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/05 17:35:09 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/06 02:19:20 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ void	sig_handler(int signum)
  */
 static inline void	initialize(t_minishell *ms, char **envp)
 {
+	int	fd;
+
 	ft_memset(ms, 0, sizeof(*ms));
 	ms->vars = arena_create(ms, MEMORY_VARS, PERSISTENT);
 	ms->pool = arena_create(ms, MEMORY, VOLATILE);
@@ -83,6 +85,11 @@ static inline void	initialize(t_minishell *ms, char **envp)
 		rl_event_hook = rl_event;
 	}
 	signal(SIGINT, sig_handler);
+	fd = try_open(ms, "/proc/sys/kernel/random/uuid", O_RDONLY, 0);
+	if (fd == ERROR)
+		error_exit(ms, "could not open /proc/sys/kernel/random/uuid");
+	try_read(ms, fd, ms->heredoc_file, UUID_CHARS);
+	close(fd);
 }
 
 /**
