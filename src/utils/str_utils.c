@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/25 06:10:00 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/03 18:28:03 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,24 +79,50 @@ char	*uint_to_str(t_minishell *ms, unsigned int n)
 	return (str);
 }
 
-char	**str_split(t_minishell *ms, char const *s, char c)
+char	**str_split(t_minishell *ms, const char *src, char c)
 {
 	char	**strs;
 	size_t	words;
 	size_t	word_len;
 	size_t	i;
 
-	if (!s)
+	if (!src)
 		return (NULL);
-	words = ft_count_words(s, c);
+	words = ft_count_words(src, c);
 	strs = alloc_volatile(ms, (words + 1) * sizeof(char *));
 	i = 0;
 	while (words--)
 	{
-		word_len = ft_word_len(&s, c);
-		strs[i] = str_sub(ms, VOLATILE, s - word_len, word_len);
+		word_len = ft_word_len(&src, c);
+		strs[i] = str_sub(ms, VOLATILE, src - word_len, word_len);
 		++i;
 	}
 	strs[i] = NULL;
 	return (strs);
+}
+
+bool	is_whitespace(const char *src, const char *set)
+{
+	if (!*set)
+		set = get_ifs();
+	while (*set)
+	{
+		if (*src == *set)
+			return (true);
+		++set;
+	}
+	return (false);
+}
+
+char	*str_trim(char *src, const char *set)
+{
+	size_t	len;
+
+	while (is_whitespace(src, set))
+		++src;
+	len = ft_strlen(src);
+	while (is_whitespace(src + len, set))
+		--len;
+	src[len] = 0;
+	return (src);
 }

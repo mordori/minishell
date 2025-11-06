@@ -33,3 +33,9 @@ const char	**get_unsupported_chars(void)
 
 	return (characters);
 }
+
+const char	*get_ifs(void)
+{
+	static const char	ifs[] = " \t\n";
+	return (ifs);
+}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   defines.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/04 15:52:56 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/06 02:08:39 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,14 @@
 # ifndef MAX_HEREDOC
 #  define MAX_HEREDOC			16
 # endif
+# ifndef UUID_CHARS
+#  define UUID_CHARS			36
+# endif
 # ifndef PATH_MAX
 #  define PATH_MAX				4096
 # endif
 # ifndef NAME_MAX
-#  define NAME_MAX			64
+#  define NAME_MAX				64
 # endif
 
 # define RW_RW_RW_				0666
@@ -215,6 +218,7 @@ struct	s_minishell
 	char				pwd[PATH_MAX];
 	t_shell_mode		mode;
 	unsigned int		lineno;
+	char				heredoc_file[UUID_CHARS];
 };
 
 struct s_prompt
@@ -229,5 +233,6 @@ struct s_prompt
 const char	**get_redirections(void);
 const char	**get_quotes(void);
 const char	**get_unsupported_chars(void);
+const char	*get_ifs(void);
 
 #endif

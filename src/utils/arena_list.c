@@ -25,7 +25,7 @@ t_list	*lstnew(t_minishell *ms, void *content)
 	new->next = NULL;
 	return (new);
 }
-
+#include <stdio.h>
 bool	lstadd_back(t_list **lst, t_list *new)
 {
 	t_list	*temp;
@@ -44,9 +44,9 @@ bool	lstadd_back(t_list **lst, t_list *new)
 	return (true);
 }
 
-int	lstsize(t_list *lst)
+size_t	lstsize(t_list *lst)
 {
-	int	len;
+	size_t	len;
 
 	if (!lst)
 		return (false);
