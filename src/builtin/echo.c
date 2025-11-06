@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:12 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/04 17:15:32 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:29:12 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,12 @@ int	echo(t_minishell *ms, t_node *node)
 	fd = node->cmd.out;
 	is_inbetween = false;
 	is_newline_off(node, &i, &is_nl_off);
+
+	#ifdef DEBUG
+	#include <stdio.h>
+	printf("are we in echo?\n");
+	#endif
+
 	while (node->cmd.args[i])
 	{
 		if (is_inbetween)

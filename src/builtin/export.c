@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:25:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/04 12:06:32 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:40:05 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ static void	put_var_into_env(t_minishell *ms, t_node *node)
 	env = ms->state.env;
 	while (node->cmd.args[i])
 	{
-		if (handle_cases(ms, &i, env, &kv) == true)
-			continue ;
-		ft_envadd_back(&env, ft_envnode_new(ms, kv.key, kv.value, VOLATILE));
+		if (handle_cases(ms, &i, env, &kv) == false)
+			ft_envadd_back(&env, \
+ft_envnode_new(ms, kv.key, kv.value, VOLATILE));
 		i++;
 	}
 	ms->state.envp = envll_to_envp(ms, env);

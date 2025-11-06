@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/05 17:38:28 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:51:24 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,7 @@ static void	wait_pids(t_minishell *ms)
 	while (node)
 	{
 		if (node->pid)
-		{
 			waitpid(node->pid, &status, 0);
-		}
 		if (WIFEXITED(status))
 		{
 			if (ms->state.exit_status == 0)

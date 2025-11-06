@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/04 17:15:27 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:33:09 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ int	exec_extern(t_minishell *ms, t_node *node)
 	args = node->cmd.args;
 	envp = ms->state.envp;
 	execve(command, args, envp);
-	ms->state.exit_status = errno;
+	if (errno == -1)
+		ms->state.exit_status = errno;
 	return (ERROR);
 }
 

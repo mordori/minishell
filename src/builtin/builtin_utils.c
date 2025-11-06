@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 12:44:17 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/04 12:06:19 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:38:36 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,11 @@ bool	handle_cases(t_minishell *ms, int *i, t_env *env, t_key_value *kv)
 {
 	parse_export(ms, ms->node->cmd.args[*i], kv);
 	if (!is_valid_key(kv->key, kv->delimiter))
+	{
 		warning(ms, str_join(ms, \
 kv->key, ": not a valid identifier", VOLATILE));
+		return (true);
+	}
 	if (!kv->delimiter)
 	{
 		ft_envadd_back(&env, ft_envnode_new(ms, kv->key, NULL, VOLATILE));
