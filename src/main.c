@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 14:39:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/07 17:19:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/07 20:25:27 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ static inline void	initialize(t_minishell *ms, char **envp)
 		rl_event_hook = rl_event;
 	}
 	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, sig_handler);
 	fd = try_open(ms, "/proc/sys/kernel/random/uuid", O_RDONLY, 0);
 	if (fd == ERROR)
 		error_exit(ms, "could not open /proc/sys/kernel/random/uuid");
@@ -103,6 +104,7 @@ static inline void	run(t_minishell *ms)
 	char		*line;
 	t_token		**tokens;
 	t_prompt	p;
+	char		*prompt;
 
 	set_prompt_names(ms, &p);
 	while (true)
@@ -110,10 +112,11 @@ static inline void	run(t_minishell *ms)
 		g_signal = 0;
 		arena_reset(&ms->pool);
 		store_pwd(ms);
-		line = get_line(ms, get_prompt(ms, &p));
+		prompt = get_prompt(ms, &p);
+		line = get_line(ms, prompt);
 		if (!line)
 			exi(ms, NULL);
-		if (*line && !g_signal)
+		if (ms->mode == INTERACTIVE && *line && g_signal != SIGINT)
 			add_history(line);
 		ms->node = alloc_volatile(ms, sizeof(t_node));
 		tokens = create_tokens(line, ms);
@@ -124,7 +127,7 @@ static inline void	run(t_minishell *ms)
 		{
 			if (g_signal)
 				ms->state.exit_status = 128 + g_signal;
-			if (ms->node->cmd.args && !g_signal)
+			if (ms->node->cmd.args && g_signal != SIGINT)
 				executor(ms);
 		}
 		close_fds(ms);

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 03:53:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/28 22:04:16 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/07 20:11:18 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ char	*get_line(t_minishell *ms, char *prompt)
 			free(line);
 		if (!dup)
 			error_exit(ms, "dup line failed");
-		++ms->lineno;
+		if (!g_signal)
+			++ms->lineno;
 		return (dup);
 	}
 	return (line);

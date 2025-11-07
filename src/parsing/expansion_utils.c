@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 23:33:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/29 00:48:47 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/07 20:00:27 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,10 @@ void	join_var_name(t_minishell *ms, char **str, char **result, t_expand_mode mod
 
 void	join_var(t_minishell *ms, char **str, char **result, char quote, t_expand_mode mode)
 {
-	size_t	i;
-	char	*val;
-	char	*name;
+	size_t		i;
+	char		*val;
+	char		*name;
+	static char	c[2];
 
 	i = 0;
 	val = NULL;
@@ -54,17 +55,24 @@ void	join_var(t_minishell *ms, char **str, char **result, char quote, t_expand_m
 	{
 		name = str_sub(ms, VOLATILE, *str, i);
 		val = get_env_val(ms, name);
+		c[0] = '\'' - (*val == '\'') * 5;
+		if (*val == '\'' || *val == '\"')
+			*result = str_join(ms, *result, c, VOLATILE);
+		*result = str_join(ms, *result, val, VOLATILE);
+		if (*val == '\'' || *val == '\"')
+			*result = str_join(ms, *result, c, VOLATILE);
+		*str += i - 1;
 	}
 	else if (quote == '\'')
 	{
 		(*str)--;
 		++i;
 		val = str_sub(ms, VOLATILE, *str, i);
+		*result = str_join(ms, *result, val, VOLATILE);
+		*str += i - 1;
 	}
 	if ((*str)[i] == quote)
 		quote = 0;
-	*result = str_join(ms, *result, val, VOLATILE);
-	*str += i - 1;
 }
 
 char	*find_quote(char *str)
