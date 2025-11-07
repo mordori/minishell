@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/06 19:41:18 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/07 14:14:28 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static inline bool	is_valid(t_minishell *ms, const char *a, uint32_t *status)
 		warn_numeric(ms, a);
 		return (false);
 	}
-	if (i > 11)
+	if (i > 19)
 	{
 		warn_numeric(ms, a);
 		return (false);

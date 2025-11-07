@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 12:44:17 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/06 18:21:56 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/07 14:30:31 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ bool	handle_cases(t_minishell *ms, int *i, t_env *env, t_key_value *kv)
 	if (!is_valid_key(kv->k, kv->delimiter))
 	{
 		warning(ms, str_join(ms, kv->k, ": not a valid identifier", VOLATILE));
+		ms->state.exit_status = ERROR_GENERAL;
 		return (true);
 	}
 	if (!kv->delimiter)
