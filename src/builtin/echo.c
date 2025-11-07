@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:12 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/06 17:48:20 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/07 10:57:16 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,20 @@ int	echo(t_minishell *ms, t_node *node)
 
 static void	is_newline_off(t_node *node, int *i, bool *is_nl_off)
 {
+	int			j;
+	char		**args;
+
 	*is_nl_off = false;
-	if (!node->cmd.args[*i])
+	args = node->cmd.args;
+	if (!args[*i])
 		return ;
-	if (ft_strcmp(node->cmd.args[*i], "-n") == 0)
+	while (ft_strncmp(args[*i], "-n", 2) == 0)
 	{
+		j = 2;
+		while (args[*i][j] == 'n')
+			j++;
+		if (args[*i][j] != 'n' && args[*i][j] != '\0')
+			break ;
 		*is_nl_off = true;
 		(*i)++;
 	}
