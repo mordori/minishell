@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:25:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/06 19:47:18 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/07 13:20:33 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ int	expo(t_minishell *ms, t_node *node)
 		put_var_into_env(ms, node);
 		copy_env_to(PERSISTENT, ms);
 	}
+	if (ms->state.exit_status == ERROR_GENERAL)
+		return (ERROR_GENERAL);
 	return (SUCCESS);
 }
 
