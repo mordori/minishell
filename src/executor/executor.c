@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/05 17:38:28 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/07 11:38:39 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@ int	execute_simple(t_minishell *ms)
 	pid_t	child_pid;
 	int		status;
 
-	if (command_verification(ms, ms->node))
-		return (ERROR_CMD_NOTFOUND);
+	status = command_verification(ms, ms->node);
+	if (status)
+		return (status);
 	update_env_lastcmd(ms, ms->node->cmd.cmd, ms->node->cmd.builtin);
 	if (ms->node->cmd.out == ERROR || ms->node->cmd.out == ERROR)
 		return (ERROR);
@@ -81,9 +82,7 @@ static void	wait_pids(t_minishell *ms)
 	while (node)
 	{
 		if (node->pid)
-		{
 			waitpid(node->pid, &status, 0);
-		}
 		if (WIFEXITED(status))
 		{
 			if (ms->state.exit_status == 0)

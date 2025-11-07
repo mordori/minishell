@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:23:27 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/05 17:32:11 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/07 11:52:13 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,19 @@ static char			*verify_extern(t_minishell *ms, char *cmd_name);
 
 int	command_verification(t_minishell *ms, t_node *node)
 {
+	char	*arg;
 	int		status;
 
 	status = verifier(ms, node);
+	arg = node->cmd.args[0];
 	if (status == ERROR_CMD_NOTFOUND)
 	{
 		errno = 0;
-		warning(ms, str_join(\
-ms, node->cmd.args[0], ": command not found", VOLATILE));
+		warning(ms, str_join(ms, arg, ": command not found", VOLATILE));
+	}
+	if (status == ERROR_CMD_CANTEXEC)
+	{
+		warning(ms, arg);
 	}
 	return (status);
 }
@@ -48,6 +53,8 @@ static int	verifier(t_minishell *ms, t_node *node)
 			cmd->cmd = verify_extern(ms, cmd_name);
 			if (!cmd->cmd)
 				return (ERROR_CMD_NOTFOUND);
+			if (access(cmd->cmd, X_OK) == -1)
+				return (ERROR_CMD_CANTEXEC);
 		}
 		else
 			cmd->cmd = cmd->args[0];

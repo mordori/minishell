@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
+<<<<<<< HEAD
+/*   Updated: 2025/11/07 11:05:24 by jvalkama         ###   ########.fr       */
+=======
 /*   Updated: 2025/11/06 02:19:20 by myli-pen         ###   ########.fr       */
+>>>>>>> 8373ef0867881e85594c4bc39a6254f1a853b28f
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +126,7 @@ static inline void	run(t_minishell *ms)
 		if (setup_io(ms, ms->node))
 		{
 			if (g_signal)
-				ms->state.exit_status = 127 + g_signal; //THIS NEEDS CORRECT PLACEMENT SO THAT IT PERSISTS.
+				ms->state.exit_status = 128 + g_signal;
 			if (ms->node->cmd.args && !g_signal)
 				executor(ms);
 		}

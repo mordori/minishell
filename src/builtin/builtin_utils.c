@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 12:44:17 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/04 12:06:19 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/06 18:21:56 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,18 @@ bool	is_pluschar(char *var, char delimiter)
 bool	handle_cases(t_minishell *ms, int *i, t_env *env, t_key_value *kv)
 {
 	parse_export(ms, ms->node->cmd.args[*i], kv);
-	if (!is_valid_key(kv->key, kv->delimiter))
-		warning(ms, str_join(ms, \
-kv->key, ": not a valid identifier", VOLATILE));
+	if (!is_valid_key(kv->k, kv->delimiter))
+	{
+		warning(ms, str_join(ms, kv->k, ": not a valid identifier", VOLATILE));
+		return (true);
+	}
 	if (!kv->delimiter)
 	{
-		ft_envadd_back(&env, ft_envnode_new(ms, kv->key, NULL, VOLATILE));
+		ft_envadd_back(&env, ft_envnode_new(ms, kv->k, NULL, VOLATILE));
 		(*i)++;
 		return (true);
 	}
-	if (handle_specials(ms, \
-ms->node->cmd.args[*i], kv->key, kv->value))
+	if (handle_specials(ms, ms->node->cmd.args[*i], kv->k, kv->value))
 	{
 		(*i)++;
 		return (true);
@@ -56,7 +57,7 @@ static void	parse_export(t_minishell *ms, char *var, t_key_value *kv)
 {
 	kv->value = NULL;
 	kv->delimiter = ft_strchr(var, '=');
-	kv->key = ft_keydup(ms, var, kv->delimiter);
+	kv->k = ft_keydup(ms, var, kv->delimiter);
 	if (!kv->delimiter)
 		return ;
 	kv->value = str_dup(ms, kv->delimiter + 1, VOLATILE);

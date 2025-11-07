@@ -3,15 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
+<<<<<<< HEAD
+/*   Updated: 2025/11/07 11:05:47 by jvalkama         ###   ########.fr       */
+=======
 /*   Updated: 2025/11/04 15:59:58 by myli-pen         ###   ########.fr       */
+>>>>>>> 8373ef0867881e85594c4bc39a6254f1a853b28f
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSER_H
-# define PARSER_H
+#ifndef PARSING_H
+# define PARSING_H
 
 # include <fcntl.h>
 # include <unistd.h>
