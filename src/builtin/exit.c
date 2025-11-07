@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/06 19:41:18 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/07 14:44:40 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,18 @@ int	exi(t_minishell *ms, t_node *node)
 
 	try_write_endl(ms, STDOUT_FILENO, "exit");
 	status = ms->state.exit_status;
-	if (node->cmd.argc > 2)
+	if (node)
 	{
-		warning(ms, "exit: too many arguments");
-		return (ERROR_GENERAL);
-	}
-	if (node->cmd.args[1])
-	{
-		if (is_valid(ms, node->cmd.args[1], &status) == false)
-			status = ERROR_BUILTIN;
+		if (node->cmd.argc > 2)
+		{
+			warning(ms, "exit: too many arguments");
+			return (ERROR_GENERAL);
+		}
+		if (node->cmd.args[1])
+		{
+			if (is_valid(ms, node->cmd.args[1], &status) == false)
+				status = ERROR_BUILTIN;
+		}
 	}
 	clean(ms);
 	exit((char)status);

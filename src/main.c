@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/11/07 11:05:24 by jvalkama         ###   ########.fr       */
-=======
-/*   Updated: 2025/11/06 02:19:20 by myli-pen         ###   ########.fr       */
->>>>>>> 8373ef0867881e85594c4bc39a6254f1a853b28f
+/*   Created: 2025/11/07 14:39:49 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/11/07 17:19:53 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +88,8 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	fd = try_open(ms, "/proc/sys/kernel/random/uuid", O_RDONLY, 0);
 	if (fd == ERROR)
 		error_exit(ms, "could not open /proc/sys/kernel/random/uuid");
-	try_read(ms, fd, ms->heredoc_file, UUID_CHARS);
+	ft_memcpy(ms->heredoc_file, "/tmp/", 5);
+	try_read(ms, fd, ms->heredoc_file + 5, UUID_CHARS);
 	close(fd);
 }
 
