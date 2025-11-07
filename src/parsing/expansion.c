@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/05 17:31:55 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/06 01:39:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,9 @@
 #include <stdio.h>
 #endif
 
-static inline void	expand_args(t_minishell *ms, char **args);
+static inline void	expand_args(t_minishell *ms, t_node *node, char **args);
 static inline void	expand_redirs(t_minishell *ms, t_list *redirs);
+static inline bool	expand(t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode);
 
 void	expand_variables(t_minishell *ms)
 {
@@ -33,61 +34,78 @@ void	expand_variables(t_minishell *ms)
 	while(node)
 	{
 		if (node->cmd.args)
-			expand_args(ms, node->cmd.args);
+			expand_args(ms, node, node->cmd.args);
 		expand_redirs(ms, node->cmd.redirs);
 		node = node->next;
 	}
 }
 
-static inline void	expand_args(t_minishell *ms, char **raw_args)
+static inline void	expand_args(t_minishell *ms, t_node *node, char **raw_args)
 {
 	char	**args;
+	t_list	*list;
+	size_t	size;
 
+	list = NULL;
 	args = raw_args;
 	while (*args)
 	{
 		expand_str(ms, args, EXPAND_DEFAULT);
-		*args = remove_quotes(ms, *args);
+		split_words(ms, *args, &list);
 		++args;
 	}
+	size = lstsize(list);
+	args = alloc_volatile(ms, (size + 1) * sizeof(char *));
+	while (list)
+	{
+		*args = remove_quotes(ms, list->content);
+		++args;
+		list = list->next;
+	}
+	args -= size;
+	node->cmd.args = args;
 }
 
 static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 {
 	t_list	*redirs;
 	t_redir	*r;
+	t_list	*list;
+	char	*raw_file;
 
 	redirs = raw_redirs;
+	list = NULL;
 	while (redirs)
 	{
 		r = (t_redir *)redirs->content;
+		raw_file = r->file;
 		if (r->type != HEREDOC)
 		{
 			expand_str(ms, &r->file, EXPAND_DEFAULT);
-			r->file = remove_quotes(ms, r->file);
+			split_words(ms, r->file, &list);
+			if (list)
+				r->file = remove_quotes(ms, list->content);
+			if (!list || list->next)
+				r->file = raw_file;
 		}
 		redirs = redirs->next;
 	}
 }
 
-bool	expand(t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode)
+static inline bool	expand(t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode)
 {
 	char	*ptr;
 
-	if (!**str)
-	{
+	if (!**str || (*quote && **str == *quote))
 		*result = str_join(ms, *result, "$", VOLATILE);
-		return (false);
-	}
-	if (**str == '?')
+	else if (**str == '?')
 		*result = str_join(ms, *result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
-	else if (**str == '$')
-		*result = str_join(ms, *result, uint_to_str(ms, (unsigned int)getpid()), VOLATILE);
 	else if (**str == '\"' || **str == '\'')
 		join_var_name(ms, str, result, mode);
 	else
 		join_var(ms, str, result, *quote, mode);
-	++(*str);
+	if (**str && !(*quote && **str == *quote))
+		++(*str);
 	ptr = ft_strchr(*str, '$');
 	if (!ptr)
 		return (false);
@@ -98,7 +116,7 @@ bool	expand(t_minishell *ms, char **str, char **result, char *quote, t_expand_mo
 	return (true);
 }
 
-void	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
+bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 {
 	char	*str;
 	char	*result;
@@ -107,7 +125,7 @@ void	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 
 	str = ft_strchr(*src, '$');
 	if (!str)
-		return ;
+		return (false);
 	i = str - *src;
 	result = alloc_volatile(ms, i + 1);
 	ft_memcpy(result, *src, i);
@@ -121,6 +139,53 @@ void	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 	}
 	result = str_join(ms, result, str, VOLATILE);
 	*src = result;
+	return (true);
+}
+
+void	split_words(t_minishell *ms, char *src, t_list **list)
+{
+	size_t	i;
+	size_t	k;
+	char	*ifs;
+	char	quote;
+	char	*new;
+
+	ifs = get_env_val(ms, "IFS");
+	src = str_trim(src, ifs);
+	while (*src)
+	{
+		i = 0;
+		while (*src && !is_whitespace(src, ifs))
+		{
+			if (*src == '\'' || *src == '\"')
+			{
+				quote = *src++;
+				++i;
+				while (*src && *src != quote)
+				{
+					++i;
+					++src;
+				}
+				quote = 0;
+			}
+			else
+			{
+				++i;
+				++src;
+			}
+		}
+		new = alloc_volatile(ms, i + 1);
+		k = 0;
+		while (i)
+		{
+			new[k] = *(src - i);
+			++k;
+			--i;
+		}
+		lstadd_back(list, lstnew(ms, new));
+		while (*src && is_whitespace(src, ifs))
+			++src;
+	}
 }
 
 char	*remove_quotes(t_minishell *ms, char *src)

@@ -26,7 +26,7 @@ void	join_var_name(t_minishell *ms, char **str, char **result, t_expand_mode mod
 
 	c = **str;
 	i = 0;
-	while ((*str)[i] != c)
+	while ((*str)[i + 1] != c)
 		++i;
 	name = str_sub(ms, VOLATILE, (*str), i + 1);
 	if (mode == EXPAND_HEREDOC)
@@ -43,6 +43,11 @@ void	join_var(t_minishell *ms, char **str, char **result, char quote, t_expand_m
 
 	i = 0;
 	val = NULL;
+	if ((*str)[i] == '$')
+	{
+		*result = str_join(ms, *result, "$$", VOLATILE);
+		return ;
+	}
 	while ((*str)[i] && (*str)[i] != quote && (*str)[i] != '$')
 		++i;
 	if (!quote || quote == '\"' || mode == EXPAND_HEREDOC)
