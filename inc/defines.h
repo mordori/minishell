@@ -212,7 +212,6 @@ struct	s_minishell
 {
 	t_arena				vars;
 	t_arena				pool;
-	char				*line;
 	t_state				state;
 	t_node				*node;
 	char				pwd[PATH_MAX];

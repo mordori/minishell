@@ -39,7 +39,7 @@ void	expand_variables(t_minishell *ms)
 		node = node->next;
 	}
 }
-
+#include <stdio.h>
 static inline void	expand_args(t_minishell *ms, t_node *node, char **raw_args)
 {
 	char	**args;
@@ -51,6 +51,7 @@ static inline void	expand_args(t_minishell *ms, t_node *node, char **raw_args)
 	while (*args)
 	{
 		expand_str(ms, args, EXPAND_DEFAULT);
+		printf("args %s\n", *args);
 		split_words(ms, *args, &list);
 		++args;
 	}
@@ -95,6 +96,7 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 static inline bool	expand(t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode)
 {
 	char	*ptr;
+	char	*q;
 
 	if (!**str || (*quote && **str == *quote))
 		*result = str_join(ms, *result, "$", VOLATILE);
@@ -103,15 +105,14 @@ static inline bool	expand(t_minishell *ms, char **str, char **result, char *quot
 	else if (**str == '\"' || **str == '\'')
 		join_var_name(ms, str, result, mode);
 	else
-		join_var(ms, str, result, *quote, mode);
-	if (**str && !(*quote && **str == *quote))
-		++(*str);
+		join_var(ms, str, result, quote, mode);
 	ptr = ft_strchr(*str, '$');
 	if (!ptr)
 		return (false);
+	q = find_quote(*str + 1);
+	if (q && q < ptr)
+		*quote = *q;
 	*result = str_join(ms, *result, str_sub(ms, VOLATILE, *str, ptr - *str), VOLATILE);
-	if (!*quote && ptr - *str > 2 && (*(ptr - 1) == '\'' || *(ptr - 1) == '\"'))
-		*quote = *(ptr - 1);
 	*str = ptr;
 	return (true);
 }
@@ -122,6 +123,7 @@ bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 	char	*result;
 	size_t	i;
 	char	quote;
+	char	*q;
 
 	str = ft_strchr(*src, '$');
 	if (!str)
@@ -130,8 +132,9 @@ bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 	result = alloc_volatile(ms, i + 1);
 	ft_memcpy(result, *src, i);
 	quote = 0;
-	if (i > 0 && ((*src)[i - 1] == '\'' || (*src)[i - 1] == '\"'))
-		quote = (*src)[i - 1];
+	q = find_quote(*src);
+	if (q && q < str)
+		quote = *q;
 	while (str++)
 	{
 		if (!expand(ms, &str, &result, &quote, mode))
@@ -159,14 +162,17 @@ void	split_words(t_minishell *ms, char *src, t_list **list)
 		{
 			if (*src == '\'' || *src == '\"')
 			{
-				quote = *src++;
+				quote = *src;
 				++i;
+				++src;
 				while (*src && *src != quote)
 				{
 					++i;
 					++src;
 				}
 				quote = 0;
+				++i;
+				++src;
 			}
 			else
 			{

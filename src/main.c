@@ -41,7 +41,8 @@ int	main(int argc, char *argv[], char **envp)
 	unsigned int	status;
 
 	(void)argv;
-	startup();
+	if (isatty(STDIN_FILENO))
+		startup();
 #ifdef DEBUG
 printf("\033[1;33m[DEBUG]\033[0m\n");
 #endif
@@ -104,7 +105,6 @@ static inline void	run(t_minishell *ms)
 	char		*line;
 	t_token		**tokens;
 	t_prompt	p;
-	char		*prompt;
 
 	set_prompt_names(ms, &p);
 	while (true)
@@ -112,11 +112,12 @@ static inline void	run(t_minishell *ms)
 		g_signal = 0;
 		arena_reset(&ms->pool);
 		store_pwd(ms);
-		prompt = get_prompt(ms, &p);
-		line = get_line(ms, prompt);
+		line = get_line(ms, get_prompt(ms, &p));
+		if (g_signal == SIGINT)
+			continue ;
 		if (!line)
 			exi(ms, NULL);
-		if (ms->mode == INTERACTIVE && *line && g_signal != SIGINT)
+		if (ms->mode == INTERACTIVE && *line && *line != ' ')
 			add_history(line);
 		ms->node = alloc_volatile(ms, sizeof(t_node));
 		tokens = create_tokens(line, ms);
@@ -127,7 +128,7 @@ static inline void	run(t_minishell *ms)
 		{
 			if (g_signal)
 				ms->state.exit_status = 128 + g_signal;
-			if (ms->node->cmd.args && g_signal != SIGINT)
+			if (ms->node->cmd.args)
 				executor(ms);
 		}
 		close_fds(ms);

@@ -31,6 +31,7 @@ static int	remove_vars(t_minishell *ms, t_node *node)
 	t_env	*env;
 
 	i = 1;
+	env = NULL;
 	while (node->cmd.args[i])
 	{
 		env = ms->state.env;

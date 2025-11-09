@@ -34,8 +34,8 @@ void	join_var_name(t_minishell *ms, char **str, char **result, t_expand_mode mod
 	*result = str_join(ms, *result, name, VOLATILE);
 	*str += i;
 }
-
-void	join_var(t_minishell *ms, char **str, char **result, char quote, t_expand_mode mode)
+#include <stdio.h>
+void	join_var(t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode)
 {
 	size_t		i;
 	char		*val;
@@ -46,12 +46,16 @@ void	join_var(t_minishell *ms, char **str, char **result, char quote, t_expand_m
 	val = NULL;
 	if ((*str)[i] == '$')
 	{
-		*result = str_join(ms, *result, "$$", VOLATILE);
+		*result = str_join(ms, *result, "$", VOLATILE);
 		return ;
 	}
-	while ((*str)[i] && (*str)[i] != quote && (*str)[i] != '$')
+	while ((*str)[i] && (*str)[i] != *quote && (*str)[i] != '$' && !is_whitespace(*str + i, ""))
+	{
+		if (!*quote && ((*str)[i] == '\"' || (*str)[i] == '\''))
+			break;
 		++i;
-	if (!quote || quote == '\"' || mode == EXPAND_HEREDOC)
+	}
+	if (!*quote || *quote == '\"' || mode == EXPAND_HEREDOC)
 	{
 		name = str_sub(ms, VOLATILE, *str, i);
 		val = get_env_val(ms, name);
@@ -61,18 +65,17 @@ void	join_var(t_minishell *ms, char **str, char **result, char quote, t_expand_m
 		*result = str_join(ms, *result, val, VOLATILE);
 		if (*val == '\'' || *val == '\"')
 			*result = str_join(ms, *result, c, VOLATILE);
-		*str += i - 1;
 	}
-	else if (quote == '\'')
+	else if (*quote == '\'')
 	{
 		(*str)--;
 		++i;
 		val = str_sub(ms, VOLATILE, *str, i);
 		*result = str_join(ms, *result, val, VOLATILE);
-		*str += i - 1;
 	}
-	if ((*str)[i] == quote)
-		quote = 0;
+	*str += i;
+	if (*quote && **str == *quote)
+		*quote = 0;
 }
 
 char	*find_quote(char *str)

@@ -13,8 +13,9 @@
 #include "get_next_line.h"
 #include "str_utils.h"
 #include "libft_str.h"
+#include "libft_mem.h"
 #include "errors.h"
-#include "try_syscall.h"
+#include "io.h"
 
 static inline char	*join_lines(t_minishell *ms, char *line, const char *buf);
 static inline char	*extract_line(t_minishell *ms, const char *buf);
@@ -40,7 +41,7 @@ int	get_next_line(t_minishell *ms, int fd, char **line)
 		return (GNL_ERROR);
 	while (!ft_strchr(buf, '\n'))
 	{
-		bytes = try_read(ms, fd, buf);
+		bytes = try_read(ms, fd, buf, BUFFER_SIZE);
 		if (bytes == 0)
 			break ;
 		buf[bytes] = '\0';
@@ -65,7 +66,9 @@ static inline char	*join_lines(t_minishell *ms, char *line, const char *buf)
 	new_line = extract_line(ms, buf);
 	if (!new_line)
 		return (NULL);
-	return (str_join(ms, line, new_line));
+	if (!line)
+		return (new_line);
+	return (str_join(ms, line, new_line, VOLATILE));
 }
 
 /**
@@ -78,7 +81,7 @@ static inline char	*extract_line(t_minishell *ms, const char *buf)
 {
 	if (!buf[0])
 		return (NULL);
-	return (str_sub(ms, buf, 0, linelen(buf)));
+	return (str_sub(ms, VOLATILE, buf, linelen(buf)));
 }
 
 /**

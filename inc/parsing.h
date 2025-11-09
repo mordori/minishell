@@ -37,7 +37,7 @@ void	split_words(t_minishell *ms, char *src, t_list **list);
 void	join_var_name(\
 t_minishell *ms, char **str, char **result, t_expand_mode mode);
 void	join_var(\
-t_minishell *ms, char **str, char **result, char quote, t_expand_mode mode);
+t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode);
 char	*find_quote(char *str);
 
 #endif

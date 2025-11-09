@@ -28,12 +28,11 @@ char	*get_line(t_minishell *ms, char *prompt)
 	char	*line;
 	char	*dup;
 
-	if (ms->mode == AUTONOMOUS)
-		get_next_line(ms, STDIN_FILENO, &line);
 	if (ms->mode == INTERACTIVE)
-		line = readline(prompt);
-	if (line)
 	{
+		line = readline(prompt);
+		if (!line)
+			return (NULL);
 		dup = dup_line(ms, line, 0, ft_strlen(line));
 		if (ms->mode == INTERACTIVE)
 			free(line);
@@ -43,6 +42,8 @@ char	*get_line(t_minishell *ms, char *prompt)
 			++ms->lineno;
 		return (dup);
 	}
+	++ms->lineno;
+	get_next_line(ms, STDIN_FILENO, &line);
 	return (line);
 }
 
@@ -129,7 +130,7 @@ void	set_prompt_names(t_minishell *ms, t_prompt *p)
 	ssize_t	len;
 	char	*name;
 
-	name = get_env_val(ms, "LOGNAME");
+	name = get_env_val(ms, "USER");
 	if (!*name)
 		name = "user";
 	ft_memcpy(p->logname, name, NAME_MAX);
