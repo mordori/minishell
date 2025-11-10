@@ -18,22 +18,8 @@
 #include "arena.h"
 #include "env.h"
 
-void	join_var_name(t_minishell *ms, char **str, char **result, t_expand_mode mode)
-{
-	size_t	i;
-	char	c;
-	char	*name;
+static inline char	*trim_spaces(t_minishell *ms, char *src);
 
-	c = **str;
-	i = 0;
-	while ((*str)[i + 1] != c)
-		++i;
-	name = str_sub(ms, VOLATILE, (*str), i + 1);
-	if (mode == EXPAND_HEREDOC)
-		*result = str_join(ms, *result, "$", VOLATILE);
-	*result = str_join(ms, *result, name, VOLATILE);
-	*str += i;
-}
 #include <stdio.h>
 void	join_var(t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode)
 {
@@ -49,21 +35,23 @@ void	join_var(t_minishell *ms, char **str, char **result, char *quote, t_expand_
 		*result = str_join(ms, *result, "$", VOLATILE);
 		return ;
 	}
-	while ((*str)[i] && (*str)[i] != *quote && (*str)[i] != '$' && !is_whitespace(*str + i, ""))
+	while ((*str)[i] && (*str)[i] != '$' && !is_whitespace(*str + i, ""))
 	{
-		if (!*quote && ((*str)[i] == '\"' || (*str)[i] == '\''))
+		if (((*str)[i] == '\"' || (*str)[i] == '\''))
 			break;
 		++i;
 	}
-	if (!*quote || *quote == '\"' || mode == EXPAND_HEREDOC)
+	if (!quote || *quote == '\"' || mode == EXPAND_HEREDOC)
 	{
 		name = str_sub(ms, VOLATILE, *str, i);
 		val = get_env_val(ms, name);
 		c[0] = '\'' - (*val == '\'') * 5;
-		if (*val == '\'' || *val == '\"')
+		if (mode != EXPAND_HEREDOC && (*val == '\'' || *val == '\"'))
 			*result = str_join(ms, *result, c, VOLATILE);
+		if (!quote && mode != EXPAND_HEREDOC)
+			val = trim_spaces(ms, val);
 		*result = str_join(ms, *result, val, VOLATILE);
-		if (*val == '\'' || *val == '\"')
+		if (mode != EXPAND_HEREDOC && (*val == '\'' || *val == '\"'))
 			*result = str_join(ms, *result, c, VOLATILE);
 	}
 	else if (*quote == '\'')
@@ -74,8 +62,6 @@ void	join_var(t_minishell *ms, char **str, char **result, char *quote, t_expand_
 		*result = str_join(ms, *result, val, VOLATILE);
 	}
 	*str += i;
-	if (*quote && **str == *quote)
-		*quote = 0;
 }
 
 char	*find_quote(char *str)
@@ -91,4 +77,43 @@ char	*find_quote(char *str)
 		return (single_q);
 	else
 		return (double_q);
+}
+
+static inline char	*trim_spaces(t_minishell *ms, char *src)
+{
+	char	*result;
+	char	*ifs;
+	char	*str;
+	size_t	i;
+
+	str = src;
+	ifs = get_env_val(ms, "IFS");
+	i = 0;
+	while (*str)
+	{
+		while (is_whitespace(str, ifs))
+			++str;
+		if (i > 0 && is_whitespace(str - 1, ifs))
+			++i;
+		if (*str)
+		{
+			++i;
+			++str;
+		}
+	}
+	result = alloc_volatile(ms, i + 1);
+	i = 0;
+	while (*src)
+	{
+		while (is_whitespace(src, ifs))
+			++src;
+		if (i > 0 && is_whitespace(src - 1, ifs))
+			result[i++] = *(src - 1);
+		if (*src)
+		{
+			result[i++] = *src;
+			++src;
+		}
+	}
+	return (result);
 }

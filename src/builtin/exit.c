@@ -23,7 +23,8 @@ int	exi(t_minishell *ms, t_node *node)
 {
 	uint32_t	status;
 
-	try_write_endl(ms, STDOUT_FILENO, "exit");
+	if (ms->mode == INTERACTIVE)
+		try_write_endl(ms, STDOUT_FILENO, "exit");
 	status = ms->state.exit_status;
 	if (node)
 	{

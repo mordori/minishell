@@ -44,6 +44,8 @@ char	*get_line(t_minishell *ms, char *prompt)
 	}
 	++ms->lineno;
 	get_next_line(ms, STDIN_FILENO, &line);
+	if (line)
+		line[ft_strlen(line) - 1] = 0;
 	return (line);
 }
 
