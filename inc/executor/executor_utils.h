@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:28:15 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/10/27 12:48:04 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/07 15:22:26 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,6 @@
 # include "errors.h"
 # include <dirent.h>
 # include <sys/stat.h>
-
-# define MS         0
-# define DIR_PATH   1
-# define CMD_NAME   2
-# define DIRSTREAM  3
 
 void	set_mode(t_minishell *ms);
 void	check_fds(int *fds);

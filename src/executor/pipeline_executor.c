@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipeline_executor.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/05 17:51:21 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/07 15:25:18 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

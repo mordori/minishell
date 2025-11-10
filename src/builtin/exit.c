@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/10 16:42:13 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/10 18:02:40 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static inline bool	is_valid(t_minishell *ms, const char *a, uint32_t *status)
 		warn_numeric(ms, a);
 		return (false);
 	}
-	if (i > 11)
+	if (i > 19)
 	{
 		warn_numeric(ms, a);
 		return (false);

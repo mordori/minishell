@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 12:44:17 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/10 17:24:09 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/10 18:02:34 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ bool	handle_cases(t_minishell *ms, int *i, t_env *env, t_key_value *kv)
 	if (!is_valid_key(kv->k, kv->delimiter))
 	{
 		warning(ms, str_join(ms, kv->k, ": not a valid identifier", VOLATILE));
-		ms->state.exit_status = 1;
+		ms->state.exit_status = ERROR_GENERAL;
 		return (true);
 	}
 	if (!kv->delimiter)
