@@ -54,5 +54,5 @@ void	try_fork(t_minishell *ms, pid_t *child_pid)
 {
 	*child_pid = fork();
 	if (*child_pid == -1)
-		error_exit(ms, "");
+		error_exit(ms, "fork failed");
 }

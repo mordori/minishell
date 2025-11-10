@@ -14,7 +14,7 @@
 
 void	node_scrollback(t_minishell *ms)
 {
-	while (ms->node->prev)
+	while (ms->node && ms->node->prev)
 		ms->node = ms->node->prev;
 }
 

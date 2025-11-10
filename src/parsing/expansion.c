@@ -83,8 +83,8 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 				r->file = remove_quotes(ms, list->content);
 			if (!list || list->next)
 				r->file = raw_file;
+			list = list->next;
 		}
-		list = list->next;
 		redirs = redirs->next;
 	}
 }

@@ -12,14 +12,14 @@
 
 #include "cleanup.h"
 #include "arena.h"
+#include "executor_utils.h"
 
 void	close_fds(t_minishell *ms)
 {
 	t_node	*node;
 
+	node_scrollback(ms);
 	node = ms->node;
-	// while (node->prev)
-	// 	node = node->prev;
 	while (node)
 	{
 		if (node->cmd.in > STDOUT_FILENO)
