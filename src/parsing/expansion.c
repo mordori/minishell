@@ -105,15 +105,18 @@ static inline bool	expand(t_minishell *ms, char **str, char **result, char **quo
 	ptr = ft_strchr(*str, '$');
 	if (!ptr)
 		return (false);
+	i = 0;
 	if (*quote && *quote < ptr)
+	{
 		*quote = NULL;
+		i = 1;
+	}
 	if (!*quote)
 	{
-		*quote = find_quote(*str + 1);
-		if (*quote && *quote > *str)
+		*quote = find_quote(*str + i);
+		if (*quote && *quote > ptr)
 			*quote = NULL;
-		i = 0;
-		while (*quote && &((*quote)[i]) < *str)
+		while (*quote && &((*quote)[i]) < ptr)
 		{
 			++i;
 			if (**quote == (*quote)[i])
@@ -123,7 +126,7 @@ static inline bool	expand(t_minishell *ms, char **str, char **result, char **quo
 			}
 		}
 	}
-	if (*quote && *quote > *str)
+	if (*quote && *quote > ptr)
 		*quote = NULL;
 	*result = str_join(ms, *result, str_sub(ms, VOLATILE, *str, ptr - *str), VOLATILE);
 	*str = ptr;

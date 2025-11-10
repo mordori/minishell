@@ -103,16 +103,17 @@ static inline char	*trim_spaces(t_minishell *ms, char *src)
 	}
 	result = alloc_volatile(ms, i + 1);
 	i = 0;
-	while (*src)
+	str = src;
+	while (*str)
 	{
-		while (is_whitespace(src, ifs))
-			++src;
-		if (i > 0 && is_whitespace(src - 1, ifs))
-			result[i++] = *(src - 1);
-		if (*src)
+		while (is_whitespace(str, ifs))
+			++str;
+		if (str > src && is_whitespace(str - 1, ifs))
+			result[i++] = *(str - 1);
+		if (*str)
 		{
-			result[i++] = *src;
-			++src;
+			result[i++] = *str;
+			++str;
 		}
 	}
 	return (result);
