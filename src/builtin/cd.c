@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/05 17:37:37 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/07 14:14:24 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ int	cd(t_minishell *ms, t_node *node)
 	if (!path)
 	{
 		if (get_home(ms, &path))
-			return (ERROR_BUILTIN);
+			return (ERROR_GENERAL);
 	}
 	if (*path == '-')
 	{
 		if (get_opwd(ms, node, &path, is_1st_cd))
-			return (ERROR_BUILTIN);
+			return (ERROR_GENERAL);
 	}
 	update_opwd(ms);
 	if (chdir(path))
@@ -48,7 +48,7 @@ static int	get_opwd(t_minishell *ms, t_node *node, char **path, bool is_1st)
 	if (*(*path + 1) == '-')
 	{
 		if (get_home(ms, path))
-			return (ERROR_BUILTIN);
+			return (ERROR_GENERAL);
 		return (SUCCESS);
 	}
 	*path = NULL;
@@ -62,7 +62,7 @@ static int	get_opwd(t_minishell *ms, t_node *node, char **path, bool is_1st)
 	if (!*path)
 	{
 		warning(ms, "cd: OLDPWD not set");
-		return (ERROR_BUILTIN);
+		return (ERROR_GENERAL);
 	}
 	try_write_endl(ms, node->cmd.out, *path);
 	return (SUCCESS);
@@ -97,7 +97,7 @@ static int	get_home(t_minishell *ms, char **path)
 	if (!envll_findkey(&ms->state, "HOME"))
 	{
 		warning(ms, "cd: HOME not set");
-		return (ERROR_BUILTIN);
+		return (ERROR_GENERAL);
 	}
 	*path = envll_findkey(&ms->state, "HOME")->value;
 	return (SUCCESS);

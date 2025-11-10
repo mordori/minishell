@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:23:27 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/07 11:52:13 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/07 15:25:43 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	command_verification(t_minishell *ms, t_node *node)
 	}
 	return (status);
 }
+
 
 static int	verifier(t_minishell *ms, t_node *node)
 {

@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 12:40:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/07 11:37:54 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/07 15:26:00 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,45 +14,44 @@
 #include "verifier_utils.h"
 
 static char	*gen_fullpath(t_minishell *ms, char *dirpath, char *filename);
-static bool	fmatch(struct stat *b, struct dirent **f, char **p, void **meta);
+static bool	fmatch(struct stat *b, struct dirent **f, void **meta, char **p);
 
-char	*scan_directory(t_minishell *ms, char *directory, char *cmd_name)
+void	scan_dir(t_minishell *ms, char *dir, char *cmd_name, char **found)
 {
 	DIR				*dirstream;
 	struct dirent	*file;
 	struct stat		buffer;
-	char			*full_path;
 	void			*metadata[4];
 
-	full_path = NULL;
 	file = NULL;
 	metadata[MS] = ms;
-	metadata[DIR_PATH] = directory;
+	metadata[DIR_PATH] = dir;
 	metadata[CMD_NAME] = cmd_name;
 	ft_memset(&buffer, 0, sizeof(buffer));
-	dirstream = opendir(directory);
+	dirstream = opendir(dir);
 	if (!dirstream)
-		return (NULL);
+		return ;
 	metadata[DIRSTREAM] = dirstream;
 	file = readdir(dirstream);
 	while (file)
 	{
-		if (fmatch(&buffer, &file, &full_path, metadata))
-			return (full_path);
+		if (fmatch(&buffer, &file, metadata, found))
+			break ;
 	}
 	closedir(dirstream);
-	return (NULL);
 }
 
-static bool	fmatch(struct stat *b, struct dirent **f, char **p, void **meta)
+static bool	fmatch(struct stat *b, struct dirent **f, void **meta, char **p)
 {
-	*p = gen_fullpath(meta[MS], meta[DIR_PATH], (*f)->d_name);
-	stat(*p, b);
+	char			*full_path;
+
+	full_path = gen_fullpath(meta[MS], meta[DIR_PATH], (*f)->d_name);
+	stat(full_path, b);
 	if ((b->st_mode & S_IFMT) == S_IFREG)
 	{
 		if (ft_strcmp((*f)->d_name, meta[CMD_NAME]) == 0)
 		{
-			closedir(meta[DIRSTREAM]);
+			*p = full_path;
 			return (true);
 		}
 	}
@@ -93,12 +92,17 @@ char	*environ_verif(t_minishell *ms, char *path, char *cmd_name)
 
 	i = 0;
 	dir_list = str_split(ms, path, ':');
+	full_path = NULL;
 	while (dir_list[i])
 	{
-		full_path = scan_directory(ms, dir_list[i], cmd_name);
+		scan_dir(ms, dir_list[i], cmd_name, &full_path);
 		if (full_path)
-			return (full_path);
+		{
+			if (access(full_path, X_OK) == 0)
+				return (full_path);
+			ms->state.exit_status = ERROR_CMD_CANTEXEC;
+		}
 		i++;
 	}
-	return (NULL);
+	return (full_path);
 }
