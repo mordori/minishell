@@ -17,7 +17,8 @@ void	run_node(t_minishell *ms, t_node *node)
 {
 	if (node->cmd.builtin)
 	{
-		if (exec_builtin(ms, node))
+		ms->state.exit_status = exec_builtin(ms, node);
+		if (ms->state.exit_status)
 			error_exit(ms, NULL);
 		clean(ms);
 		exit(0);

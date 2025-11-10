@@ -40,19 +40,15 @@ int	execute_simple(t_minishell *ms)
 		return (ERROR);
 	if (ms->node->cmd.builtin)
 		return (exec_builtin(ms, ms->node));
-	else
+	try_fork(ms, &child_pid);
+	if (child_pid == 0)
 	{
-		try_fork(ms, &child_pid);
-		if (child_pid == 0)
-		{
-			dup_io(ms->node);
-			if (exec_extern(ms, ms->node))
-				error_exit(ms, NULL);
-		}
-		waitpid(child_pid, &status, 0);
-		if (WIFEXITED(status))
-			ms->state.exit_status = WEXITSTATUS(status);
+		dup_io(ms->node);
+		exec_extern(ms, ms->node);
 	}
+	waitpid(child_pid, &status, 0);
+	if (WIFEXITED(status))
+		ms->state.exit_status = WEXITSTATUS(status);
 	return (ms->state.exit_status);
 }
 
@@ -63,10 +59,8 @@ int	execute_pipeline(t_minishell *ms)
 	node = ms->node;
 	while (node)
 	{
-		if (command_verification(ms, node))
-			return (ERROR_PIPELINE);
-		update_env_lastcmd(ms, node->cmd.cmd, node->cmd.builtin);
 		spawn_and_run(ms, node);
+		update_env_lastcmd(ms, node->cmd.cmd, node->cmd.builtin);
 		node = node->next;
 	}
 	wait_pids(ms);
@@ -81,15 +75,17 @@ static void	wait_pids(t_minishell *ms)
 	node = ms->node;
 	while (node)
 	{
-		if (node->pid)
-			waitpid(node->pid, &status, 0);
-		if (WIFEXITED(status))
+		if (node->pid > 0)
 		{
-			if (ms->state.exit_status == 0)
+			waitpid(node->pid, &status, 0);
+			if (WIFEXITED(status))
 			{
-				ms->state.exit_status = WEXITSTATUS(status);
-				if (ms->state.exit_status != 0)
-					warning(ms, NULL);
+				if (ms->state.exit_status == 0)
+				{
+					ms->state.exit_status = WEXITSTATUS(status);
+					if (ms->state.exit_status != 0)
+						warning(ms, NULL);
+				}
 			}
 		}
 		node = node->next;

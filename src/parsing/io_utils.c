@@ -18,13 +18,30 @@ void	dup_io(t_node *node)
 {
 	if (node->cmd.in != STDIN_FILENO)
 	{
+
+	#ifdef DEBUG
+	#include <stdio.h>
+	printf("cmd in: %d\n", node->cmd.in);
+	#endif
+
 		dup2(node->cmd.in, STDIN_FILENO);
 		close (node->cmd.in);
 	}
 	if (node->cmd.out != STDOUT_FILENO)
 	{
+
+	#ifdef DEBUG
+	#include <stdio.h>
+	printf("cmd out: %d\n", node->cmd.out);
+	#endif
+
 		dup2(node->cmd.out, STDOUT_FILENO);
 		close (node->cmd.out);
+
+	#ifdef DEBUG
+	#include <stdio.h>
+	printf("stdout: %d\n", STDOUT_FILENO);
+	#endif
 	}
 }
 
