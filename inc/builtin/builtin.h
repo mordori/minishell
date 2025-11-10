@@ -20,6 +20,7 @@
 # include "errors.h"
 # include "str_utils.h"
 # include "libft_str.h"
+# include "io.h"
 # include <stdio.h>
 # include <stdlib.h>
 

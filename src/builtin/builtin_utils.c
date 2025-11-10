@@ -31,9 +31,9 @@ bool	is_pluschar(char *var, char delimiter)
 	return (is_pluschar);
 }
 
-bool	handle_cases(t_minishell *ms, int *i, t_env *env, t_key_value *kv)
+bool	handle_cases(t_minishell *ms, int i, t_env *env, t_key_value *kv)
 {
-	parse_export(ms, ms->node->cmd.args[*i], kv);
+	parse_export(ms, ms->node->cmd.args[i], kv);
 	if (!is_valid_key(kv->k, kv->delimiter))
 	{
 		warning(ms, str_join(ms, kv->k, ": not a valid identifier", VOLATILE));
@@ -43,12 +43,10 @@ bool	handle_cases(t_minishell *ms, int *i, t_env *env, t_key_value *kv)
 	if (!kv->delimiter)
 	{
 		ft_envadd_back(&env, ft_envnode_new(ms, kv->k, NULL, VOLATILE));
-		(*i)++;
 		return (true);
 	}
-	if (handle_specials(ms, ms->node->cmd.args[*i], kv->k, kv->value))
+	if (handle_specials(ms, ms->node->cmd.args[i], kv->k, kv->value))
 	{
-		(*i)++;
 		return (true);
 	}
 	return (false);

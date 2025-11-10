@@ -12,37 +12,37 @@
 
 #include "builtin.h"
 
-static int	remove_vars(t_minishell *ms, t_node *node);
+static int	remove_vars(t_minishell *ms, t_env *env, t_node *node);
 static void	remove_node(t_minishell *ms, t_env *env);
 
 int	unse(t_minishell *ms, t_node *node)
 {
 	copy_env_to(VOLATILE, ms);
 	arena_reset(&ms->vars);
-	remove_vars(ms, node);
+	remove_vars(ms, ms->state.env, node);
 	copy_env_to(PERSISTENT, ms);
 	return (SUCCESS);
 }
 
-static int	remove_vars(t_minishell *ms, t_node *node)
+static int	remove_vars(t_minishell *ms, t_env *env, t_node *node)
 {
 	char	*arg;
 	int		i;
-	t_env	*env;
+	t_env	*tmp;
 
 	i = 1;
 	while (node->cmd.args[i])
 	{
-		env = ms->state.env;
+		tmp = env;
 		arg = node->cmd.args[i];
-		while (env)
+		while (tmp)
 		{
-			if (ft_strcmp(arg, env->key) == 0)
+			if (ft_strcmp(arg, tmp->key) == 0)
 			{
-				remove_node(ms, env);
+				remove_node(ms, tmp);
 				break ;
 			}
-			env = env->next;
+			tmp = tmp->next;
 		}
 		i++;
 	}
