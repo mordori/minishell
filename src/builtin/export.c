@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:25:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/06 19:47:18 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/10 17:24:03 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	expo(t_minishell *ms, t_node *node)
 		put_var_into_env(ms, node);
 		copy_env_to(PERSISTENT, ms);
 	}
-	return (SUCCESS);
+	return (ms->state.exit_status);
 }
 
 static void	display_exporting_vars(t_state *state)

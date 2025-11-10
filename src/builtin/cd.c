@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/05 17:37:37 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/10 17:58:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,11 @@ int	cd(t_minishell *ms, t_node *node)
 	char			*path;
 	static bool		is_1st_cd = true;
 
+	if (node->cmd.args[2])
+	{
+		warning(ms, str_join(ms, "cd: ", "too many arguments", VOLATILE));
+		return (ERROR_GENERAL);
+	}
 	path = node->cmd.args[1];
 	if (!path)
 	{
@@ -72,24 +77,24 @@ static void	update_opwd(t_minishell *ms)
 {
 	t_env		*oldpwd;
 	char		*current_pwd;
+	char		buf[PATH_MAX];
 
-	current_pwd = getcwd(NULL, 0);
+	current_pwd = getcwd(buf, sizeof(buf));
 	oldpwd = envll_findkey(&ms->state, "OLDPWD");
 	if (oldpwd)
 		replace_value(oldpwd, str_dup(ms, current_pwd, PERSISTENT));
-	free(current_pwd);
 }
 
 static void	update_pwd(t_minishell *ms)
 {
 	t_env		*pwdvar;
 	char		*pwd;
+	char		buf[PATH_MAX];
 
-	pwd = getcwd(NULL, 0);
+	pwd = getcwd(buf, sizeof(buf));
 	pwdvar = envll_findkey(&ms->state, "PWD");
 	if (pwdvar)
 		replace_value(pwdvar, str_dup(ms, pwd, PERSISTENT));
-	free(pwd);
 }
 
 static int	get_home(t_minishell *ms, char **path)

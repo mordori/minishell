@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 12:44:17 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/06 18:21:56 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/10 17:24:09 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ bool	handle_cases(t_minishell *ms, int *i, t_env *env, t_key_value *kv)
 	if (!is_valid_key(kv->k, kv->delimiter))
 	{
 		warning(ms, str_join(ms, kv->k, ": not a valid identifier", VOLATILE));
+		ms->state.exit_status = 1;
 		return (true);
 	}
 	if (!kv->delimiter)

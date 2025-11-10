@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_processor.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/06 18:08:44 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/10 17:19:44 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,9 @@ int	exec_extern(t_minishell *ms, t_node *node)
 	command = node->cmd.cmd;
 	args = node->cmd.args;
 	envp = ms->state.envp;
-	if (execve(command, args, envp) == -1)
-		ms->state.exit_status = errno;
+	execve(command, args, envp);
+	// if (execve(command, args, envp) == -1)
+		// ms->state.exit_status = errno;        <----- this needs to be inveestigated
 	return (ERROR);
 }
 

@@ -22,6 +22,7 @@ echo 20. ""$VAR""$VAR""
 echo 21. "$VAR$VAR"
 echo 22. '$VAR$VAR'
 echo 23. ''$VAR''$VAR''
+echo 24. "$VAR""$VAR""$VAR"
 echo
 export VAR='"   A   B   "'
 echo 1a. $VAR
@@ -47,6 +48,7 @@ echo 20a. ""$VAR""$VAR""
 echo 21a. "$VAR$VAR"
 echo 22a. '$VAR$VAR'
 echo 23a. ''$VAR''$VAR''
+echo 24a. "$VAR""$VAR""$VAR"
 echo
 export VAR="'   A   B   '"
 echo 1b. $VAR
@@ -72,7 +74,9 @@ echo 20b. ""$VAR""$VAR""
 echo 21b. "$VAR$VAR"
 echo 22b. '$VAR$VAR'
 echo 23b. ''$VAR''$VAR''
+echo 24b. "$VAR""$VAR""$VAR"
 echo
 echo 1c. $?
 echo 2c. $"$?"
 echo 3c. "$"$?
+echo 4c. "  $  "
