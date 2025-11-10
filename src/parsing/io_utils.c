@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   io_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 05:06:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/05 17:48:36 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/07 17:26:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,26 +40,19 @@ ssize_t	try_write(t_minishell *ms, int fd, char *src)
 	len = (ssize_t)ulen;
 	bytes = write(fd, src, len);
 	if (bytes != len)
+	{
+		close(fd);
 		error_exit(ms, NULL);
+	}
 	return (bytes);
 }
 
 ssize_t	try_write_endl(t_minishell *ms, int fd, char *src)
 {
 	ssize_t	bytes;
-	ssize_t	len;
-	size_t	ulen;
 
-	ulen = ft_strlen(src);
-	if (ulen > LONG_MAX)
-		error_exit(ms, "write src is longer than LONG_MAX");
-	len = (ssize_t)ulen;
-	bytes = write(fd, src, len);
-	if (bytes != len)
-		error_exit(ms, NULL);
-	bytes = write(fd, "\n", 1);
-	if (bytes != 1)
-		error_exit(ms, NULL);
+	bytes = try_write(ms, fd, src);
+	bytes += try_write(ms, fd, "\n");
 	return (bytes);
 }
 
@@ -79,6 +72,9 @@ ssize_t	try_read(t_minishell *ms, int fd, char *buf, size_t n_bytes)
 
 	bytes = read(fd, buf, n_bytes);
 	if (bytes == ERROR)
+	{
+		close(fd);
 		error_exit(ms, "readline/write failed");
+	}
 	return (bytes);
 }

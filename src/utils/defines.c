@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   defines.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 21:46:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/06 15:50:39 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/07 17:49:39 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ const char	**get_quotes(void)
 const char	**get_unsupported_chars(void)
 {
 	static const char	*characters[] = \
-{">|", ">>|", "\\", ";", "&&", "&", "||", "*", "(", ")", "{", "}", "~", "#", "`", "!", NULL};
+{">|", ">>|", "<<<", "\\", ";", "&&", "&", "||", "*", "(", ")", "{", "}", "~", \
+"#", "`", "!", NULL};
 
 	return (characters);
 }

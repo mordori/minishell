@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
 /*   Updated: 2025/11/07 12:42:18 by jvalkama         ###   ########.fr       */
@@ -34,10 +34,8 @@ bool	is_unsupported_char(t_minishell *ms, const char *src);
 bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode);
 char	*remove_quotes(t_minishell *ms, char *src);
 void	split_words(t_minishell *ms, char *src, t_list **list);
-void	join_var_name(\
-t_minishell *ms, char **str, char **result, t_expand_mode mode);
 void	join_var(\
-t_minishell *ms, char **str, char **result, char quote, t_expand_mode mode);
+t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode);
 char	*find_quote(char *str);
 
 #endif

@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
 /*   Updated: 2025/11/07 12:41:28 by jvalkama         ###   ########.fr       */
@@ -41,7 +41,8 @@ int	main(int argc, char *argv[], char **envp)
 	unsigned int	status;
 
 	(void)argv;
-	startup();
+	if (isatty(STDIN_FILENO))
+		startup();
 #ifdef DEBUG
 printf("\033[1;33m[DEBUG]\033[0m\n");
 #endif
@@ -85,10 +86,12 @@ static inline void	initialize(t_minishell *ms, char **envp)
 		rl_event_hook = rl_event;
 	}
 	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, sig_handler);
 	fd = try_open(ms, "/proc/sys/kernel/random/uuid", O_RDONLY, 0);
 	if (fd == ERROR)
 		error_exit(ms, "could not open /proc/sys/kernel/random/uuid");
-	try_read(ms, fd, ms->heredoc_file, UUID_CHARS);
+	ft_memcpy(ms->heredoc_file, "/tmp/", 5);
+	try_read(ms, fd, ms->heredoc_file + 5, UUID_CHARS);
 	close(fd);
 }
 
@@ -110,9 +113,11 @@ static inline void	run(t_minishell *ms)
 		arena_reset(&ms->pool);
 		store_pwd(ms);
 		line = get_line(ms, get_prompt(ms, &p));
+		if (g_signal == SIGINT)
+			continue ;
 		if (!line)
 			exi(ms, NULL);
-		if (*line && !g_signal)
+		if (ms->mode == INTERACTIVE && *line && *line != ' ')
 			add_history(line);
 		ms->node = alloc_volatile(ms, sizeof(t_node));
 		tokens = create_tokens(line, ms);
@@ -123,7 +128,7 @@ static inline void	run(t_minishell *ms)
 		{
 			if (g_signal)
 				ms->state.exit_status = 128 + g_signal;
-			if (ms->node->cmd.args && !g_signal)
+			if (ms->node->cmd.args)
 				executor(ms);
 		}
 		close_fds(ms);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   defines.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/07 11:55:04 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/07 17:09:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,13 +212,12 @@ struct	s_minishell
 {
 	t_arena				vars;
 	t_arena				pool;
-	char				*line;
 	t_state				state;
 	t_node				*node;
 	char				pwd[PATH_MAX];
 	t_shell_mode		mode;
 	unsigned int		lineno;
-	char				heredoc_file[UUID_CHARS];
+	char				heredoc_file[UUID_CHARS + 5];
 };
 
 struct s_prompt

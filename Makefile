@@ -67,7 +67,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
 				expansion_utils.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				arena_list.c arena_utils.c arena.c cleanup.c defines.c \
-				errors.c str_utils.c line_utils.c)
+				errors.c str_utils.c line_utils.c get_next_line.c)
 OBJS		:=$(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)%.o, $(SRCS))
 DEPS		:=$(patsubst $(DIR_OBJ)%.o, $(DIR_DEP)%.d, $(OBJS))
 
