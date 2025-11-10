@@ -45,7 +45,7 @@ static int	verifier(t_minishell *ms, t_node *node)
 	if (node)
 	{
 		cmd = &node->cmd;
-		if (cmd->args[0] == NULL)
+		if (cmd->args == NULL)
 			return (ERROR_CMD_NOTFOUND);
 		cmd_name = cmd->args[0];
 		cmd->builtin = verify_builtin(cmd_name);

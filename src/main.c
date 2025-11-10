@@ -128,15 +128,11 @@ static inline void	run(t_minishell *ms)
 		if (!tokens || !parse_tokens(ms, tokens))
 			continue ;
 		expand_variables(ms);
-		if (setup_io(ms, ms->node))
-		{
-			if (g_signal)
-				ms->state.exit_status = 128 + g_signal;
-			if (ms->node->cmd.args)
-				executor(ms);
-		}
-		else
-			ms->state.exit_status = ERROR_GENERAL;
+		setup_io(ms, ms->node);
+		if (g_signal)
+			ms->state.exit_status = 128 + g_signal;
+		if (ms->node->cmd.args)
+			executor(ms);
 		close_fds(ms);
 	}
 }

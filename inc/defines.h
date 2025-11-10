@@ -195,7 +195,7 @@ struct s_node
 struct s_state
 {
 	t_mode			mode;
-	unsigned int	exit_status;
+	uint8_t			exit_status;
 	t_env			*env;
 	char			**envp;
 };

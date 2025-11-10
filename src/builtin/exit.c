@@ -17,11 +17,11 @@
 
 static inline bool	is_numbers(const char *str, int *i);
 static inline void	warn_numeric(t_minishell *ms, const char *arg);
-static inline bool	is_valid(t_minishell *ms, const char *a, uint32_t *status);
+static inline bool	is_valid(t_minishell *ms, const char *a, uint8_t *status);
 
 int	exi(t_minishell *ms, t_node *node)
 {
-	uint32_t	status;
+	uint8_t	status;
 
 	// if (ms->mode == INTERACTIVE)
 		try_write_endl(ms, STDOUT_FILENO, "exit");
@@ -40,10 +40,10 @@ int	exi(t_minishell *ms, t_node *node)
 		}
 	}
 	clean(ms);
-	exit(status);
+	exit((uint8_t)status);
 }
 
-static inline bool	is_valid(t_minishell *ms, const char *a, uint32_t *status)
+static inline bool	is_valid(t_minishell *ms, const char *a, uint8_t *status)
 {
 	int		i;
 
@@ -59,7 +59,7 @@ static inline bool	is_valid(t_minishell *ms, const char *a, uint32_t *status)
 		return (false);
 	}
 	else
-		*status = ft_atouint32_t_base(a, "0123456789");
+		*status = (uint8_t)ft_atouint32_t_base(a, "0123456789");
 	return (true);
 }
 

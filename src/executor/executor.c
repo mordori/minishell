@@ -19,6 +19,11 @@ void	executor(t_minishell *ms)
 	set_mode(ms);
 	if (ms->state.mode == SIMPLE)
 	{
+		if (ms->node->cmd.in == ERROR)
+		{
+			ms->state.exit_status = ERROR_GENERAL;
+			return ;
+		}
 		ms->state.exit_status = execute_simple(ms);
 	}
 	else if (ms->state.mode == PIPELINE)
@@ -59,8 +64,13 @@ int	execute_pipeline(t_minishell *ms)
 	node = ms->node;
 	while (node)
 	{
-		spawn_and_run(ms, node);
-		update_env_lastcmd(ms, node->cmd.cmd, node->cmd.builtin);
+		if (node->cmd.in == ERROR)
+			ms->state.exit_status = ERROR_GENERAL;
+		else if (node->cmd.args)
+		{
+			spawn_and_run(ms, node);
+			update_env_lastcmd(ms, node->cmd.cmd, node->cmd.builtin);
+		}
 		node = node->next;
 	}
 	wait_pids(ms);
@@ -79,14 +89,7 @@ static void	wait_pids(t_minishell *ms)
 		{
 			waitpid(node->pid, &status, 0);
 			if (WIFEXITED(status))
-			{
-				if (ms->state.exit_status == 0)
-				{
-					ms->state.exit_status = WEXITSTATUS(status);
-					if (ms->state.exit_status != 0)
-						warning(ms, NULL);
-				}
-			}
+				ms->state.exit_status = WEXITSTATUS(status);
 		}
 		node = node->next;
 	}

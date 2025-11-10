@@ -18,17 +18,15 @@
 #include "line_utils.h"
 #include "parsing.h"
 
-static inline int		set_in_file(t_minishell *ms, t_node *node, char *file);
-static inline int		set_out_file(t_minishell *ms, t_node *node, t_redir *r);
+static inline int	set_in_file(t_minishell *ms, t_node *node, char *file);
+static inline int	set_out_file(t_minishell *ms, t_node *node, t_redir *r);
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof);
 
-bool	setup_io(t_minishell *ms, t_node *node)
+void	setup_io(t_minishell *ms, t_node *node)
 {
 	t_redir	*r;
 	t_list	*redirs;
-	bool	status;
 
-	status = true;
 	while (node)
 	{
 		redirs = node->cmd.redirs;
@@ -40,34 +38,29 @@ bool	setup_io(t_minishell *ms, t_node *node)
 			if (*r->file == \
 '$' && *(r->file + 1) && (*(r->file + 1) != '$' || *(r->file + 1) != '?'))
 			{
-				status = false;
 				warning(\
 ms, str_join(ms, r->file, ": ambiguous redirect", VOLATILE));
+				if (r->type == IN)
+					node->cmd.in = ERROR;
+				if (r->type == OUT)
+					node->cmd.out = ERROR;
+				break;
 			}
 			else
 			{
 				if (r->type == IN)
 					if (set_in_file(ms, node, r->file) == ERROR)
-					{
-						status = false;
-						break ;
-					}
+						break;
 				if (r->type == HEREDOC)
 					set_in_heredoc(ms, node, r->file);
 				if (r->type == OUT || r->type == OUT_APPEND)
-				{
 					if (set_out_file(ms, node, r) == ERROR)
-					{
-						status = false;
-						break ;
-					}
-				}
+						break;
 			}
 			redirs = redirs->next;
 		}
 		node = node->next;
 	}
-	return (status);
 }
 
 void	set_pipe(t_minishell *ms, t_node *node)

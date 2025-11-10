@@ -84,6 +84,7 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 			if (!list || list->next)
 				r->file = raw_file;
 		}
+		list = list->next;
 		redirs = redirs->next;
 	}
 }
