@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/07 12:41:28 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:03:26 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ int	main(int argc, char *argv[], char **envp)
 	(void)argv;
 	if (isatty(STDIN_FILENO))
 		startup();
+	else
+		errno = 0;
 #ifdef DEBUG
 printf("\033[1;33m[DEBUG]\033[0m\n");
 #endif
@@ -85,6 +87,8 @@ static inline void	initialize(t_minishell *ms, char **envp)
 		rl_catch_signals = 0;
 		rl_event_hook = rl_event;
 	}
+	else
+		errno = 0;
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
 	fd = try_open(ms, "/proc/sys/kernel/random/uuid", O_RDONLY, 0);
@@ -131,6 +135,8 @@ static inline void	run(t_minishell *ms)
 			if (ms->node->cmd.args)
 				executor(ms);
 		}
+		else
+			ms->state.exit_status = ERROR_GENERAL;
 		close_fds(ms);
 	}
 }

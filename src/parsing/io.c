@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/07 17:17:45 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/10 18:59:53 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,10 @@ ms, str_join(ms, r->file, ": ambiguous redirect", VOLATILE));
 			{
 				if (r->type == IN)
 					if (set_in_file(ms, node, r->file) == ERROR)
+					{
+						status = false;
 						break ;
+					}
 				if (r->type == HEREDOC)
 					set_in_heredoc(ms, node, r->file);
 				if (r->type == OUT || r->type == OUT_APPEND)

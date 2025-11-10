@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/25 04:39:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/10 17:49:36 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ void	warning(t_minishell *ms, char *src)
 	msg = "undefined source";
 	if (src)
 		msg = src;
-	try_write(ms, STDERR_FILENO, "\033[1;33m");
+	if (ms->mode == INTERACTIVE)
+		try_write(ms, STDERR_FILENO, "\033[1;33m");
 	try_write(ms, STDERR_FILENO, "minishell: ");
 	if (errno)
 	{
@@ -94,7 +95,8 @@ void	warning(t_minishell *ms, char *src)
 		try_write(ms, STDERR_FILENO, msg);
 		try_write(ms, STDERR_FILENO, "\n");
 	}
-	try_write(ms, STDERR_FILENO, "\033[0m");
+	if (ms->mode == INTERACTIVE)
+		try_write(ms, STDERR_FILENO, "\033[0m");
 }
 
 /**
