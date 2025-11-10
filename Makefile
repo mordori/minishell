@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+         #
+#    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/11/04 12:29:46 by jvalkama         ###   ########.fr        #
+#    Updated: 2025/11/10 19:16:11 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 

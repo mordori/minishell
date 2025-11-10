@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/10 18:01:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/10 18:22:15 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,14 @@ int	cd(t_minishell *ms, t_node *node)
 			return (ERROR_GENERAL);
 	}
 	update_opwd(ms);
+	is_1st_cd = false;
 	if (chdir(path))
+	{
 		warning(ms, str_join(ms, "cd: ", path, VOLATILE));
+		return (ERROR_GENERAL);
+	}
 	else
 		update_pwd(ms);
-	is_1st_cd = false;
 	return (SUCCESS);
 }
 

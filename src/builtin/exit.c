@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/10 18:02:40 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:02:22 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	exi(t_minishell *ms, t_node *node)
 		}
 	}
 	clean(ms);
-	exit((char)status);
+	exit(status);
 }
 
 static inline bool	is_valid(t_minishell *ms, const char *a, uint32_t *status)

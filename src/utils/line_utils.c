@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 03:53:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/07 20:11:18 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/10 18:43:26 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*get_line(t_minishell *ms, char *prompt)
 	}
 	++ms->lineno;
 	get_next_line(ms, STDIN_FILENO, &line);
-	if (line)
+	if (line && line[ft_strlen(line) - 1] == '\n')
 		line[ft_strlen(line) - 1] = 0;
 	return (line);
 }
