@@ -16,6 +16,6 @@
 # include "builtin.h"
 
 bool	is_pluschar(char *var, char delimiter);
-bool	handle_cases(t_minishell *ms, int *i, t_env *env, t_key_value *kv);
+bool	handle_cases(t_minishell *ms, int i, t_env *env, t_key_value *kv);
 
 #endif
