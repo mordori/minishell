@@ -76,7 +76,7 @@ int	execute_pipeline(t_minishell *ms)
 		}
 		if (in != STDIN_FILENO)
 			close(in);
-		close_fds(node);
+		close_node_fds(node);
 		if (node->next)
 		{
 			close(pipefd[1]);

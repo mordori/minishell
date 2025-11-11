@@ -21,6 +21,6 @@
 
 void	clean(t_minishell *ms);
 void	close_all_fds(t_minishell *ms);
-void	close_fds(t_node *node);
+void	close_node_fds(t_node *node);
 
 #endif

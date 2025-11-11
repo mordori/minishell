@@ -14,7 +14,7 @@
 #include "arena.h"
 #include "executor_utils.h"
 
-void	close_fds(t_node *node)
+void	close_node_fds(t_node *node)
 {
 	if (node->cmd.in != STDIN_FILENO && node->cmd.in != ERROR)
 		close(node->cmd.in);
@@ -30,7 +30,7 @@ void	close_all_fds(t_minishell *ms)
 	node = ms->node;
 	while (node)
 	{
-		close_fds(node);
+		close_node_fds(node);
 		node = node->next;
 	}
 }
