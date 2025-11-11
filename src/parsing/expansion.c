@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/07 20:22:54 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/11 13:17:21 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,13 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 	t_list	*redirs;
 	t_redir	*r;
 	t_list	*list;
-	char	*raw_file;
 
 	redirs = raw_redirs;
 	list = NULL;
 	while (redirs)
 	{
 		r = (t_redir *)redirs->content;
-		raw_file = r->file;
+		r->name = r->file;
 		if (r->type != HEREDOC)
 		{
 			expand_str(ms, &r->file, EXPAND_DEFAULT);
@@ -82,7 +81,7 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 			if (list)
 				r->file = remove_quotes(ms, list->content);
 			if (!list || list->next)
-				r->file = raw_file;
+				r->file = NULL;
 			list = list->next;
 		}
 		redirs = redirs->next;

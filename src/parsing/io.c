@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/10 18:59:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/11 13:17:50 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,10 @@ void	setup_io(t_minishell *ms, t_node *node)
 		while (redirs)
 		{
 			r = (t_redir *)redirs->content;
-			if (*r->file == \
-'$' && *(r->file + 1) && (*(r->file + 1) != '$' || *(r->file + 1) != '?'))
+			if (!r->file)
 			{
 				warning(\
-ms, str_join(ms, r->file, ": ambiguous redirect", VOLATILE));
+ms, str_join(ms, r->name, ": ambiguous redirect", VOLATILE));
 				if (r->type == IN)
 					node->cmd.in = ERROR;
 				if (r->type == OUT)

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/10 19:16:14 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/11 13:15:52 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ struct s_redir
 {
 	t_redir_type	type;
 	char			*file;
+	char			*name;
 	t_redir			*next;
 };
 
