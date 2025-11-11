@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "cleanup.h"
 
 static void	wait_pids(t_minishell *ms);
 
@@ -46,7 +47,7 @@ int	execute_simple(t_minishell *ms)
 	try_fork(ms, &child_pid);
 	if (child_pid == 0)
 	{
-		dup_io(ms->node);
+		dup_redirections(ms, ms->node);
 		run_node(ms, ms->node);
 	}
 	waitpid(child_pid, &status, 0);
@@ -58,21 +59,28 @@ int	execute_simple(t_minishell *ms)
 int	execute_pipeline(t_minishell *ms)
 {
 	t_node	*node;
+	int		pipefd[2];
+	int		in;
 
 	node = ms->node;
+	in = STDIN_FILENO;
 	while (node)
 	{
 		if (node->next)
-			set_pipe(ms, node);
-		node = node->next;
-	}
-	node = ms->node;
-	while (node)
-	{
+			if (pipe(pipefd) == ERROR)
+				error_exit(ms, "pipe failed");
 		if (node->cmd.args)
 		{
-			spawn_and_run(ms, node);
+			spawn_and_run(ms, node, in, pipefd);
 			update_env_lastcmd(ms, node->cmd.cmd, node->cmd.builtin);
+		}
+		if (in != STDIN_FILENO)
+			close(in);
+		close_fds(node);
+		if (node->next)
+		{
+			close(pipefd[1]);
+			in = pipefd[0];
 		}
 		node = node->next;
 	}

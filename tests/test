@@ -1,2 +1,2 @@
-env | sort | grep -v SHLVL | grep -v ^_
 
+echo 123 | echo asd | wc

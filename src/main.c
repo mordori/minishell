@@ -133,7 +133,7 @@ static inline void	run(t_minishell *ms)
 			ms->state.exit_status = 128 + g_signal;
 		if (ms->node->cmd.args)
 			executor(ms);
-		close_fds(ms);
+		close_all_fds(ms);
 	}
 }
 

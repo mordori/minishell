@@ -13,36 +13,37 @@
 #include "executor.h"
 #include "io.h"
 
-void	spawn_and_run(t_minishell *ms, t_node *node)
+void	spawn_and_run(t_minishell *ms, t_node *node, int in, int pipefd[2])
 {
-	pid_t		child_pid;
-	int			status;
-	t_node		*temp;
+	pid_t	child_pid;
+	int		status;
 
 	child_pid = -1;
 	status = command_verification(ms, node);
-	if (node->cmd.in != ERROR && node->cmd.out != ERROR && status == SUCCESS)
+	if (status == SUCCESS)
 		try_fork(ms, &child_pid);
-	if (child_pid != 0)
-	{
-		if (node->cmd.in != STDIN_FILENO)
-			close(node->cmd.in);
-		if (node->cmd.out != STDOUT_FILENO)
-			close(node->cmd.out);
-		node->pid = child_pid;
-	}
+	node->pid = child_pid;
 	if (child_pid == 0)
 	{
-		temp = ms->node;
-		while (temp)
+		if (in != STDIN_FILENO)
 		{
-			if (temp->cmd.in != STDIN_FILENO && temp->cmd.in != node->cmd.in)
-				close(temp->cmd.in);
-			if (temp->cmd.out != STDOUT_FILENO && temp->cmd.out != node->cmd.out)
-				close(temp->cmd.out);
-			temp = temp->next;
+			if (dup2(in, STDIN_FILENO) == ERROR)
+				error_exit(ms, "dup2 in failed");
+			close(in);
 		}
-		dup_io(node);
+		if (node->next)
+		{
+			close(pipefd[0]);
+			if (dup2(pipefd[1], STDOUT_FILENO) == ERROR)
+				error_exit(ms, "dup2 out failed");
+			close(pipefd[1]);
+		}
+		dup_redirections(ms, node);
+		if (node->cmd.in == ERROR || node->cmd.out == ERROR)
+		{
+			clean(ms);
+			exit(EXIT_FAILURE);
+		}
 		run_node(ms, node);
 	}
 }

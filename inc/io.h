@@ -23,11 +23,10 @@
 # include "defines.h"
 
 void	setup_io(t_minishell *ms, t_node *node);
-void	dup_io(t_node *node);
+void	dup_redirections(t_minishell *ms, t_node *node);
 int		try_open(t_minishell *ms, char *file, int o_flag, int p_flag);
 ssize_t	try_write(t_minishell *ms, int fd, char *src);
 ssize_t	try_write_endl(t_minishell *ms, int fd, char *src);
 ssize_t	try_read(t_minishell *ms, int fd, char *buf, size_t n_bytes);
-void	set_pipe(t_minishell *ms, t_node *node);
 
 #endif

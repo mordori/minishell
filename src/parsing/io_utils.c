@@ -14,16 +14,18 @@
 #include "libft_str.h"
 #include "errors.h"
 
-void	dup_io(t_node *node)
+void	dup_redirections(t_minishell *ms, t_node *node)
 {
-	if (node->cmd.in != STDIN_FILENO)
+	if (node->cmd.in != STDIN_FILENO && node->cmd.in != ERROR)
 	{
-		dup2(node->cmd.in, STDIN_FILENO);
+		if (dup2(node->cmd.in, STDIN_FILENO) == ERROR)
+			error_exit(ms, "dup2 redir in failed");
 		close (node->cmd.in);
 	}
-	if (node->cmd.out != STDOUT_FILENO)
+	if (node->cmd.out != STDOUT_FILENO && node->cmd.out != ERROR)
 	{
-		dup2(node->cmd.out, STDOUT_FILENO);
+		if (dup2(node->cmd.out, STDOUT_FILENO) == ERROR)
+			error_exit(ms, "dup2 redir out failed");
 		close (node->cmd.out);
 	}
 }

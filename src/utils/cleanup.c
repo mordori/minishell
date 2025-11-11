@@ -14,7 +14,15 @@
 #include "arena.h"
 #include "executor_utils.h"
 
-void	close_fds(t_minishell *ms)
+void	close_fds(t_node *node)
+{
+	if (node->cmd.in != STDIN_FILENO && node->cmd.in != ERROR)
+		close(node->cmd.in);
+	if (node->cmd.out != STDOUT_FILENO && node->cmd.out != ERROR)
+		close(node->cmd.out);
+}
+
+void	close_all_fds(t_minishell *ms)
 {
 	t_node	*node;
 
@@ -22,10 +30,7 @@ void	close_fds(t_minishell *ms)
 	node = ms->node;
 	while (node)
 	{
-		if (node->cmd.in > STDOUT_FILENO)
-			close(node->cmd.in);
-		if (node->cmd.out > STDOUT_FILENO)
-			close(node->cmd.out);
+		close_fds(node);
 		node = node->next;
 	}
 }
@@ -37,7 +42,7 @@ void	clean(t_minishell *ms)
 {
 	if (!ms)
 		return ;
-	close_fds(ms);
+	close_all_fds(ms);
 	arena_destroy(&ms->pool);
 	arena_destroy(&ms->vars);
 	rl_clear_history();
