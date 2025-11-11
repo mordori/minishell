@@ -19,14 +19,14 @@ void	run_node(t_minishell *ms, t_node *node)
 	{
 		ms->state.exit_status = exec_builtin(ms, node);
 		if (ms->state.exit_status)
-			error_exit(ms, NULL);
+			error_exit(ms, "Builtin exit");
 		clean(ms);
 		exit(0);
 	}
 	else
 	{
 		if (exec_extern(ms, node))
-			error_exit(ms, NULL);
+			error_exit(ms, "External exit");
 	}
 }
 

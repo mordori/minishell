@@ -87,7 +87,7 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 	unsigned int	lines;
 	bool			is_quoted;
 
-	if (node->cmd.in > STDOUT_FILENO)
+	if (node->cmd.in != STDIN_FILENO)
 		close(node->cmd.in);
 	node->cmd.in = \
 try_open(ms, ms->heredoc_file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
@@ -116,7 +116,7 @@ try_open(ms, ms->heredoc_file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
 
 static inline int	set_in_file(t_minishell *ms, t_node *node, char *file)
 {
-	if (node->cmd.in > STDOUT_FILENO)
+	if (node->cmd.in != STDIN_FILENO)
 		close(node->cmd.in);
 	node->cmd.in = try_open(ms, file, O_RDONLY, 0);
 	return (node->cmd.in);
@@ -131,7 +131,7 @@ static inline int	set_out_file(t_minishell *ms, t_node *node, t_redir *r)
 		o_flag |= O_APPEND;
 	if (r->type == OUT)
 		o_flag |= O_TRUNC;
-	if (node->cmd.out > STDOUT_FILENO)
+	if (node->cmd.out != STDOUT_FILENO)
 		close(node->cmd.out);
 	node->cmd.out = try_open(ms, r->file, o_flag, RW_RW_RW_);
 	return (node->cmd.out);

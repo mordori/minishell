@@ -52,6 +52,8 @@ static inline void	expand_args(t_minishell *ms, t_node *node, char **raw_args)
 	}
 	size = lstsize(list);
 	args = alloc_volatile(ms, (size + 1) * sizeof(char *));
+	if (!list)
+		args = NULL;
 	while (list)
 	{
 		*args = remove_quotes(ms, list->content);

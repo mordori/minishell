@@ -21,8 +21,6 @@ void	spawn_and_run(t_minishell *ms, t_node *node)
 
 	child_pid = -1;
 	status = command_verification(ms, node);
-	if (node->next)
-		set_pipe(ms, node);
 	if (node->cmd.in != ERROR && node->cmd.out != ERROR && status == SUCCESS)
 		try_fork(ms, &child_pid);
 	if (child_pid != 0)
@@ -44,8 +42,7 @@ void	spawn_and_run(t_minishell *ms, t_node *node)
 				close(temp->cmd.out);
 			temp = temp->next;
 		}
-		if (!node->cmd.builtin)
-			dup_io(node);
+		dup_io(node);
 		run_node(ms, node);
 	}
 }

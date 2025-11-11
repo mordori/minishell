@@ -21,24 +21,22 @@ int	echo(t_minishell *ms, t_node *node)
 	bool	is_inbetween;
 	bool	is_nl_off;
 	int		i;
-	int		fd;
 
 	i = 1;
-	fd = node->cmd.out;
 	is_inbetween = false;
 	is_newline_off(node, &i, &is_nl_off);
 	while (node->cmd.args[i])
 	{
 		if (is_inbetween)
-			try_write(ms, fd, " ");
+			try_write(ms, STDOUT_FILENO, " ");
 		string = node->cmd.args[i];
-		try_write(ms, fd, string);
+		try_write(ms, STDOUT_FILENO, string);
 		if (!is_inbetween)
 			is_inbetween = true;
 		i++;
 	}
 	if (!is_nl_off)
-		try_write(ms, fd, "\n");
+		try_write(ms, STDOUT_FILENO, "\n");
 	return (SUCCESS);
 }
 

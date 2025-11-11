@@ -1,1 +1,2 @@
-exit 123
+env | sort | grep -v SHLVL | grep -v ^_
+
