@@ -14,34 +14,19 @@
 #include "libft_str.h"
 #include "errors.h"
 
-void	dup_io(t_node *node)
+void	dup_redirections(t_minishell *ms, t_node *node)
 {
-	if (node->cmd.in != STDIN_FILENO)
+	if (node->cmd.in != STDIN_FILENO && node->cmd.in != ERROR)
 	{
-
-	#ifdef DEBUG
-	#include <stdio.h>
-	printf("cmd in: %d\n", node->cmd.in);
-	#endif
-
-		dup2(node->cmd.in, STDIN_FILENO);
+		if (dup2(node->cmd.in, STDIN_FILENO) == ERROR)
+			error_exit(ms, "dup2 redir in failed");
 		close (node->cmd.in);
 	}
-	if (node->cmd.out != STDOUT_FILENO)
+	if (node->cmd.out != STDOUT_FILENO && node->cmd.out != ERROR)
 	{
-
-	#ifdef DEBUG
-	#include <stdio.h>
-	printf("cmd out: %d\n", node->cmd.out);
-	#endif
-
-		dup2(node->cmd.out, STDOUT_FILENO);
+		if (dup2(node->cmd.out, STDOUT_FILENO) == ERROR)
+			error_exit(ms, "dup2 redir out failed");
 		close (node->cmd.out);
-
-	#ifdef DEBUG
-	#include <stdio.h>
-	printf("stdout: %d\n", STDOUT_FILENO);
-	#endif
 	}
 }
 
@@ -59,7 +44,7 @@ ssize_t	try_write(t_minishell *ms, int fd, char *src)
 	if (bytes != len)
 	{
 		close(fd);
-		error_exit(ms, NULL);
+		error_exit(ms, "write failed");
 	}
 	return (bytes);
 }
@@ -91,7 +76,7 @@ ssize_t	try_read(t_minishell *ms, int fd, char *buf, size_t n_bytes)
 	if (bytes == ERROR)
 	{
 		close(fd);
-		error_exit(ms, "readline/write failed");
+		error_exit(ms, "read failed");
 	}
 	return (bytes);
 }

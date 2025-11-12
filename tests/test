@@ -1,1 +1,0 @@
-cat minishell_tester/test_files/infile_big | echo 1

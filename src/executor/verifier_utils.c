@@ -43,7 +43,7 @@ void	scan_dir(t_minishell *ms, char *dir, char *cmd_name, char **found)
 
 static bool	fmatch(struct stat *b, struct dirent **f, void **meta, char **p)
 {
-	char			*full_path;
+	char	*full_path;
 
 	full_path = gen_fullpath(meta[MS], meta[DIR_PATH], (*f)->d_name);
 	stat(full_path, b);

@@ -17,6 +17,7 @@ int	env(t_minishell *ms, t_node *node)
 {
 	t_env	*env;
 
+	(void)node;
 	env = ms->state.env;
 	while (env)
 	{
@@ -24,9 +25,9 @@ int	env(t_minishell *ms, t_node *node)
 		{
 			if (*env->value)
 			{
-				try_write(ms, node->cmd.out, env->key);
-				try_write(ms, node->cmd.out, "=");
-				try_write_endl(ms, node->cmd.out, env->value);
+				try_write(ms, STDOUT_FILENO, env->key);
+				try_write(ms, STDOUT_FILENO, "=");
+				try_write_endl(ms, STDOUT_FILENO, env->value);
 			}
 		}
 		env = env->next;

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/10 18:59:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/11 13:17:50 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,15 @@
 #include "line_utils.h"
 #include "parsing.h"
 
-static inline int		set_in_file(t_minishell *ms, t_node *node, char *file);
-static inline int		set_out_file(t_minishell *ms, t_node *node, t_redir *r);
+static inline int	set_in_file(t_minishell *ms, t_node *node, char *file);
+static inline int	set_out_file(t_minishell *ms, t_node *node, t_redir *r);
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof);
 
-bool	setup_io(t_minishell *ms, t_node *node)
+void	setup_io(t_minishell *ms, t_node *node)
 {
 	t_redir	*r;
 	t_list	*redirs;
-	bool	status;
 
-	status = true;
 	while (node)
 	{
 		redirs = node->cmd.redirs;
@@ -37,55 +35,30 @@ bool	setup_io(t_minishell *ms, t_node *node)
 		while (redirs)
 		{
 			r = (t_redir *)redirs->content;
-			if (*r->file == \
-'$' && *(r->file + 1) && (*(r->file + 1) != '$' || *(r->file + 1) != '?'))
+			if (!r->file)
 			{
-				status = false;
 				warning(\
-ms, str_join(ms, r->file, ": ambiguous redirect", VOLATILE));
+ms, str_join(ms, r->name, ": ambiguous redirect", VOLATILE));
+				if (r->type == IN)
+					node->cmd.in = ERROR;
+				if (r->type == OUT)
+					node->cmd.out = ERROR;
+				break;
 			}
 			else
 			{
 				if (r->type == IN)
 					if (set_in_file(ms, node, r->file) == ERROR)
-					{
-						status = false;
-						break ;
-					}
+						break;
 				if (r->type == HEREDOC)
 					set_in_heredoc(ms, node, r->file);
 				if (r->type == OUT || r->type == OUT_APPEND)
-				{
 					if (set_out_file(ms, node, r) == ERROR)
-					{
-						status = false;
-						break ;
-					}
-				}
+						break;
 			}
 			redirs = redirs->next;
 		}
 		node = node->next;
-	}
-	return (status);
-}
-
-void	set_pipe(t_minishell *ms, t_node *node)
-{
-	int	pipefd[2];
-
-	if (node->next)
-	{
-		if (pipe(pipefd) == ERROR)
-			error_exit(ms, "pipe failed");
-		if (node->next->cmd.in == STDIN_FILENO)
-			node->next->cmd.in = pipefd[0];
-		else
-			close(pipefd[0]);
-		if (node->cmd.out == STDOUT_FILENO)
-			node->cmd.out = pipefd[1];
-		else
-			close(pipefd[1]);
 	}
 }
 
@@ -95,7 +68,7 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 	unsigned int	lines;
 	bool			is_quoted;
 
-	if (node->cmd.in > STDOUT_FILENO)
+	if (node->cmd.in != STDIN_FILENO)
 		close(node->cmd.in);
 	node->cmd.in = \
 try_open(ms, ms->heredoc_file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
@@ -124,7 +97,7 @@ try_open(ms, ms->heredoc_file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
 
 static inline int	set_in_file(t_minishell *ms, t_node *node, char *file)
 {
-	if (node->cmd.in > STDOUT_FILENO)
+	if (node->cmd.in != STDIN_FILENO && node->cmd.in != ERROR)
 		close(node->cmd.in);
 	node->cmd.in = try_open(ms, file, O_RDONLY, 0);
 	return (node->cmd.in);
@@ -139,7 +112,7 @@ static inline int	set_out_file(t_minishell *ms, t_node *node, t_redir *r)
 		o_flag |= O_APPEND;
 	if (r->type == OUT)
 		o_flag |= O_TRUNC;
-	if (node->cmd.out > STDOUT_FILENO)
+	if (node->cmd.out != STDOUT_FILENO && node->cmd.out != ERROR)
 		close(node->cmd.out);
 	node->cmd.out = try_open(ms, r->file, o_flag, RW_RW_RW_);
 	return (node->cmd.out);

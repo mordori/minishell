@@ -1,4 +1,4 @@
-export VAR='"    G  "'
+export VAR='"    G    sdf "'
 cat << eof
 testing without quotes "
 $VAR
@@ -12,7 +12,7 @@ asd"$VAR"
 '$VAR'"$VAR"
 eof
 echo
-export VAR="'    G1  '"
+export VAR="'    G1  sdf '"
 cat << eof
 testing without quotes '
 $VAR
@@ -26,7 +26,7 @@ asd"$VAR"
 '$VAR'"$VAR"
 eof
 echo
-export VAR='"    H  "'
+export VAR='"    H  a "'
 cat << eof""
 testing with double quotes
 $VAR
@@ -40,7 +40,7 @@ asd"$VAR"
 '$VAR'"$VAR"
 eof
 echo
-export VAR='"    I  "'
+export VAR='"    I  a "'
 cat << eof''
 testing with single quotes
 $VAR

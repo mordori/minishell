@@ -31,14 +31,8 @@ static inline void	print_error(char *msg);
  */
 void	error_exit(t_minishell *ms, char *msg)
 {
-	unsigned int	status;
-
-	status = EXIT_FAILURE;
 	if (ms)
-	{
-		status = ms->state.exit_status;
 		clean(ms);
-	}
 	if (msg)
 		print_error(msg);
 	else if (errno)
@@ -46,7 +40,7 @@ void	error_exit(t_minishell *ms, char *msg)
 		perror("minishell");
 		errno = 0;
 	}
-	exit(status);
+	exit(EXIT_FAILURE);
 }
 
 void	eof_warning(t_minishell *ms, char *eof, unsigned int lineno)

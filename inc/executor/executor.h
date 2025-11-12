@@ -43,7 +43,7 @@ void	update_env_lastcmd(t_minishell *ms, char *cmd, t_builtin builtin);
 int		command_verification(t_minishell *ms, t_node *node);
 
 //exec_pipelines.c
-void	spawn_and_run(t_minishell *ms, t_node *node);
+void	spawn_and_run(t_minishell *ms, t_node *node, int in, int pipefd[2]);
 void	try_fork(t_minishell *ms, pid_t *child_pid);
 
 #endif
