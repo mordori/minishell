@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/10 18:22:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/12 17:43:14 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "io.h"
 
-static int	get_opwd(t_minishell *ms, t_node *node, char **path, bool is_1st);
 static void	update_opwd(t_minishell *ms);
 static void	update_pwd(t_minishell *ms);
 static int	get_home(t_minishell *ms, char **path);
@@ -34,11 +33,8 @@ int	cd(t_minishell *ms, t_node *node)
 		if (get_home(ms, &path))
 			return (ERROR_GENERAL);
 	}
-	if (*path == '-')
-	{
-		if (get_opwd(ms, node, &path, is_1st_cd))
-			return (ERROR_GENERAL);
-	}
+	if (handle_cd_specs(ms, &path, node, is_1st_cd))
+		return (ERROR_GENERAL);
 	update_opwd(ms);
 	is_1st_cd = false;
 	if (chdir(path))
@@ -51,7 +47,7 @@ int	cd(t_minishell *ms, t_node *node)
 	return (SUCCESS);
 }
 
-static int	get_opwd(t_minishell *ms, t_node *node, char **path, bool is_1st)
+int	get_opwd(t_minishell *ms, t_node *node, char **path, bool is_1st)
 {
 	if (*(*path + 1) == '-')
 	{
