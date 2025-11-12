@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:23:57 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/03 13:42:45 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:46:25 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	unse(t_minishell *ms, t_node *node)
 	arena_reset(&ms->vars);
 	remove_vars(ms, ms->state.env, node);
 	copy_env_to(PERSISTENT, ms);
+	ms->state.envp = envll_to_envp(ms, ms->state.env);
 	return (SUCCESS);
 }
 
@@ -28,26 +29,22 @@ static int	remove_vars(t_minishell *ms, t_env *env, t_node *node)
 {
 	char	*arg;
 	int		i;
-	t_env	*tmp;
 
 	i = 1;
-	env = NULL;
 	while (node->cmd.args[i])
 	{
-		tmp = env;
 		arg = node->cmd.args[i];
-		while (tmp)
+		while (env)
 		{
-			if (ft_strcmp(arg, tmp->key) == 0)
+			if (ft_strcmp(arg, env->key) == 0)
 			{
-				remove_node(ms, tmp);
+				remove_node(ms, env);
 				break ;
 			}
-			tmp = tmp->next;
+			env = env->next;
 		}
 		i++;
 	}
-	ms->state.envp = envll_to_envp(ms, env);
 	return (SUCCESS);
 }
 

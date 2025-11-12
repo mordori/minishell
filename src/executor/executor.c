@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/10 18:58:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/12 15:38:20 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	executor(t_minishell *ms)
 			return ;
 		}
 		ms->state.exit_status = execute_simple(ms);
+		update_env_lastcmd(ms, ms->node->cmd.cmd, ms->node->cmd.builtin);
 	}
 	else if (ms->state.mode == PIPELINE)
 	{
@@ -41,7 +42,6 @@ int	execute_simple(t_minishell *ms)
 	status = command_verification(ms, ms->node);
 	if (status)
 		return (status);
-	update_env_lastcmd(ms, ms->node->cmd.cmd, ms->node->cmd.builtin);
 	if (ms->node->cmd.builtin && ms->node->cmd.in == STDIN_FILENO && ms->node->cmd.out == STDOUT_FILENO)
 		return (exec_builtin(ms, ms->node));
 	try_fork(ms, &child_pid);

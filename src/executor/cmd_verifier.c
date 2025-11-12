@@ -6,12 +6,14 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:23:27 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/07 15:25:43 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:03:53 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "verifier_utils.h"
+
+//if user tries t run dir as cmd then error msg ": is a directory" code 126
 
 static int			verifier(t_minishell *ms, t_node *node);
 static t_builtin	verify_builtin(char *cmd);
@@ -81,10 +83,23 @@ NULL, "echo", "cd", "pwd", "export", "unset", "env", "exit"};
 
 static char	*verify_extern(t_minishell *ms, char *cmd_name)
 {
-	char	*path;
+	t_env	*path_env;
 
-	path = getenv("PATH");
-	if (!path || cmd_name[0] == '/' || cmd_name[0] == '.')
+	path_env = envll_findkey(&ms->state, "PATH");
+	if (!path_env || cmd_name[0] == '/' || cmd_name[0] == '.')
+	{
+		#ifdef DEBUG
+		#include <stdio.h>
+		printf("no path\n");
+		#endif
+
 		return (path_verif(cmd_name));
-	return (environ_verif(ms, path, cmd_name));
+	}
+
+	#ifdef DEBUG
+	#include <stdio.h>
+	printf("path is: %s\n", path_env->value);
+	#endif
+
+	return (environ_verif(ms, path_env->value, cmd_name));
 }
