@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/10 18:58:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:02:11 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	executor(t_minishell *ms)
 	set_mode(ms);
 	if (ms->state.mode == SIMPLE)
 	{
-		if (ms->node->cmd.in == ERROR || ms->node->cmd.out == ERROR)
+		if (ms->node->cmd.redir_in == ERROR || ms->node->cmd.redir_out == ERROR)
 		{
 			ms->state.exit_status = ERROR_GENERAL;
 			return ;
@@ -42,7 +42,7 @@ int	execute_simple(t_minishell *ms)
 	if (status)
 		return (status);
 	update_env_lastcmd(ms, ms->node->cmd.cmd, ms->node->cmd.builtin);
-	if (ms->node->cmd.builtin && ms->node->cmd.in == STDIN_FILENO && ms->node->cmd.out == STDOUT_FILENO)
+	if (ms->node->cmd.builtin && ms->node->cmd.redir_in == STDIN_FILENO && ms->node->cmd.redir_out == STDOUT_FILENO)
 		return (exec_builtin(ms, ms->node));
 	try_fork(ms, &child_pid);
 	if (child_pid == 0)
@@ -102,7 +102,7 @@ static void	wait_pids(t_minishell *ms)
 			if (WIFEXITED(status))
 				ms->state.exit_status = WEXITSTATUS(status);
 		}
-		if (node->cmd.in == ERROR || node->cmd.out == ERROR)
+		if (node->cmd.redir_in == ERROR || node->cmd.redir_out == ERROR)
 			ms->state.exit_status = ERROR_GENERAL;
 		node = node->next;
 	}

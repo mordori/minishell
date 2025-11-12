@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:25:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/10 19:01:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:01:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	display_vars(t_minishell *ms, t_state *state, t_node *node)
 	t_env		*last;
 	int			fd;
 
-	fd = node->cmd.out;
+	fd = node->cmd.redir_out;
 	head = state->env;
 	last = envlast(state->env);
 	quicksort(head, last);

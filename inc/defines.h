@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/11 13:15:52 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:01:15 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,8 +180,8 @@ struct s_cmd
 	char		*cmd;
 	int			argc;
 	char		**args;
-	int			in;
-	int			out;
+	int			redir_in;
+	int			redir_out;
 	t_list		*redirs;
 };
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipeline_executor.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/07 15:25:18 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:02:17 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	spawn_and_run(t_minishell *ms, t_node *node, int in, int pipefd[2])
 			close(pipefd[1]);
 		}
 		dup_redirections(ms, node);
-		if (node->cmd.in == ERROR || node->cmd.out == ERROR)
+		if (node->cmd.redir_in == ERROR || node->cmd.redir_out == ERROR)
 		{
 			clean(ms);
 			exit(EXIT_FAILURE);

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/10 18:22:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/12 18:42:21 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static int	get_opwd(t_minishell *ms, t_node *node, char **path, bool is_1st)
 		warning(ms, "cd: OLDPWD not set");
 		return (ERROR_GENERAL);
 	}
-	try_write_endl(ms, node->cmd.out, *path);
+	try_write_endl(ms, node->cmd.redir_out, *path);
 	return (SUCCESS);
 }
 

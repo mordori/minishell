@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 22:27:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/03 16:24:41 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:02:56 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 
 void	close_node_fds(t_node *node)
 {
-	if (node->cmd.in != STDIN_FILENO && node->cmd.in != ERROR)
-		close(node->cmd.in);
-	if (node->cmd.out != STDOUT_FILENO && node->cmd.out != ERROR)
-		close(node->cmd.out);
+	if (node->cmd.redir_in != STDIN_FILENO && node->cmd.redir_in != ERROR)
+		close(node->cmd.redir_in);
+	if (node->cmd.redir_out != STDOUT_FILENO && node->cmd.redir_out != ERROR)
+		close(node->cmd.redir_out);
 }
 
 void	close_all_fds(t_minishell *ms)

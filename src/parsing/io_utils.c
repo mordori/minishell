@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 05:06:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/07 17:26:43 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:02:33 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,17 @@
 
 void	dup_redirections(t_minishell *ms, t_node *node)
 {
-	if (node->cmd.in != STDIN_FILENO && node->cmd.in != ERROR)
+	if (node->cmd.redir_in != STDIN_FILENO && node->cmd.redir_in != ERROR)
 	{
-		if (dup2(node->cmd.in, STDIN_FILENO) == ERROR)
+		if (dup2(node->cmd.redir_in, STDIN_FILENO) == ERROR)
 			error_exit(ms, "dup2 redir in failed");
-		close (node->cmd.in);
+		close (node->cmd.redir_in);
 	}
-	if (node->cmd.out != STDOUT_FILENO && node->cmd.out != ERROR)
+	if (node->cmd.redir_out != STDOUT_FILENO && node->cmd.redir_out != ERROR)
 	{
-		if (dup2(node->cmd.out, STDOUT_FILENO) == ERROR)
+		if (dup2(node->cmd.redir_out, STDOUT_FILENO) == ERROR)
 			error_exit(ms, "dup2 redir out failed");
-		close (node->cmd.out);
+		close (node->cmd.redir_out);
 	}
 }
 

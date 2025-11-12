@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/11 13:17:50 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:03:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void	setup_io(t_minishell *ms, t_node *node)
 	while (node)
 	{
 		redirs = node->cmd.redirs;
-		node->cmd.in = STDIN_FILENO;
-		node->cmd.out = STDOUT_FILENO;
+		node->cmd.redir_in = STDIN_FILENO;
+		node->cmd.redir_out = STDOUT_FILENO;
 		while (redirs)
 		{
 			r = (t_redir *)redirs->content;
@@ -40,9 +40,9 @@ void	setup_io(t_minishell *ms, t_node *node)
 				warning(\
 ms, str_join(ms, r->name, ": ambiguous redirect", VOLATILE));
 				if (r->type == IN)
-					node->cmd.in = ERROR;
+					node->cmd.redir_in = ERROR;
 				if (r->type == OUT)
-					node->cmd.out = ERROR;
+					node->cmd.redir_out = ERROR;
 				break;
 			}
 			else
@@ -68,9 +68,9 @@ static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof)
 	unsigned int	lines;
 	bool			is_quoted;
 
-	if (node->cmd.in != STDIN_FILENO)
-		close(node->cmd.in);
-	node->cmd.in = \
+	if (node->cmd.redir_in != STDIN_FILENO)
+		close(node->cmd.redir_in);
+	node->cmd.redir_in = \
 try_open(ms, ms->heredoc_file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
 	is_quoted = ft_strchr(eof, '\"') || ft_strchr(eof, '\'');
 	eof = remove_quotes(ms, eof);
@@ -84,23 +84,23 @@ try_open(ms, ms->heredoc_file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
 				break ;
 			if (!is_quoted)
 				expand_str(ms, &line, EXPAND_HEREDOC);
-			try_write_endl(ms, node->cmd.in, line);
+			try_write_endl(ms, node->cmd.redir_in, line);
 			++lines;
 		}
 		if (!line)
 			eof_warning(ms, eof, ms->lineno - lines);
 	}
-	close(node->cmd.in);
-	node->cmd.in = try_open(ms, ms->heredoc_file, O_RDWR, 0);
+	close(node->cmd.redir_in);
+	node->cmd.redir_in = try_open(ms, ms->heredoc_file, O_RDWR, 0);
 	unlink(ms->heredoc_file);
 }
 
 static inline int	set_in_file(t_minishell *ms, t_node *node, char *file)
 {
-	if (node->cmd.in != STDIN_FILENO && node->cmd.in != ERROR)
-		close(node->cmd.in);
-	node->cmd.in = try_open(ms, file, O_RDONLY, 0);
-	return (node->cmd.in);
+	if (node->cmd.redir_in != STDIN_FILENO && node->cmd.redir_in != ERROR)
+		close(node->cmd.redir_in);
+	node->cmd.redir_in = try_open(ms, file, O_RDONLY, 0);
+	return (node->cmd.redir_in);
 }
 
 static inline int	set_out_file(t_minishell *ms, t_node *node, t_redir *r)
@@ -112,8 +112,8 @@ static inline int	set_out_file(t_minishell *ms, t_node *node, t_redir *r)
 		o_flag |= O_APPEND;
 	if (r->type == OUT)
 		o_flag |= O_TRUNC;
-	if (node->cmd.out != STDOUT_FILENO && node->cmd.out != ERROR)
-		close(node->cmd.out);
-	node->cmd.out = try_open(ms, r->file, o_flag, RW_RW_RW_);
-	return (node->cmd.out);
+	if (node->cmd.redir_out != STDOUT_FILENO && node->cmd.redir_out != ERROR)
+		close(node->cmd.redir_out);
+	node->cmd.redir_out = try_open(ms, r->file, o_flag, RW_RW_RW_);
+	return (node->cmd.redir_out);
 }

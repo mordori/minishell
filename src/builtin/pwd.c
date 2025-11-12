@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:03 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/07 14:30:35 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:01:45 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ int	pwd(t_minishell *ms, t_node *node)
 		ms->state.exit_status = ERROR_GENERAL;
 		if (errno == ENOENT && ms->pwd[0])
 		{
-			try_write_endl(ms, node->cmd.out, ms->pwd);
+			try_write_endl(ms, node->cmd.redir_out, ms->pwd);
 			return (SUCCESS);
 		}
 		else
 			error_exit(ms, "getcwd failed");
 	}
-	try_write_endl(ms, node->cmd.out, pwd);
+	try_write_endl(ms, node->cmd.redir_out, pwd);
 	return (SUCCESS);
 }
