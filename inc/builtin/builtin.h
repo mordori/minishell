@@ -6,13 +6,14 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 13:52:41 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/04 11:16:54 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/12 17:40:59 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTIN_H
 # define BUILTIN_H
 
+# include "builtin_utils.h"
 # include "defines.h"
 # include "libft_list.h"
 # include "env.h"
@@ -26,6 +27,7 @@
 
 //cd.c
 int		cd(t_minishell *ms, t_node *node);
+int		get_opwd(t_minishell *ms, t_node *node, char **path, bool is_1st);
 
 //echo.c
 int		echo(t_minishell *ms, t_node *node);
