@@ -6,12 +6,14 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:20:54 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/07 15:22:36 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/13 12:13:22 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VERIFIER_UTILS_H
 # define VERIFIER_UTILS_H
+
+# include <sys/stat.h>
 
 # define MS         0
 # define DIR_PATH   1

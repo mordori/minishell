@@ -216,7 +216,6 @@ struct	s_minishell
 	t_state				state;
 	t_node				*node;
 	char				pwd[PATH_MAX];
-	char				home[PATH_MAX];
 	t_shell_mode		mode;
 	unsigned int		lineno;
 	char				heredoc_file[UUID_CHARS + 5];
