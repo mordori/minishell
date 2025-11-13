@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/12 17:34:05 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/13 17:05:00 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,16 +139,16 @@ static inline void	run(t_minishell *ms)
 
 void	store_pwd(t_minishell *ms)
 {
-	char	*cwd;
-	char	buf[PATH_MAX];
+	char		*cwd;
+	char		buf[PATH_MAX];
 
-	cwd = getcwd(buf, sizeof(buf));
+	cwd = get_env_val(ms, "PWD");
+	if (!*cwd)
+		cwd = getcwd(buf, sizeof(buf));
 	if (!cwd)
 	{
 		if (errno == ENOENT && ms->pwd[0])
 			return ;
-		else
-			error_exit(ms, "get cwd failed");
 	}
 	ft_memcpy(ms->pwd, cwd, ft_strlen(cwd) + 1);
 }
