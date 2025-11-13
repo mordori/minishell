@@ -6,14 +6,12 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:23:27 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/12 16:03:53 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/13 10:44:12 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "verifier_utils.h"
-
-//if user tries t run dir as cmd then error msg ": is a directory" code 126
 
 static int			verifier(t_minishell *ms, t_node *node);
 static t_builtin	verify_builtin(char *cmd);
@@ -21,8 +19,9 @@ static char			*verify_extern(t_minishell *ms, char *cmd_name);
 
 int	command_verification(t_minishell *ms, t_node *node)
 {
-	char	*arg;
-	int		status;
+	char			*arg;
+	int				status;
+	struct stat		buf;
 
 	status = verifier(ms, node);
 	arg = node->cmd.args[0];
@@ -35,14 +34,19 @@ int	command_verification(t_minishell *ms, t_node *node)
 	{
 		warning(ms, arg);
 	}
+	stat(node->cmd.cmd, &buf);
+	if (S_ISDIR(buf.st_mode))
+	{
+		warning(ms, str_join(ms, arg, ": Is a directory", VOLATILE));
+		status = ERROR_CMD_CANTEXEC;
+	}
 	return (status);
 }
 
-
 static int	verifier(t_minishell *ms, t_node *node)
 {
-	t_cmd		*cmd;
-	char		*cmd_name;
+	t_cmd	*cmd;
+	char	*cmd_name;
 
 	if (node)
 	{
@@ -88,18 +92,7 @@ static char	*verify_extern(t_minishell *ms, char *cmd_name)
 	path_env = envll_findkey(&ms->state, "PATH");
 	if (!path_env || cmd_name[0] == '/' || cmd_name[0] == '.')
 	{
-		#ifdef DEBUG
-		#include <stdio.h>
-		printf("no path\n");
-		#endif
-
 		return (path_verif(cmd_name));
 	}
-
-	#ifdef DEBUG
-	#include <stdio.h>
-	printf("path is: %s\n", path_env->value);
-	#endif
-
 	return (environ_verif(ms, path_env->value, cmd_name));
 }

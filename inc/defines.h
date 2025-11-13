@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/12 17:21:24 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/12 18:17:10 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,7 +216,6 @@ struct	s_minishell
 	t_state				state;
 	t_node				*node;
 	char				pwd[PATH_MAX];
-	char				home[PATH_MAX];
 	t_shell_mode		mode;
 	unsigned int		lineno;
 	char				heredoc_file[UUID_CHARS + 5];
