@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/12 18:42:01 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/13 17:19:09 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,7 @@ int	cd(t_minishell *ms, t_node *node)
 		warning(ms, str_join(ms, "cd: ", path, VOLATILE));
 		return (ERROR_GENERAL);
 	}
-	else
-		update_pwd(ms);
+	update_pwd(ms);
 	return (SUCCESS);
 }
 
@@ -92,7 +91,14 @@ static void	update_pwd(t_minishell *ms)
 
 	pwd = getcwd(buf, sizeof(buf));
 	pwdvar = envll_findkey(&ms->state, "PWD");
-	if (pwdvar)
+	if (!pwd)
+	{
+		if (errno == ENOENT)
+			warning(ms, "cd: error retrieving current directory: \
+getcwd: cannot access parent directories");
+		replace_value(pwdvar, str_join(ms, pwdvar->value, "/..", PERSISTENT));
+	}
+	else
 		replace_value(pwdvar, str_dup(ms, pwd, PERSISTENT));
 }
 
