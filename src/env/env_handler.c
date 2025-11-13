@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env_handler.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 12:14:16 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/06 02:08:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/13 18:05:26 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
-
-static char	*update_shell_value(t_minishell *ms);
 
 int	envp_to_envll(t_minishell *ms, char **envp)
 {
@@ -51,7 +49,7 @@ void	var_to_node(t_minishell *ms, char *var, t_env **env)
 	ft_envadd_back(env, node);
 }
 
-static char	*update_shell_value(t_minishell *ms)
+char	*update_shell_value(t_minishell *ms)
 {
 	char	*pwd;
 	char	buf[PATH_MAX];
