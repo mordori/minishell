@@ -42,7 +42,7 @@ int	execute_simple(t_minishell *ms)
 	status = command_verification(ms, ms->node);
 	if (status)
 		return (status);
-	if (ms->node->cmd.builtin && ms->node->cmd.in == STDIN_FILENO && ms->node->cmd.out == STDOUT_FILENO)
+	if (ms->node->cmd.builtin && ms->node->cmd.redir_in == STDIN_FILENO && ms->node->cmd.redir_out == STDOUT_FILENO)
 		return (exec_builtin(ms, ms->node));
 	try_fork(ms, &child_pid);
 	if (child_pid == 0)

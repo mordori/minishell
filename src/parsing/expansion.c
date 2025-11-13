@@ -18,6 +18,8 @@
 #include "arena.h"
 #include "env.h"
 
+#include <stdio.h>
+
 static inline void	expand_args(t_minishell *ms, t_node *node, char **args);
 static inline void	expand_redirs(t_minishell *ms, t_list *redirs);
 static inline bool	expand(t_minishell *ms, char **str, char **result, char **quote, t_expand_mode mode);
@@ -89,13 +91,13 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 		redirs = redirs->next;
 	}
 }
-#include <stdio.h>
+
 static inline bool	expand(t_minishell *ms, char **str, char **result, char **quote, t_expand_mode mode)
 {
 	char	*ptr;
 	size_t	i;
 
-	if (!**str || (*quote && **str == **quote))
+	if (!**str || is_whitespace(*str, "") || (*quote && **str == **quote))
 		*result = str_join(ms, *result, "$", VOLATILE);
 	else if (**str == '?')
 	{
