@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
+#    By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/11/10 19:16:11 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/11/14 12:19:42 by jvalkama         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,7 +57,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_BUILT), \
 				cd.c echo.c env.c exit.c export.c pwd.c unset.c builtin_utils.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_ENV), \
 				env_handler.c env_utils.c env_utils2.c quicksort.c \
-				mem_transfer.c)
+				mem_transfer.c update_shlvl.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EXE), \
 				executor.c cmd_verifier.c cmd_processor.c \
 				pipeline_executor.c executor_utils.c verifier_utils.c)
