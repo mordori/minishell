@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/13 18:08:35 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/14 11:04:38 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static inline void	startup(void);
 static inline void	initialize(t_minishell *ms, char **envp);
 static inline void	run(t_minishell *ms);
 void				store_pwd(t_minishell *ms);
-static void			update_shellvars(t_minishell *ms);
+//static void			update_shellvars(t_minishell *ms);
 
 /**
  * @brief	Entry point to the program.
@@ -83,7 +83,7 @@ static inline void	initialize(t_minishell *ms, char **envp)
 		error_exit(ms, "arena creation failed");
 	envp_to_envll(ms, envp);
 	ms->state.envp = envll_to_envp(ms, ms->state.env);
-	update_shellvars(ms);
+	//update_shellvars(ms);
 	if (isatty(STDIN_FILENO))
 	{
 		ms->mode = INTERACTIVE;
@@ -156,7 +156,8 @@ void	store_pwd(t_minishell *ms)
 	ft_memcpy(ms->pwd, cwd, ft_strlen(cwd) + 1);
 }
 
-static void	update_shellvars(t_minishell *ms)
+/*
+static void		update_shellvars(t_minishell *ms)
 {
 	t_env	*env;
 
@@ -173,6 +174,7 @@ static void	update_shellvars(t_minishell *ms)
 	}
 	copy_env_to(PERSISTENT, ms);
 }
+*/
 
 /**
  * @brief	Prints out a cool startup message. Wow!
