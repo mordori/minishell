@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/14 11:04:38 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/14 12:48:01 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ volatile sig_atomic_t	g_signal = 0;
 static inline void	startup(void);
 static inline void	initialize(t_minishell *ms, char **envp);
 static inline void	run(t_minishell *ms);
-void				store_pwd(t_minishell *ms);
-//static void			update_shellvars(t_minishell *ms);
+void			store_pwd(t_minishell *ms);
 
 /**
  * @brief	Entry point to the program.
@@ -83,7 +82,6 @@ static inline void	initialize(t_minishell *ms, char **envp)
 		error_exit(ms, "arena creation failed");
 	envp_to_envll(ms, envp);
 	ms->state.envp = envll_to_envp(ms, ms->state.env);
-	//update_shellvars(ms);
 	if (isatty(STDIN_FILENO))
 	{
 		ms->mode = INTERACTIVE;
@@ -155,26 +153,6 @@ void	store_pwd(t_minishell *ms)
 	}
 	ft_memcpy(ms->pwd, cwd, ft_strlen(cwd) + 1);
 }
-
-/*
-static void		update_shellvars(t_minishell *ms)
-{
-	t_env	*env;
-
-	copy_env_to(VOLATILE, ms);
-	arena_reset(&ms->vars);
-	env = ms->state.env;
-	while (env)
-	{
-		if (ft_strcmp(env->key, "SHLVL") == 0)
-			(*env->value)++;
-		if (ft_strcmp(env->key, "SHELL") == 0)
-			replace_value(env, update_shell_value(ms));
-		env = env->next;
-	}
-	copy_env_to(PERSISTENT, ms);
-}
-*/
 
 /**
  * @brief	Prints out a cool startup message. Wow!
