@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/12 15:38:20 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/14 13:14:13 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ int	execute_simple(t_minishell *ms)
 	status = command_verification(ms, ms->node);
 	if (status)
 		return (status);
-	if (ms->node->cmd.builtin && ms->node->cmd.redir_in == STDIN_FILENO && ms->node->cmd.redir_out == STDOUT_FILENO)
+	if (ms->node->cmd.builtin \
+&& ms->node->cmd.redir_in == STDIN_FILENO \
+&& ms->node->cmd.redir_out == STDOUT_FILENO)
 		return (exec_builtin(ms, ms->node));
 	try_fork(ms, &child_pid);
 	if (child_pid == 0)
@@ -70,10 +72,7 @@ int	execute_pipeline(t_minishell *ms)
 			if (pipe(pipefd) == ERROR)
 				error_exit(ms, "pipe failed");
 		if (node->cmd.args)
-		{
 			spawn_and_run(ms, node, in, pipefd);
-			update_env_lastcmd(ms, node->cmd.cmd, node->cmd.builtin);
-		}
 		if (in != STDIN_FILENO)
 			close(in);
 		close_node_fds(node);

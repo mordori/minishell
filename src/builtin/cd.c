@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/13 17:19:09 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/14 10:44:46 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,15 @@ getcwd: cannot access parent directories");
 
 static int	get_home(t_minishell *ms, char **path)
 {
-	if (!envll_findkey(&ms->state, "HOME"))
+	t_env		*home;
+
+	home = envll_findkey(&ms->state, "HOME");
+	if (!home || (home && !home->value[0]))
 	{
+		errno = 0;
 		warning(ms, "cd: HOME not set");
 		return (ERROR_GENERAL);
 	}
-	*path = envll_findkey(&ms->state, "HOME")->value;
+	*path = home->value;
 	return (SUCCESS);
 }
