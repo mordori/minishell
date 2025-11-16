@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 12:14:16 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/13 18:05:26 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/14 11:52:55 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ void	var_to_node(t_minishell *ms, char *var, t_env **env)
 	node = NULL;
 	delimiter = ft_strchr(var, '=');
 	key = ft_keydup(ms, var, delimiter);
-	if (ft_strcmp(key, "SHELL") == 0)
+	if (ft_strcmp(key, "SHLVL") == 0)
+		update_shlvl(ms, delimiter + 1, &value);
+	else if (ft_strcmp(key, "SHELL") == 0)
 		value = update_shell_value(ms);
 	else
 		value = str_dup(ms, delimiter + 1, PERSISTENT);
@@ -51,9 +53,9 @@ void	var_to_node(t_minishell *ms, char *var, t_env **env)
 
 char	*update_shell_value(t_minishell *ms)
 {
-	char	*pwd;
-	char	buf[PATH_MAX];
-	char	*shell_path;
+	char		*pwd;
+	char		buf[PATH_MAX];
+	char		*shell_path;
 
 	pwd = getcwd(buf, sizeof(buf));
 	shell_path = str_dup(ms, str_join(ms, \

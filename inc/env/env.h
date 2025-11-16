@@ -6,7 +6,7 @@
 /*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 12:17:25 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/13 17:55:02 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/14 11:53:16 by jvalkama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,8 @@ int		count_variables(t_env *env);
 
 //mem_transfer.c
 void	copy_env_to(t_arena_type to_type, t_minishell *ms);
+
+//update_shlvl.c
+void	update_shlvl(t_minishell *ms, char *delim, char **value);
 
 #endif
