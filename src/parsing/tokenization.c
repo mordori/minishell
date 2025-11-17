@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 01:06:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/05 17:40:55 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/17 21:03:18 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,8 @@ static inline int	count_words(t_minishell *ms, char const *src)
 			if (is_unsupported_char(ms, src))
 				return (ERROR);
 			++count;
-			++src;
-			if (*src && \
-((*(src - 1) == '>' && *src == '>') || (*(src - 1) == '<' && *src == '<')))
-				++src;
+			src += 1 + (*(src + 1) && \
+((*src == '>' && *(src + 1) == '>') || (*src == '<' && *(src + 1) == '<')));
 			continue ;
 		}
 		while (*src && *src != '\n' && !is_space(*src) && !is_operator(src))

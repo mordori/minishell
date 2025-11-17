@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/14 13:14:13 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/17 21:05:14 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static void	wait_pids(t_minishell *ms);
 
 void	executor(t_minishell *ms)
 {
+	if (!ms->node->cmd.args)
+		return ;
 	set_mode(ms);
 	if (ms->state.mode == SIMPLE)
 	{

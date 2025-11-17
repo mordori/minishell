@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/17 18:03:12 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/17 21:41:51 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,15 @@
 
 static inline void	expand_args(t_minishell *ms, t_node *node, char **args);
 static inline void	expand_redirs(t_minishell *ms, t_list *redirs);
-static inline bool	expand(t_minishell *ms, char **str, char **result, char **quote, t_expand_mode mode);
+static inline bool	expand(\
+t_minishell *ms, char **str, char **result, char **quote, t_expand_mode mode);
 
 void	expand_variables(t_minishell *ms)
 {
 	t_node	*node;
 
 	node = ms->node;
-	while(node)
+	while (node)
 	{
 		if (node->cmd.args)
 			expand_args(ms, node, node->cmd.args);
@@ -92,7 +93,8 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 	}
 }
 
-static inline bool	expand(t_minishell *ms, char **str, char **result, char **quote, t_expand_mode mode)
+static inline bool	expand(\
+t_minishell *ms, char **str, char **result, char **quote, t_expand_mode mode)
 {
 	char	*ptr;
 	size_t	i;
@@ -101,7 +103,8 @@ static inline bool	expand(t_minishell *ms, char **str, char **result, char **quo
 		*result = str_join(ms, *result, "$", VOLATILE);
 	else if (**str == '?')
 	{
-		*result = str_join(ms, *result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
+		*result = str_join(\
+ms, *result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
 		(*str)++;
 	}
 	else
@@ -132,7 +135,8 @@ static inline bool	expand(t_minishell *ms, char **str, char **result, char **quo
 	}
 	if (*quote && *quote > ptr)
 		*quote = NULL;
-	*result = str_join(ms, *result, str_sub(ms, VOLATILE, *str, ptr - *str), VOLATILE);
+	*result = str_join(\
+ms, *result, str_sub(ms, VOLATILE, *str, ptr - *str), VOLATILE);
 	*str = ptr;
 	return (true);
 }
@@ -166,7 +170,7 @@ bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 	while (str++)
 	{
 		if (!expand(ms, &str, &result, &quote, mode))
-			break;
+			break ;
 	}
 	result = str_join(ms, result, str, VOLATILE);
 	*src = result;
@@ -248,10 +252,10 @@ void	split_words(t_minishell *ms, char *src, t_list **list)
 // 			++i;
 // 		result = str_join(ms, result, str_sub(ms, VOLATILE, src, i), VOLATILE);
 // 		if (!*(src + 1))
-// 			break;
+// 			break ;
 // 		quote = find_quote(src);
 // 		if (!quote)
-// 			break;
+// 			break ;
 // 		result = str_join(ms, result, str_sub(ms, VOLATILE, src, quote - src), VOLATILE);
 // 	}
 // 	result = str_join(ms, result, src, VOLATILE);
@@ -291,10 +295,10 @@ char	*remove_quotes(t_minishell *ms, char *src)
 		result = str_join(ms, result, str_sub(ms, VOLATILE, src, i), VOLATILE);
 		src += i + k;
 		if (!*(src + 1))
-			break;
+			break ;
 		quote = find_quote(src + (k == 2));
 		if (!quote)
-			break;
+			break ;
 		result = str_join(ms, result, str_sub(ms, VOLATILE, src, quote - src), VOLATILE);
 	}
 	result = str_join(ms, result, src, VOLATILE);

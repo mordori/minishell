@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 12:44:17 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/13 18:27:18 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/17 20:07:45 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ bool	handle_cases(t_minishell *ms, int i, t_env *env, t_key_value *kv)
 	parse_export(ms, ms->node->cmd.args[i], kv);
 	if (!is_valid_key(kv->k, kv->delimiter))
 	{
+		errno = 0;
 		warning(ms, str_join(ms, kv->k, ": not a valid identifier", VOLATILE));
 		ms->state.exit_status = ERROR_GENERAL;
 		return (true);

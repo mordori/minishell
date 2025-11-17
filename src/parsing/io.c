@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/12 16:03:30 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/17 21:39:01 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 #include "line_utils.h"
 #include "parsing.h"
 
-static inline int	set_in_file(t_minishell *ms, t_node *node, char *file);
-static inline int	set_out_file(t_minishell *ms, t_node *node, t_redir *r);
+static inline int		set_in_file(t_minishell *ms, t_node *node, char *file);
+static inline int		set_out_file(t_minishell *ms, t_node *node, t_redir *r);
 static inline void	set_in_heredoc(t_minishell *ms, t_node *node, char *eof);
 
 void	setup_io(t_minishell *ms, t_node *node)
@@ -43,18 +43,18 @@ ms, str_join(ms, r->name, ": ambiguous redirect", VOLATILE));
 					node->cmd.redir_in = ERROR;
 				if (r->type == OUT)
 					node->cmd.redir_out = ERROR;
-				break;
+				break ;
 			}
 			else
 			{
 				if (r->type == IN)
 					if (set_in_file(ms, node, r->file) == ERROR)
-						break;
+						break ;
 				if (r->type == HEREDOC)
 					set_in_heredoc(ms, node, r->file);
 				if (r->type == OUT || r->type == OUT_APPEND)
 					if (set_out_file(ms, node, r) == ERROR)
-						break;
+						break ;
 			}
 			redirs = redirs->next;
 		}

@@ -3,14 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   arena_list.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 01:27:29 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/05 17:48:49 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/17 20:40:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include <stdlib.h>
 
 #include "arena_list.h"
 #include "arena.h"
@@ -25,7 +23,7 @@ t_list	*lstnew(t_minishell *ms, void *content)
 	new->next = NULL;
 	return (new);
 }
-#include <stdio.h>
+
 bool	lstadd_back(t_list **lst, t_list *new)
 {
 	t_list	*temp;

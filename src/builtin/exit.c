@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/17 18:04:17 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/17 20:09:47 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,14 @@ int	exi(t_minishell *ms, t_node *node)
 {
 	uint8_t	status;
 
-	// if (ms->mode == INTERACTIVE)
+	if (ms->mode == INTERACTIVE)
 		try_write_endl(ms, STDOUT_FILENO, "exit");
 	status = ms->state.exit_status;
 	if (node)
 	{
 		if (node->cmd.argc > 2)
 		{
+			errno = 0;
 			warning(ms, "exit: too many arguments");
 			return (ERROR_GENERAL);
 		}
@@ -82,6 +83,7 @@ static inline bool	is_numbers(const char *str, int *i)
 
 static inline void	warn_numeric(t_minishell *ms, const char *arg)
 {
+	errno = 0;
 	warning(ms, \
 str_join(ms, "exit: ", \
 str_join(ms, arg, ": numeric argument required", \

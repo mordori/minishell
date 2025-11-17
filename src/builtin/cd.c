@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/14 10:44:46 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/17 20:39:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,14 @@ int	cd(t_minishell *ms, t_node *node)
 
 	if (node->cmd.args[2])
 	{
+		errno = 0;
 		warning(ms, str_join(ms, "cd: ", "too many arguments", VOLATILE));
 		return (ERROR_GENERAL);
 	}
 	path = node->cmd.args[1];
 	if (!path)
-	{
 		if (get_home(ms, &path))
 			return (ERROR_GENERAL);
-	}
 	if (handle_cd_specs(ms, &path, node, is_1st_cd))
 		return (ERROR_GENERAL);
 	update_opwd(ms);
