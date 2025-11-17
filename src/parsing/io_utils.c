@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 05:06:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/17 21:35:52 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/17 23:05:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@ ssize_t	try_write(t_minishell *ms, int fd, char *src)
 	size_t	ulen;
 
 	ulen = ft_strlen(src);
-	if (ulen > LONG_MAX)
+	if (ulen > SSIZE_MAX)
 		error_exit(ms, "write src is longer than LONG_MAX");
 	len = (ssize_t)ulen;
 	bytes = write(fd, src, len);
-	if (bytes != len)
+	if (bytes != len && errno != EPIPE)
 	{
 		close(fd);
 		error_exit(ms, "write failed");
