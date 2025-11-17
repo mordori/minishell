@@ -56,7 +56,7 @@ static void	set_io(t_minishell *ms, t_node *node, int in, int pipefd[2])
 		close(pipefd[1]);
 	}
 	dup_redirections(ms, node);
-	if (node->cmd.in == ERROR || node->cmd.out == ERROR)
+	if (node->cmd.redir_in == ERROR || node->cmd.redir_out == ERROR)
 	{
 		clean(ms);
 		exit(EXIT_FAILURE);
