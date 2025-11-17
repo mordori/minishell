@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/12 16:07:50 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/17 18:04:17 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	exi(t_minishell *ms, t_node *node)
 {
 	uint8_t	status;
 
-	if (ms->mode == INTERACTIVE)
+	// if (ms->mode == INTERACTIVE)
 		try_write_endl(ms, STDOUT_FILENO, "exit");
 	status = ms->state.exit_status;
 	if (node)

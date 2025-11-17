@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 23:33:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/13 17:49:55 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/17 18:02:59 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,12 @@
 
 static inline char	*trim_spaces(t_minishell *ms, char *src);
 
-#include <stdio.h>
 void	join_var(t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode)
 {
 	size_t		i;
 	char		*val;
 	char		*name;
 	static char	c[2];
-
-	// if(quote)
-	// 	printf("QUOTE: %c\n", *quote);
 
 	i = 0;
 	val = NULL;

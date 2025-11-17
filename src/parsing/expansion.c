@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/13 18:33:40 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/17 18:03:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,6 @@ void	split_words(t_minishell *ms, char *src, t_list **list)
 	ifs = get_env_val(ms, "IFS");
 	src = str_trim(src, ifs);
 	quotes = 0;
-	// printf("SRC: %s\n", src);
 	while (*src)
 	{
 		i = 0;
@@ -229,46 +228,12 @@ void	split_words(t_minishell *ms, char *src, t_list **list)
 	}
 }
 
-char	*remove_quotes(t_minishell *ms, char *src)
-{
-	char	*result;
-	char	*quote;
-	size_t	i;
-
-	printf("SRC: %s\n", src);
-	quote = find_quote(src);
-	if (!quote)
-		return (src);
-	i = quote - src;
-	result = alloc_volatile(ms, i + 1);
-	ft_memcpy(result, src, i);
-	while (*src)
-	{
-		i = 0;
-		src = quote + 1;
-		while (src[i] != *quote)
-			++i;
-		result = str_join(ms, result, str_sub(ms, VOLATILE, src, i), VOLATILE);
-		if (!*(src + 1))
-			break;
-		quote = find_quote(src);
-		if (!quote)
-			break;
-		result = str_join(ms, result, str_sub(ms, VOLATILE, src, quote - src), VOLATILE);
-	}
-	result = str_join(ms, result, src, VOLATILE);
-	return (result);
-}
 // char	*remove_quotes(t_minishell *ms, char *src)
 // {
 // 	char	*result;
 // 	char	*quote;
 // 	size_t	i;
-// 	size_t	k;
-// 	bool	is_double;
 
-// 	// printf("SRC: %s\n", src);
-// 	is_double = false;
 // 	quote = find_quote(src);
 // 	if (!quote)
 // 		return (src);
@@ -278,24 +243,13 @@ char	*remove_quotes(t_minishell *ms, char *src)
 // 	while (*src)
 // 	{
 // 		i = 0;
-// 		k = 1;
-// 		if (*quote == '\"' && *(quote + 1) == '\'' && *(quote + 2) && *(quote + 2) == '\"')
-// 		{
-// 			k = 2;
-// 			is_double = true;
-// 		}
-// 		src = quote + k;
-// 		while (src[i] != *quote || is_double)
-// 		{
-// 			if (is_double)
-// 				is_double = false;
+// 		src = quote + 1;
+// 		while (src[i] != *quote)
 // 			++i;
-// 		}
 // 		result = str_join(ms, result, str_sub(ms, VOLATILE, src, i), VOLATILE);
-// 		src += i + k;
 // 		if (!*(src + 1))
 // 			break;
-// 		quote = find_quote(src + (k == 2));
+// 		quote = find_quote(src);
 // 		if (!quote)
 // 			break;
 // 		result = str_join(ms, result, str_sub(ms, VOLATILE, src, quote - src), VOLATILE);
@@ -303,3 +257,46 @@ char	*remove_quotes(t_minishell *ms, char *src)
 // 	result = str_join(ms, result, src, VOLATILE);
 // 	return (result);
 // }
+char	*remove_quotes(t_minishell *ms, char *src)
+{
+	char	*result;
+	char	*quote;
+	size_t	i;
+	size_t	k;
+	bool	is_double;
+
+	is_double = false;
+	quote = find_quote(src);
+	if (!quote)
+		return (src);
+	i = quote - src;
+	result = alloc_volatile(ms, i + 1);
+	ft_memcpy(result, src, i);
+	while (*src)
+	{
+		i = 0;
+		k = 1;
+		if (*quote == '\"' && *(quote + 1) == '\'' && *(quote + 2) && *(quote + 2) == '\"')
+		{
+			k = 2;
+			is_double = true;
+		}
+		src = quote + k;
+		while (src[i] != *quote || is_double)
+		{
+			if (is_double)
+				is_double = false;
+			++i;
+		}
+		result = str_join(ms, result, str_sub(ms, VOLATILE, src, i), VOLATILE);
+		src += i + k;
+		if (!*(src + 1))
+			break;
+		quote = find_quote(src + (k == 2));
+		if (!quote)
+			break;
+		result = str_join(ms, result, str_sub(ms, VOLATILE, src, quote - src), VOLATILE);
+	}
+	result = str_join(ms, result, src, VOLATILE);
+	return (result);
+}

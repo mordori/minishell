@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/13 17:05:00 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/17 19:25:24 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,6 @@ int	main(int argc, char *argv[], char **envp)
 		startup();
 	else
 		errno = 0;
-#ifdef DEBUG
-printf("\033[1;33m[DEBUG]\033[0m\n");
-#endif
 	if (MEMORY < 0)
 		error_exit(NULL, "defined memory amount is negative");
 	if (argc > 1)
@@ -92,6 +89,7 @@ static inline void	initialize(t_minishell *ms, char **envp)
 		errno = 0;
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
+	signal(SIGPIPE, sig_handler);
 	fd = try_open(ms, "/proc/sys/kernel/random/uuid", O_RDONLY, 0);
 	if (fd == ERROR)
 		error_exit(ms, "could not open /proc/sys/kernel/random/uuid");
