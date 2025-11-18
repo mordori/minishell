@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/18 04:31:20 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 19:07:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	setup_io(t_minishell *ms, t_node *node)
 		{
 			r = (t_redir *)redirs->content;
 			if (!process_redir(ms, node, r))
-				break;
+				break ;
 			redirs = redirs->next;
 		}
 		node = node->next;

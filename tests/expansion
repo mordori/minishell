@@ -83,3 +83,5 @@ echo 1c. $?
 echo 2c. $"$?"
 echo 3c. "$"$?
 echo 4c. "  $  "
+echo 5c. '$$'
+echo 5c. '$?'

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 23:33:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/18 05:05:56 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 18:55:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,10 @@
 #include "arena_list.h"
 #include "arena.h"
 #include "env.h"
+
+
+#include <stdio.h>
+
 
 char	*join_var(t_minishell *ms, char **str, char *quote, t_expand_mode mode)
 {
@@ -35,6 +39,8 @@ char	*join_var(t_minishell *ms, char **str, char *quote, t_expand_mode mode)
 			break ;
 		++i;
 	}
+	// if (quote)
+	// 	printf("QUOTE: %s\n", quote);
 	if (!quote || *quote == '\"' || mode == EXPAND_HEREDOC)
 	{
 		name = str_sub(ms, VOLATILE, *str, i);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 00:57:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/22 13:29:18 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/18 19:14:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ str_join(ms, \
 str_join(ms, \
 "warning: unsupported meta-character `", c, VOLATILE), \
 "'", VOLATILE));
+		ms->state.exit_status = 1;
 		return (true);
 	}
 	return (false);

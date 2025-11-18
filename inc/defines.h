@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/18 05:01:02 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 19:47:25 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@
 #  define MEM_UNIT				1024UL
 # endif
 # ifndef MEMORY
-#  define MEMORY				8388608UL
+#  define MEMORY				16777216UL
 # endif
 
 # ifndef MAX_HEREDOC
@@ -171,7 +171,7 @@ struct s_token
 {
 	char			*src;
 	t_token_type	type;
-	size_t			pos;
+	int				pos;
 };
 
 struct s_cmd

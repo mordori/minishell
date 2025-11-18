@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/18 03:06:01 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 19:09:09 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	warning_syntax(t_minishell *ms, char *src)
 "minishell: syntax error near unxpected token `");
 	try_write(ms, STDERR_FILENO, msg);
 	try_write(ms, STDERR_FILENO, "\'\n\033[0m");
+	ms->state.exit_status = 1;
 }
 
 void	warning(t_minishell *ms, char *src)

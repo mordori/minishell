@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/18 03:06:35 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 19:51:53 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,10 +106,9 @@ static inline void	run(t_minishell *ms)
 		reset_context(ms);
 		line = get_line(ms, get_prompt(ms, &p));
 		if (g_signal == SIGINT)
-		{
 			ms->state.exit_status = 130;
+		if (g_signal == SIGINT)
 			continue ;
-		}
 		if (!line)
 			exi(ms, NULL);
 		if (ms->mode == INTERACTIVE && *line && *line != ' ')
@@ -124,21 +123,21 @@ static inline void	run(t_minishell *ms)
 	}
 }
 
-// Error: TOO_MANY_ARGS        (line:  24, col:  77):      Function has more than 4 arguments
-// Error: TOO_MANY_LINES       (line:  65, col:   1):      Function has more than 25 lines
-// Error: TOO_MANY_LINES       (line: 120, col:   1):      Function has more than 25 lines
-
 // expansion.c: Error!
-// Error: TOO_MANY_ARGS        (line:  26, col:  78):      Function has more than 4 arguments
-// Error: TOO_MANY_ARGS        (line:  97, col:  78):      Function has more than 4 arguments
-// Error: TOO_MANY_LINES       (line: 142, col:   1):      Function has more than 25 lines
-// Error: TOO_MANY_LINES       (line: 178, col:   1):      Function has more than 25 lines
-// Error: TOO_MANY_FUNCS       (line: 180, col:   1):      Too many functions in file
-// Error: TOO_MANY_VARS_FUNC   (line: 187, col:   1):      Too many variables declarations in a function
-// Error: TOO_MANY_LINES       (line: 233, col:   1):      Function has more than 25 lines
-// Error: LINE_TOO_LONG        (line: 259, col:   1):      line too long
-// Error: LINE_TOO_LONG        (line: 259, col:  90):      line too long
-// Error: TOO_MANY_FUNCS       (line: 264, col:   1):      Too many functions in file
-// Error: LINE_TOO_LONG        (line: 283, col:  82):      line too long
-// Error: LINE_TOO_LONG        (line: 302, col:  88):      line too long
-// Error: TOO_MANY_LINES       (line: 306, col:   1):      Function has more than 25 lines
+// Error: WRONG_SCOPE_COMMENT  (line:  51, col:   9):      Comment is invalid in this scope
+// expansion_utils.c: Error!
+// Error: CONSECUTIVE_NEWLINES (line:  21, col:   1):      Consecutive newlines
+// Error: CONSECUTIVE_NEWLINES (line:  22, col:   1):      Consecutive newlines
+// Error: CONSECUTIVE_NEWLINES (line:  25, col:   1):      Consecutive newlines
+// Error: CONSECUTIVE_NEWLINES (line:  26, col:   1):      Consecutive newlines
+// Error: CONSECUTIVE_NEWLINES (line:  27, col:   1):      Consecutive newlines
+// Error: WRONG_SCOPE_COMMENT  (line:  45, col:   5):      Comment is invalid in this scope
+// Error: WRONG_SCOPE_COMMENT  (line:  46, col:   5):      Comment is invalid in this scope
+// Error: TOO_MANY_LINES       (line:  69, col:   1):      Function has more than 25 lines
+// Error: TOO_MANY_LINES       (line: 153, col:   1):      Function has more than 25 lines
+// io.c: OK!
+// io_utils.c: OK!
+// expansion_utils_2.c: Error!
+// Error: TOO_MANY_LINES       (line:  95, col:   1):      Function has more than 25 lines
+// Error: TOO_MANY_VARS_FUNC   (line: 104, col:   1):      Too many variables declarations in a function
+// Error: TOO_MANY_LINES       (line: 150, col:   1):      Function has more than 25 lines

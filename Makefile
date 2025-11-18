@@ -6,13 +6,13 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/11/18 05:00:59 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/11/18 18:52:58 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:=minishell
 
-MEMORY		?=8388608
+MEMORY		?=16777216
 CONF		:=.config
 BUILD_TYPE	:=RELEASE
 
@@ -64,7 +64,7 @@ SRCS		+=$(addprefix $(DIR_SRC)$(DIR_EXE), \
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_PAR), \
 				expansion.c parser.c io_utils.c io.c lexer.c \
 				tokenization_utils.c tokenization.c syntax_utils.c \
-				expansion_utils.c)
+				expansion_utils.c expansion_utils_2.c)
 SRCS		+=$(addprefix $(DIR_SRC)$(DIR_UTILS), \
 				arena_list.c arena_utils.c arena.c cleanup.c defines.c \
 				errors.c str_utils.c str_utils_2.c line_utils.c \
