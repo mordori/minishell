@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   defines.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/12 16:01:15 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 05:01:02 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@
 #  define MEM_UNIT				1024UL
 # endif
 # ifndef MEMORY
-#  define MEMORY				2097152UL
+#  define MEMORY				8388608UL
 # endif
 
 # ifndef MAX_HEREDOC

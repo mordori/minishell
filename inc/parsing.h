@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/18 03:55:44 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 04:46:25 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ bool	is_operator(const char *src);
 bool	is_redirection(const char *src);
 bool	is_pipe(const char *src);
 bool	is_unsupported_char(t_minishell *ms, const char *src);
-bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode);
+char	*expand_str(t_minishell *ms, char *src, t_expand_mode mode);
 char	*remove_quotes(t_minishell *ms, char *src);
 void	split_words(t_minishell *ms, char *src, t_list **list);
-void	join_var(\
-t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode);
-char	*find_quote(char *str);
+char	*join_var(t_minishell *ms, char **str, char *quote, t_expand_mode mode);
+char	*locate_quote(char *str);
+void	find_quote(char *str, char **quote, char *ptr);
 char	*trim_spaces(t_minishell *ms, char *src);
 
 #endif

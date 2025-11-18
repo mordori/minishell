@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/18 03:48:31 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 04:31:20 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ try_open(ms, ms->heredoc_file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
 		if (!line || !ft_strcmp(line, eof) || g_signal)
 			break ;
 		if (!is_quoted)
-			expand_str(ms, &line, EXPAND_HEREDOC);
+			line = expand_str(ms, line, EXPAND_HEREDOC);
 		try_write_endl(ms, node->cmd.redir_in, line);
 		++lines;
 	}

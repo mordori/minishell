@@ -6,13 +6,13 @@
 #    By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/25 13:37:28 by myli-pen          #+#    #+#              #
-#    Updated: 2025/11/18 02:48:37 by myli-pen         ###   ########.fr        #
+#    Updated: 2025/11/18 05:00:59 by myli-pen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:=minishell
 
-MEMORY		?=2097152
+MEMORY		?=8388608
 CONF		:=.config
 BUILD_TYPE	:=RELEASE
 
