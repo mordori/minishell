@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/17 21:41:51 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 03:55:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@
 
 static inline void	expand_args(t_minishell *ms, t_node *node, char **args);
 static inline void	expand_redirs(t_minishell *ms, t_list *redirs);
-static inline bool	expand(\
-t_minishell *ms, char **str, char **result, char **quote, t_expand_mode mode);
 
 void	expand_variables(t_minishell *ms)
 {
@@ -93,53 +91,89 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 	}
 }
 
-static inline bool	expand(\
-t_minishell *ms, char **str, char **result, char **quote, t_expand_mode mode)
-{
-	char	*ptr;
-	size_t	i;
+// bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
+// {
+// 	char	*str;
+// 	char	*result;
+// 	size_t	i;
+// 	char	*quote;
 
-	if (!**str || is_whitespace(*str, "") || (*quote && **str == **quote))
-		*result = str_join(ms, *result, "$", VOLATILE);
-	else if (**str == '?')
-	{
-		*result = str_join(\
-ms, *result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
-		(*str)++;
-	}
-	else
-		join_var(ms, str, result, *quote, mode);
-	ptr = ft_strchr(*str, '$');
-	if (!ptr)
-		return (false);
-	i = 0;
-	if (*quote && find_quote(*str + i) && find_quote(*str + i) < ptr)
-	{
-		*quote = NULL;
-		i = 1;
-	}
-	if (!*quote)
-	{
-		*quote = find_quote(*str + i);
-		if (*quote && *quote > ptr)
-			*quote = NULL;
-		while (*quote && &((*quote)[i]) < ptr)
-		{
-			++i;
-			if (**quote == (*quote)[i])
-			{
-				*quote = find_quote(&((*quote)[i + 1]));
-				i = 0;
-			}
-		}
-	}
-	if (*quote && *quote > ptr)
-		*quote = NULL;
-	*result = str_join(\
-ms, *result, str_sub(ms, VOLATILE, *str, ptr - *str), VOLATILE);
-	*str = ptr;
-	return (true);
-}
+// 	str = ft_strchr(*src, '$');
+// 	if (!str)
+// 		return (false);
+// 	i = str - *src;
+// 	result = alloc_volatile(ms, i + 1);
+// 	ft_memcpy(result, *src, i);
+// 	quote = find_quote(*src);
+// 	i = 0;
+// 	while (quote && &(quote[i]) < str)
+// 	{
+// 		++i;
+// 		if (*quote == quote[i])
+// 		{
+// 			quote = find_quote(&(quote[i + 1]));
+// 			i = 0;
+// 		}
+// 	}
+// 	if (quote && quote > str)
+// 		quote = NULL;
+// 	while (str++)
+// 	{
+// 		if (!expand(ms, &str, &result, &quote, mode))
+// 			break ;
+// 	}
+// 	result = str_join(ms, result, str, VOLATILE);
+// 	*src = result;
+// 	return (true);
+// }
+
+// static inline bool	expand(
+// t_minishell *ms, char **str, char **result, char **quote, t_expand_mode mode)
+// {
+// 	char	*ptr;
+// 	size_t	i;
+
+// 	if (!**str || is_whitespace(*str, "") || (*quote && **str == **quote))
+// 		*result = str_join(ms, *result, "$", VOLATILE);
+// 	else if (**str == '?')
+// 	{
+// 		*result = str_join(
+// ms, *result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
+// 		(*str)++;
+// 	}
+// 	else
+// 		join_var(ms, str, result, *quote, mode);
+// 	ptr = ft_strchr(*str, '$');
+// 	if (!ptr)
+// 		return (false);
+// 	i = 0;
+// 	if (*quote && find_quote(*str + i) && find_quote(*str + i) < ptr)
+// 	{
+// 		*quote = NULL;
+// 		i = 1;
+// 	}
+// 	if (!*quote)
+// 	{
+// 		*quote = find_quote(*str + i);
+// 		if (*quote && *quote > ptr)
+// 			*quote = NULL;
+// 		while (*quote && &((*quote)[i]) < ptr)
+// 		{
+// 			++i;
+// 			if (**quote == (*quote)[i])
+// 			{
+// 				*quote = find_quote(&((*quote)[i + 1]));
+// 				i = 0;
+// 			}
+// 		}
+// 	}
+// 	if (*quote && *quote > ptr)
+// 		*quote = NULL;
+// 	*result = str_join(
+// ms, *result, str_sub(ms, VOLATILE, *str, ptr - *str), VOLATILE);
+// 	*str = ptr;
+// 	return (true);
+// }
 
 bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 {
@@ -147,6 +181,10 @@ bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 	char	*result;
 	size_t	i;
 	char	*quote;
+	char	*ptr;
+	char		*val;
+	char		*name;
+	static char	c[2];
 
 	str = ft_strchr(*src, '$');
 	if (!str)
@@ -169,8 +207,80 @@ bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
 		quote = NULL;
 	while (str++)
 	{
-		if (!expand(ms, &str, &result, &quote, mode))
+		if (!*str || is_whitespace(str, "") || (quote && *str == *quote))
+			result = str_join(ms, result, "$", VOLATILE);
+		else if (*str == '?')
+		{
+			result = str_join(\
+ms, result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
+			str++;
+		}
+		else if (*str == '$')
+		{
+			result = str_join(ms, result, "$", VOLATILE);
+			str++;
+		}
+		else
+		{
+			i = 0;
+			val = NULL;
+			while (str[i] && str[i] != '$' && !is_whitespace(str + i, ""))
+			{
+				if ((str[i] == '\"' || str[i] == '\''))
+					break ;
+				++i;
+			}
+			if (!quote || *quote == '\"' || mode == EXPAND_HEREDOC)
+			{
+				name = str_sub(ms, VOLATILE, str, i);
+				val = get_env_val(ms, name);
+				c[0] = '\'' - (*val == '\'') * 5;
+				if (mode != EXPAND_HEREDOC && (*val == '\'' || *val == '\"'))
+					result = str_join(ms, result, c, VOLATILE);
+				if (!quote && mode != EXPAND_HEREDOC)
+					val = trim_spaces(ms, val);
+				result = str_join(ms, result, val, VOLATILE);
+				if (mode != EXPAND_HEREDOC && (*val == '\'' || *val == '\"'))
+					result = str_join(ms, result, c, VOLATILE);
+			}
+			else if (*quote == '\'')
+			{
+				str--;
+				++i;
+				val = str_sub(ms, VOLATILE, str, i);
+				result = str_join(ms, result, val, VOLATILE);
+			}
+			str += i;
+		}
+		ptr = ft_strchr(str, '$');
+		if (!ptr)
 			break ;
+		i = 0;
+		if (quote && find_quote(str + i) && find_quote(str + i) < ptr)
+		{
+			quote = NULL;
+			i = 1;
+		}
+		if (!quote)
+		{
+			quote = find_quote(str + i);
+			if (quote && quote > ptr)
+				quote = NULL;
+			while (quote && &((quote)[i]) < ptr)
+			{
+				++i;
+				if (*quote == (quote)[i])
+				{
+					quote = find_quote(&(quote[i + 1]));
+					i = 0;
+				}
+			}
+		}
+		if (quote && quote > ptr)
+			quote = NULL;
+		result = str_join(\
+ms, result, str_sub(ms, VOLATILE, str, ptr - str), VOLATILE);
+		str = ptr;
 	}
 	result = str_join(ms, result, str, VOLATILE);
 	*src = result;

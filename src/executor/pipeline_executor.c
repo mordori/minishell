@@ -27,6 +27,9 @@ void	spawn_and_run(t_minishell *ms, t_node *node, int in, int pipefd[2])
 	node->pid = child_pid;
 	if (child_pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGPIPE, SIG_DFL);
 		set_io(ms, node, in, pipefd);
 		run_node(ms, node);
 	}

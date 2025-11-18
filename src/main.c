@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/17 22:50:07 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 03:06:35 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "errors.h"
 #include "libft_mem.h"
 #include "parsing.h"
-#include "io.h"
+#include "file_utils.h"
 #include "cleanup.h"
 #include "str_utils.h"
 #include "line_utils.h"
@@ -76,10 +76,10 @@ static inline void	initialize(t_minishell *ms, char **envp)
 		ms->mode = INTERACTIVE;
 		rl_catch_signals = 0;
 		rl_event_hook = rl_event;
+		signal(SIGINT, sig_handler);
+		signal(SIGQUIT, sig_handler);
 	}
 	errno = 0;
-	signal(SIGINT, sig_handler);
-	signal(SIGQUIT, sig_handler);
 	signal(SIGPIPE, sig_handler);
 	fd = try_open(ms, "/proc/sys/kernel/random/uuid", O_RDONLY, 0);
 	if (fd == ERROR)
@@ -106,7 +106,10 @@ static inline void	run(t_minishell *ms)
 		reset_context(ms);
 		line = get_line(ms, get_prompt(ms, &p));
 		if (g_signal == SIGINT)
+		{
+			ms->state.exit_status = 130;
 			continue ;
+		}
 		if (!line)
 			exi(ms, NULL);
 		if (ms->mode == INTERACTIVE && *line && *line != ' ')
@@ -117,8 +120,6 @@ static inline void	run(t_minishell *ms)
 			continue ;
 		expand_variables(ms);
 		setup_io(ms, ms->node);
-		if (g_signal)
-			ms->state.exit_status = (128 + g_signal);
 		executor(ms);
 	}
 }
@@ -126,10 +127,7 @@ static inline void	run(t_minishell *ms)
 // Error: TOO_MANY_ARGS        (line:  24, col:  77):      Function has more than 4 arguments
 // Error: TOO_MANY_LINES       (line:  65, col:   1):      Function has more than 25 lines
 // Error: TOO_MANY_LINES       (line: 120, col:   1):      Function has more than 25 lines
-// io.c: Error!
-// Error: TOO_MANY_LINES       (line:  63, col:   1):      Function has more than 25 lines
-// Error: TOO_MANY_LINES       (line:  96, col:   1):      Function has more than 25 lines
-// io_utils.c: OK!
+
 // expansion.c: Error!
 // Error: TOO_MANY_ARGS        (line:  26, col:  78):      Function has more than 4 arguments
 // Error: TOO_MANY_ARGS        (line:  97, col:  78):      Function has more than 4 arguments

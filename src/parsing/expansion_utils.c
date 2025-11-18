@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 23:33:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/17 21:37:38 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 03:55:57 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 #include "arena_list.h"
 #include "arena.h"
 #include "env.h"
-
-static inline char	*trim_spaces(t_minishell *ms, char *src);
 
 void	join_var(\
 t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode)
@@ -79,7 +77,7 @@ char	*find_quote(char *str)
 		return (double_q);
 }
 
-static inline char	*trim_spaces(t_minishell *ms, char *src)
+char	*trim_spaces(t_minishell *ms, char *src)
 {
 	char	*result;
 	char	*ifs;

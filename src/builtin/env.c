@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:07:03 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/04 17:10:25 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/18 03:04:25 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
-#include "io.h"
+#include "file_utils.h"
 
 int	env(t_minishell *ms, t_node *node)
 {

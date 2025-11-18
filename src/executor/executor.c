@@ -18,13 +18,17 @@ static void	wait_pids(t_minishell *ms);
 void	executor(t_minishell *ms)
 {
 	if (!ms->node->cmd.args)
+	{
+		close_all_fds(ms);
 		return ;
+	}
 	set_mode(ms);
 	if (ms->state.mode == SIMPLE)
 	{
 		if (ms->node->cmd.redir_in == ERROR || ms->node->cmd.redir_out == ERROR)
 		{
 			ms->state.exit_status = ERROR_GENERAL;
+			close_all_fds(ms);
 			return ;
 		}
 		ms->state.exit_status = execute_simple(ms);
@@ -34,6 +38,7 @@ void	executor(t_minishell *ms)
 	{
 		ms->state.exit_status = execute_pipeline(ms);
 	}
+	close_all_fds(ms);
 }
 
 int	execute_simple(t_minishell *ms)
@@ -51,6 +56,9 @@ int	execute_simple(t_minishell *ms)
 	try_fork(ms, &child_pid);
 	if (child_pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGPIPE, SIG_DFL);
 		dup_redirections(ms, ms->node);
 		run_node(ms, ms->node);
 	}

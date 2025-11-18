@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 03:53:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/17 22:39:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 03:06:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "errors.h"
 #include "arena.h"
 #include "env.h"
-#include "io.h"
+#include "file_utils.h"
 
 static inline char	*dup_line(\
 t_minishell *ms, const char *src, unsigned int start, size_t len);
@@ -73,7 +73,7 @@ int	rl_event(void)
 	if (g_signal == SIGINT)
 	{
 		bytes = write(1, "^C", 2);
-		if (bytes == ERROR)
+		if (bytes < 2)
 			perror("minishell");
 		rl_done = 1;
 		return (1);

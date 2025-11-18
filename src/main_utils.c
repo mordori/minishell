@@ -21,7 +21,6 @@ void	reset_context(t_minishell *ms)
 {
 	errno = 0;
 	g_signal = 0;
-	close_all_fds(ms);
 	arena_reset(&ms->pool);
 	store_pwd(ms);
 }

@@ -6,14 +6,14 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/17 20:09:47 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 03:04:36 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "cleanup.h"
 #include "errors.h"
-#include "io.h"
+#include "file_utils.h"
 
 static inline bool	is_numbers(const char *str, int *i);
 static inline void	warn_numeric(t_minishell *ms, const char *arg);

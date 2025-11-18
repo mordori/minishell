@@ -3,27 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 13:52:41 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/12 17:40:59 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/18 03:05:36 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTIN_H
 # define BUILTIN_H
 
-# include "builtin_utils.h"
+# include <stdio.h>
+# include <stdlib.h>
+
 # include "defines.h"
+# include "builtin_utils.h"
 # include "libft_list.h"
 # include "env.h"
 # include "cleanup.h"
 # include "errors.h"
 # include "str_utils.h"
 # include "libft_str.h"
-# include "io.h"
-# include <stdio.h>
-# include <stdlib.h>
+# include "file_utils.h"
 
 //cd.c
 int		cd(t_minishell *ms, t_node *node);

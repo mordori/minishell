@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/07 12:42:18 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/18 03:55:44 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@ void	split_words(t_minishell *ms, char *src, t_list **list);
 void	join_var(\
 t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode);
 char	*find_quote(char *str);
+char	*trim_spaces(t_minishell *ms, char *src);
 
 #endif

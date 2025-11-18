@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/17 22:55:32 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 03:06:01 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "libft_str.h"
 #include "str_utils.h"
 #include "cleanup.h"
-#include "io.h"
+#include "file_utils.h"
 
 static inline void	print_error(char *msg);
 
