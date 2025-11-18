@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_verifier.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:23:27 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/14 11:36:51 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/17 20:36:34 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,22 @@ int	command_verification(t_minishell *ms, t_node *node)
 	arg = node->cmd.args[0];
 	if (status == ERROR_CMD_NOTFOUND)
 	{
+		if (errno == ENOENT && \
+(*arg == '/' || (*arg == '.' && *(arg + 1) == '/')))
+		{
+			warning(ms, arg);
+			return (ERROR_CMD_NOTFOUND);
+		}
 		errno = 0;
 		warning(ms, str_join(ms, arg, ": command not found", VOLATILE));
 	}
-	if (status == ERROR_CMD_CANTEXEC)
-	{
-		warning(ms, arg);
-	}
-	stat(node->cmd.cmd, &buf);
-	if (S_ISDIR(buf.st_mode))
+	else if (stat(arg, &buf) == 0 && S_ISDIR(buf.st_mode))
 	{
 		warning(ms, str_join(ms, arg, ": Is a directory", VOLATILE));
-		status = ERROR_CMD_CANTEXEC;
+		return (ERROR_CMD_CANTEXEC);
 	}
+	else if (status == ERROR_CMD_CANTEXEC)
+		warning(ms, arg);
 	return (status);
 }
 

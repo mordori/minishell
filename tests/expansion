@@ -77,7 +77,7 @@ echo 21b. "$VAR$VAR"
 echo 22b. '$VAR$VAR'
 echo 23b. ''$VAR''$VAR''
 echo 24b. "$VAR""$VAR""$VAR"
-echo 25a. "'"'$VAR'"'"
+echo 25b. "'"'$VAR'"'"
 echo
 echo 1c. $?
 echo 2c. $"$?"

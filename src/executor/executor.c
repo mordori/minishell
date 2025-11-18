@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/14 13:14:13 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/17 22:45:30 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,18 @@ static void	wait_pids(t_minishell *ms);
 
 void	executor(t_minishell *ms)
 {
+	if (!ms->node->cmd.args)
+	{
+		close_all_fds(ms);
+		return ;
+	}
 	set_mode(ms);
 	if (ms->state.mode == SIMPLE)
 	{
-		if (ms->node->cmd.in == ERROR || ms->node->cmd.out == ERROR)
+		if (ms->node->cmd.redir_in == ERROR || ms->node->cmd.redir_out == ERROR)
 		{
 			ms->state.exit_status = ERROR_GENERAL;
+			close_all_fds(ms);
 			return ;
 		}
 		ms->state.exit_status = execute_simple(ms);
@@ -32,6 +38,7 @@ void	executor(t_minishell *ms)
 	{
 		ms->state.exit_status = execute_pipeline(ms);
 	}
+	close_all_fds(ms);
 }
 
 int	execute_simple(t_minishell *ms)
@@ -43,12 +50,15 @@ int	execute_simple(t_minishell *ms)
 	if (status)
 		return (status);
 	if (ms->node->cmd.builtin \
-&& ms->node->cmd.in == STDIN_FILENO \
-&& ms->node->cmd.out == STDOUT_FILENO)
+&& ms->node->cmd.redir_in == STDIN_FILENO \
+&& ms->node->cmd.redir_out == STDOUT_FILENO)
 		return (exec_builtin(ms, ms->node));
 	try_fork(ms, &child_pid);
 	if (child_pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGPIPE, SIG_DFL);
 		dup_redirections(ms, ms->node);
 		run_node(ms, ms->node);
 	}
@@ -101,7 +111,7 @@ static void	wait_pids(t_minishell *ms)
 			if (WIFEXITED(status))
 				ms->state.exit_status = WEXITSTATUS(status);
 		}
-		if (node->cmd.in == ERROR || node->cmd.out == ERROR)
+		if (node->cmd.redir_in == ERROR || node->cmd.redir_out == ERROR)
 			ms->state.exit_status = ERROR_GENERAL;
 		node = node->next;
 	}

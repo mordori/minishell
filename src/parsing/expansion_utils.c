@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 23:33:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/07 20:00:27 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 05:05:56 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,21 @@
 #include "arena.h"
 #include "env.h"
 
-static inline char	*trim_spaces(t_minishell *ms, char *src);
-
-#include <stdio.h>
-void	join_var(t_minishell *ms, char **str, char **result, char *quote, t_expand_mode mode)
+char	*join_var(t_minishell *ms, char **str, char *quote, t_expand_mode mode)
 {
 	size_t		i;
 	char		*val;
 	char		*name;
 	static char	c[2];
+	char		*result;
 
 	i = 0;
 	val = NULL;
-	if ((*str)[i] == '$')
-	{
-		*result = str_join(ms, *result, "$", VOLATILE);
-		return ;
-	}
+	result = "";
 	while ((*str)[i] && (*str)[i] != '$' && !is_whitespace(*str + i, ""))
 	{
 		if (((*str)[i] == '\"' || (*str)[i] == '\''))
-			break;
+			break ;
 		++i;
 	}
 	if (!quote || *quote == '\"' || mode == EXPAND_HEREDOC)
@@ -47,24 +41,54 @@ void	join_var(t_minishell *ms, char **str, char **result, char *quote, t_expand_
 		val = get_env_val(ms, name);
 		c[0] = '\'' - (*val == '\'') * 5;
 		if (mode != EXPAND_HEREDOC && (*val == '\'' || *val == '\"'))
-			*result = str_join(ms, *result, c, VOLATILE);
+			result = str_join(ms, result, c, VOLATILE);
 		if (!quote && mode != EXPAND_HEREDOC)
 			val = trim_spaces(ms, val);
-		*result = str_join(ms, *result, val, VOLATILE);
+		result = str_join(ms, result, val, VOLATILE);
 		if (mode != EXPAND_HEREDOC && (*val == '\'' || *val == '\"'))
-			*result = str_join(ms, *result, c, VOLATILE);
+			result = str_join(ms, result, c, VOLATILE);
 	}
 	else if (*quote == '\'')
 	{
 		(*str)--;
 		++i;
 		val = str_sub(ms, VOLATILE, *str, i);
-		*result = str_join(ms, *result, val, VOLATILE);
+		result = str_join(ms, result, val, VOLATILE);
 	}
 	*str += i;
+	return (result);
 }
 
-char	*find_quote(char *str)
+void	find_quote(char *str, char **quote, char *ptr)
+{
+	size_t	i;
+
+	i = 0;
+	if (*quote && locate_quote(str + i) && locate_quote(str + i) < ptr)
+	{
+		*quote = NULL;
+		i = 1;
+	}
+	if (!*quote)
+	{
+		*quote = locate_quote(str + i);
+		if (*quote && *quote > ptr)
+			*quote = NULL;
+		while (*quote && *quote + i < ptr)
+		{
+			++i;
+			if (**quote == (*quote)[i])
+			{
+				*quote = locate_quote(*quote + i + 1);
+				i = 0;
+			}
+		}
+	}
+	if (*quote && *quote > ptr)
+		*quote = NULL;
+}
+
+char	*locate_quote(char *str)
 {
 	char	*single_q;
 	char	*double_q;
@@ -79,7 +103,7 @@ char	*find_quote(char *str)
 		return (double_q);
 }
 
-static inline char	*trim_spaces(t_minishell *ms, char *src)
+char	*trim_spaces(t_minishell *ms, char *src)
 {
 	char	*result;
 	char	*ifs;
@@ -87,7 +111,7 @@ static inline char	*trim_spaces(t_minishell *ms, char *src)
 	size_t	i;
 
 	str = src;
-	ifs = get_env_val(ms, "IFS");
+	ifs = get_env_val(ms, "");
 	i = 0;
 	while (*str)
 	{

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/11 13:17:21 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 04:57:53 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,17 @@
 #include "arena.h"
 #include "env.h"
 
+#include <stdio.h>
+
 static inline void	expand_args(t_minishell *ms, t_node *node, char **args);
 static inline void	expand_redirs(t_minishell *ms, t_list *redirs);
-static inline bool	expand(t_minishell *ms, char **str, char **result, char **quote, t_expand_mode mode);
 
 void	expand_variables(t_minishell *ms)
 {
 	t_node	*node;
 
 	node = ms->node;
-	while(node)
+	while (node)
 	{
 		if (node->cmd.args)
 			expand_args(ms, node, node->cmd.args);
@@ -46,7 +47,7 @@ static inline void	expand_args(t_minishell *ms, t_node *node, char **raw_args)
 	args = raw_args;
 	while (*args)
 	{
-		expand_str(ms, args, EXPAND_DEFAULT);
+		*args = expand_str(ms, *args, EXPAND_DEFAULT);
 		split_words(ms, *args, &list);
 		++args;
 	}
@@ -78,7 +79,7 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 		r->name = r->file;
 		if (r->type != HEREDOC)
 		{
-			expand_str(ms, &r->file, EXPAND_DEFAULT);
+			r->file = expand_str(ms, r->file, EXPAND_DEFAULT);
 			split_words(ms, r->file, &list);
 			if (list)
 				r->file = remove_quotes(ms, list->content);
@@ -89,86 +90,125 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 		redirs = redirs->next;
 	}
 }
-#include <stdio.h>
-static inline bool	expand(t_minishell *ms, char **str, char **result, char **quote, t_expand_mode mode)
-{
-	char	*ptr;
-	size_t	i;
 
-	if (!**str || (*quote && **str == **quote))
-		*result = str_join(ms, *result, "$", VOLATILE);
-	else if (**str == '?')
-	{
-		*result = str_join(ms, *result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
-		(*str)++;
-	}
-	else
-		join_var(ms, str, result, *quote, mode);
-	ptr = ft_strchr(*str, '$');
-	if (!ptr)
-		return (false);
-	i = 0;
-	if (*quote && *quote < ptr)
-	{
-		*quote = NULL;
-		i = 1;
-	}
-	if (!*quote)
-	{
-		*quote = find_quote(*str + i);
-		if (*quote && *quote > ptr)
-			*quote = NULL;
-		while (*quote && &((*quote)[i]) < ptr)
-		{
-			++i;
-			if (**quote == (*quote)[i])
-			{
-				*quote = find_quote(&((*quote)[i + 1]));
-				i = 0;
-			}
-		}
-	}
-	if (*quote && *quote > ptr)
-		*quote = NULL;
-	*result = str_join(ms, *result, str_sub(ms, VOLATILE, *str, ptr - *str), VOLATILE);
-	*str = ptr;
-	return (true);
-}
+// bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
+// {
+// 	char	*str;
+// 	char	*result;
+// 	size_t	i;
+// 	char	*quote;
 
-bool	expand_str(t_minishell *ms, char **src, t_expand_mode mode)
+// 	str = ft_strchr(*src, '$');
+// 	if (!str)
+// 		return (false);
+// 	i = str - *src;
+// 	result = alloc_volatile(ms, i + 1);
+// 	ft_memcpy(result, *src, i);
+// 	quote = find_quote(*src);
+// 	i = 0;
+// 	while (quote && &(quote[i]) < str)
+// 	{
+// 		++i;
+// 		if (*quote == quote[i])
+// 		{
+// 			quote = find_quote(&(quote[i + 1]));
+// 			i = 0;
+// 		}
+// 	}
+// 	if (quote && quote > str)
+// 		quote = NULL;
+// 	while (str++)
+// 	{
+// 		if (!expand(ms, &str, &result, &quote, mode))
+// 			break ;
+// 	}
+// 	result = str_join(ms, result, str, VOLATILE);
+// 	*src = result;
+// 	return (true);
+// }
+
+// static inline bool	expand(
+// t_minishell *ms, char **str, char **result, char **quote, t_expand_mode mode)
+// {
+// 	char	*ptr;
+// 	size_t	i;
+
+// 	if (!**str || is_whitespace(*str, "") || (*quote && **str == **quote))
+// 		*result = str_join(ms, *result, "$", VOLATILE);
+// 	else if (**str == '?')
+// 	{
+// 		*result = str_join(
+// ms, *result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
+// 		(*str)++;
+// 	}
+// 	else
+// 		join_var(ms, str, result, *quote, mode);
+// 	ptr = ft_strchr(*str, '$');
+// 	if (!ptr)
+// 		return (false);
+// 	i = 0;
+// 	if (*quote && find_quote(*str + i) && find_quote(*str + i) < ptr)
+// 	{
+// 		*quote = NULL;
+// 		i = 1;
+// 	}
+// 	if (!*quote)
+// 	{
+// 		*quote = find_quote(*str + i);
+// 		if (*quote && *quote > ptr)
+// 			*quote = NULL;
+// 		while (*quote && &((*quote)[i]) < ptr)
+// 		{
+// 			++i;
+// 			if (**quote == (*quote)[i])
+// 			{
+// 				*quote = find_quote(&((*quote)[i + 1]));
+// 				i = 0;
+// 			}
+// 		}
+// 	}
+// 	if (*quote && *quote > ptr)
+// 		*quote = NULL;
+// 	*result = str_join(
+// ms, *result, str_sub(ms, VOLATILE, *str, ptr - *str), VOLATILE);
+// 	*str = ptr;
+// 	return (true);
+// }
+
+char	*expand_str(t_minishell *ms, char *src, t_expand_mode mode)
 {
 	char	*str;
 	char	*result;
-	size_t	i;
 	char	*quote;
 
-	str = ft_strchr(*src, '$');
+	str = ft_strchr(src, '$');
 	if (!str)
-		return (false);
-	i = str - *src;
-	result = alloc_volatile(ms, i + 1);
-	ft_memcpy(result, *src, i);
-	quote = find_quote(*src);
-	i = 0;
-	while (quote && &(quote[i]) < str)
-	{
-		++i;
-		if (*quote == quote[i])
-		{
-			quote = find_quote(&(quote[i + 1]));
-			i = 0;
-		}
-	}
-	if (quote && quote > str)
-		quote = NULL;
+		return (src);
+	result = alloc_volatile(ms, str - src + 1);
+	ft_memcpy(result, src, str - src);
+	quote = NULL;
+	find_quote(src, &quote, str);
 	while (str++)
 	{
-		if (!expand(ms, &str, &result, &quote, mode))
-			break;
+		if (!*str || is_whitespace(str, "") || (quote && *str == *quote) || *str == '$')
+			result = str_join(ms, result, "$", VOLATILE);
+		else if (*str == '?')
+			result = str_join(\
+ms, result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
+		else
+			result = str_join(ms, result, join_var(ms, &str, quote, mode), VOLATILE);
+		if (*str == '$' || *str == '?')
+			str++;
+		src = ft_strchr(str, '$');
+		if (!src)
+			break ;
+		find_quote(str, &quote, src);
+		result = str_join(\
+ms, result, str_sub(ms, VOLATILE, str, src - str), VOLATILE);
+		str = src;
 	}
 	result = str_join(ms, result, str, VOLATILE);
-	*src = result;
-	return (true);
+	return (result);
 }
 
 void	split_words(t_minishell *ms, char *src, t_list **list)
@@ -183,7 +223,6 @@ void	split_words(t_minishell *ms, char *src, t_list **list)
 	ifs = get_env_val(ms, "IFS");
 	src = str_trim(src, ifs);
 	quotes = 0;
-	//printf("SRC: %s\n", src);
 	while (*src)
 	{
 		i = 0;
@@ -227,6 +266,35 @@ void	split_words(t_minishell *ms, char *src, t_list **list)
 	}
 }
 
+// char	*remove_quotes(t_minishell *ms, char *src)
+// {
+// 	char	*result;
+// 	char	*quote;
+// 	size_t	i;
+
+// 	quote = find_quote(src);
+// 	if (!quote)
+// 		return (src);
+// 	i = quote - src;
+// 	result = alloc_volatile(ms, i + 1);
+// 	ft_memcpy(result, src, i);
+// 	while (*src)
+// 	{
+// 		i = 0;
+// 		src = quote + 1;
+// 		while (src[i] != *quote)
+// 			++i;
+// 		result = str_join(ms, result, str_sub(ms, VOLATILE, src, i), VOLATILE);
+// 		if (!*(src + 1))
+// 			break ;
+// 		quote = find_quote(src);
+// 		if (!quote)
+// 			break ;
+// 		result = str_join(ms, result, str_sub(ms, VOLATILE, src, quote - src), VOLATILE);
+// 	}
+// 	result = str_join(ms, result, src, VOLATILE);
+// 	return (result);
+// }
 char	*remove_quotes(t_minishell *ms, char *src)
 {
 	char	*result;
@@ -236,7 +304,7 @@ char	*remove_quotes(t_minishell *ms, char *src)
 	bool	is_double;
 
 	is_double = false;
-	quote = find_quote(src);
+	quote = locate_quote(src);
 	if (!quote)
 		return (src);
 	i = quote - src;
@@ -261,10 +329,10 @@ char	*remove_quotes(t_minishell *ms, char *src)
 		result = str_join(ms, result, str_sub(ms, VOLATILE, src, i), VOLATILE);
 		src += i + k;
 		if (!*(src + 1))
-			break;
-		quote = find_quote(src + (k == 2));
+			break ;
+		quote = locate_quote(src + (k == 2));
 		if (!quote)
-			break;
+			break ;
 		result = str_join(ms, result, str_sub(ms, VOLATILE, src, quote - src), VOLATILE);
 	}
 	result = str_join(ms, result, src, VOLATILE);

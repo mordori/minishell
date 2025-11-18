@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   io.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 05:09:20 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/27 17:07:13 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/18 03:03:07 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,5 @@
 
 void	setup_io(t_minishell *ms, t_node *node);
 void	dup_redirections(t_minishell *ms, t_node *node);
-int		try_open(t_minishell *ms, char *file, int o_flag, int p_flag);
-ssize_t	try_write(t_minishell *ms, int fd, char *src);
-ssize_t	try_write_endl(t_minishell *ms, int fd, char *src);
-ssize_t	try_read(t_minishell *ms, int fd, char *buf, size_t n_bytes);
 
 #endif

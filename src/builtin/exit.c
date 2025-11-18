@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/12 16:07:50 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/18 03:04:36 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "cleanup.h"
 #include "errors.h"
-#include "io.h"
+#include "file_utils.h"
 
 static inline bool	is_numbers(const char *str, int *i);
 static inline void	warn_numeric(t_minishell *ms, const char *arg);
@@ -30,6 +30,7 @@ int	exi(t_minishell *ms, t_node *node)
 	{
 		if (node->cmd.argc > 2)
 		{
+			errno = 0;
 			warning(ms, "exit: too many arguments");
 			return (ERROR_GENERAL);
 		}
@@ -82,6 +83,7 @@ static inline bool	is_numbers(const char *str, int *i)
 
 static inline void	warn_numeric(t_minishell *ms, const char *arg)
 {
+	errno = 0;
 	warning(ms, \
 str_join(ms, "exit: ", \
 str_join(ms, arg, ": numeric argument required", \

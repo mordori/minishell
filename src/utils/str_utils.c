@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/07 12:42:39 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/17 20:42:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ t_minishell *ms, t_arena_type type, const char *src, size_t len)
 	return (sub);
 }
 
-char	*str_join(t_minishell *ms, const char *s1, const char *s2, t_arena_type type)
+char	*str_join(\
+t_minishell *ms, const char *s1, const char *s2, t_arena_type type)
 {
 	char	*str;
 	size_t	len1;
@@ -99,30 +100,4 @@ char	**str_split(t_minishell *ms, const char *src, char c)
 	}
 	strs[i] = NULL;
 	return (strs);
-}
-
-bool	is_whitespace(const char *src, const char *set)
-{
-	if (!*set)
-		set = get_ifs();
-	while (*set)
-	{
-		if (*src == *set)
-			return (true);
-		++set;
-	}
-	return (false);
-}
-
-char	*str_trim(char *src, const char *set)
-{
-	size_t	len;
-
-	while (is_whitespace(src, set))
-		++src;
-	len = ft_strlen(src);
-	while (is_whitespace(src + len, set))
-		--len;
-	src[len] = 0;
-	return (src);
 }

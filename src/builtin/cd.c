@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/14 10:44:46 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/18 03:04:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
-#include "io.h"
+#include "file_utils.h"
 
 static void	update_opwd(t_minishell *ms);
 static void	update_pwd(t_minishell *ms);
@@ -24,15 +24,14 @@ int	cd(t_minishell *ms, t_node *node)
 
 	if (node->cmd.args[2])
 	{
+		errno = 0;
 		warning(ms, str_join(ms, "cd: ", "too many arguments", VOLATILE));
 		return (ERROR_GENERAL);
 	}
 	path = node->cmd.args[1];
 	if (!path)
-	{
 		if (get_home(ms, &path))
 			return (ERROR_GENERAL);
-	}
 	if (handle_cd_specs(ms, &path, node, is_1st_cd))
 		return (ERROR_GENERAL);
 	update_opwd(ms);
@@ -67,7 +66,7 @@ int	get_opwd(t_minishell *ms, t_node *node, char **path, bool is_1st)
 		warning(ms, "cd: OLDPWD not set");
 		return (ERROR_GENERAL);
 	}
-	try_write_endl(ms, node->cmd.out, *path);
+	try_write_endl(ms, node->cmd.redir_out, *path);
 	return (SUCCESS);
 }
 

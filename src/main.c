@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/14 12:48:01 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/18 03:06:35 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "errors.h"
 #include "libft_mem.h"
 #include "parsing.h"
-#include "io.h"
+#include "file_utils.h"
 #include "cleanup.h"
 #include "str_utils.h"
 #include "line_utils.h"
@@ -25,10 +25,8 @@
 
 volatile sig_atomic_t	g_signal = 0;
 
-static inline void	startup(void);
 static inline void	initialize(t_minishell *ms, char **envp);
 static inline void	run(t_minishell *ms);
-void			store_pwd(t_minishell *ms);
 
 /**
  * @brief	Entry point to the program.
@@ -43,12 +41,8 @@ int	main(int argc, char *argv[], char **envp)
 
 	(void)argv;
 	if (isatty(STDIN_FILENO))
-		startup();
-	else
-		errno = 0;
-#ifdef DEBUG
-printf("\033[1;33m[DEBUG]\033[0m\n");
-#endif
+		startup_msg();
+	errno = 0;
 	if (MEMORY < 0)
 		error_exit(NULL, "defined memory amount is negative");
 	if (argc > 1)
@@ -58,11 +52,6 @@ printf("\033[1;33m[DEBUG]\033[0m\n");
 	status = ms.state.exit_status;
 	clean(&ms);
 	return (status);
-}
-
-void	sig_handler(int signum)
-{
-	g_signal = signum;
 }
 
 /**
@@ -87,11 +76,11 @@ static inline void	initialize(t_minishell *ms, char **envp)
 		ms->mode = INTERACTIVE;
 		rl_catch_signals = 0;
 		rl_event_hook = rl_event;
+		signal(SIGINT, sig_handler);
+		signal(SIGQUIT, sig_handler);
 	}
-	else
-		errno = 0;
-	signal(SIGINT, sig_handler);
-	signal(SIGQUIT, sig_handler);
+	errno = 0;
+	signal(SIGPIPE, sig_handler);
 	fd = try_open(ms, "/proc/sys/kernel/random/uuid", O_RDONLY, 0);
 	if (fd == ERROR)
 		error_exit(ms, "could not open /proc/sys/kernel/random/uuid");
@@ -114,12 +103,13 @@ static inline void	run(t_minishell *ms)
 	set_prompt_names(ms, &p);
 	while (true)
 	{
-		g_signal = 0;
-		arena_reset(&ms->pool);
-		store_pwd(ms);
+		reset_context(ms);
 		line = get_line(ms, get_prompt(ms, &p));
 		if (g_signal == SIGINT)
+		{
+			ms->state.exit_status = 130;
 			continue ;
+		}
 		if (!line)
 			exi(ms, NULL);
 		if (ms->mode == INTERACTIVE && *line && *line != ' ')
@@ -130,48 +120,25 @@ static inline void	run(t_minishell *ms)
 			continue ;
 		expand_variables(ms);
 		setup_io(ms, ms->node);
-		if (g_signal)
-			ms->state.exit_status = 128 + g_signal;
-		if (ms->node->cmd.args)
-			executor(ms);
-		close_all_fds(ms);
+		executor(ms);
 	}
 }
 
-void	store_pwd(t_minishell *ms)
-{
-	char	*cwd;
-	char	buf[PATH_MAX];
+// Error: TOO_MANY_ARGS        (line:  24, col:  77):      Function has more than 4 arguments
+// Error: TOO_MANY_LINES       (line:  65, col:   1):      Function has more than 25 lines
+// Error: TOO_MANY_LINES       (line: 120, col:   1):      Function has more than 25 lines
 
-	cwd = getcwd(buf, sizeof(buf));
-	if (!cwd)
-	{
-		if (errno == ENOENT && ms->pwd[0])
-			return ;
-		else
-			error_exit(ms, "get cwd failed");
-	}
-	ft_memcpy(ms->pwd, cwd, ft_strlen(cwd) + 1);
-}
-
-/**
- * @brief	Prints out a cool startup message. Wow!
- *
- * @return	Success status of the operation.
- */
-static inline void	startup(void)
-{
-	if (printf("%s%s%s%s%s%s%s%s%s%s\n", \
-"   ________   ________  ________   ________  _", \
-"_______  ________  ________  _______   _______ \n", \
-"  ╱        ╲ ╱        ╲╱    ╱   ╲ ╱        ╲╱ ", \
-"       ╲╱    ╱   ╲╱        ╲╱       ╲ ╱       ╲\n", \
-" ╱         ╱_╱       ╱╱         ╱_╱       ╱╱  ", \
-"      _╱         ╱         ╱        ╱╱        ╱\n", \
-"╱         ╱╱         ╱         ╱╱         ╱-  ", \
-"      ╱         ╱        _╱        ╱╱        ╱ \n", \
-"╲__╱__╱__╱ ╲________╱╲__╱_____╱ ╲________╱╲___", \
-"_____╱╲___╱____╱╲________╱╲________╱╲________╱ \n") \
-< 0)
-		error_exit(NULL, NULL);
-}
+// expansion.c: Error!
+// Error: TOO_MANY_ARGS        (line:  26, col:  78):      Function has more than 4 arguments
+// Error: TOO_MANY_ARGS        (line:  97, col:  78):      Function has more than 4 arguments
+// Error: TOO_MANY_LINES       (line: 142, col:   1):      Function has more than 25 lines
+// Error: TOO_MANY_LINES       (line: 178, col:   1):      Function has more than 25 lines
+// Error: TOO_MANY_FUNCS       (line: 180, col:   1):      Too many functions in file
+// Error: TOO_MANY_VARS_FUNC   (line: 187, col:   1):      Too many variables declarations in a function
+// Error: TOO_MANY_LINES       (line: 233, col:   1):      Function has more than 25 lines
+// Error: LINE_TOO_LONG        (line: 259, col:   1):      line too long
+// Error: LINE_TOO_LONG        (line: 259, col:  90):      line too long
+// Error: TOO_MANY_FUNCS       (line: 264, col:   1):      Too many functions in file
+// Error: LINE_TOO_LONG        (line: 283, col:  82):      line too long
+// Error: LINE_TOO_LONG        (line: 302, col:  88):      line too long
+// Error: TOO_MANY_LINES       (line: 306, col:   1):      Function has more than 25 lines

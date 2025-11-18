@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 19:13:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/20 20:00:30 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 03:06:22 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "libft_str.h"
 #include "libft_mem.h"
 #include "errors.h"
-#include "io.h"
+#include "file_utils.h"
 
 static inline char	*join_lines(t_minishell *ms, char *line, const char *buf);
 static inline char	*extract_line(t_minishell *ms, const char *buf);

@@ -1,26 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.h                                             :+:      :+:    :+:   */
+/*   file_utils.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/02 16:53:19 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/17 20:34:58 by myli-pen         ###   ########.fr       */
+/*   Created: 2025/11/18 03:02:12 by myli-pen          #+#    #+#             */
+/*   Updated: 2025/11/18 03:03:16 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAIN_H
-# define MAIN_H
+#ifndef FILE_UTILS_H
+# define FILE_UTILS_H
 
-# include <readline/readline.h>
-# include <readline/history.h>
+# define _GNU_SOURCE
+
+# include <fcntl.h>
+# include <unistd.h>
 
 # include "defines.h"
 
-void	sig_handler(int sig);
-void	store_pwd(t_minishell *ms);
-void	reset_context(t_minishell *ms);
-void	startup_msg(void);
+int		try_open(t_minishell *ms, char *file, int o_flag, int p_flag);
+ssize_t	try_write(t_minishell *ms, int fd, char *src);
+ssize_t	try_write_endl(t_minishell *ms, int fd, char *src);
+ssize_t	try_read(t_minishell *ms, int fd, char *buf, size_t n_bytes);
 
 #endif
