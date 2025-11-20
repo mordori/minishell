@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 23:33:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/20 02:42:36 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 03:56:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ bool	expand(t_minishell *ms, char **src, t_ctx_exp *ctx, t_expand_mode mode)
 {
 	if (ctx->quote == SQUOTE || (**src == '$' && (*src)[1] == 0) || \
 (**src == '$' && (*src)[1] == '$') || \
+(**src == '$' && (*src)[1] == '/') || \
 (**src == '$' && (*src)[1] != '?' && \
 !ft_isalpha((*src)[1]) && mode == EXPAND_HEREDOC) || \
 ((*src)[1] != '?' && !ft_isalpha((*src)[1]) && ctx->quote))
@@ -52,7 +53,9 @@ char	*join_var(t_minishell *ms, char **src, t_expand_mode mode)
 	char	*result;
 
 	i = 0;
-	while ((*src)[i] && (*src)[i] != '$' && !is_whitespace(*src + i, "") && (*src)[i] != SQUOTE && (*src)[i] != DQUOTE)
+	while ((*src)[i] && (*src)[i] != '$' && (*src)[i] != '/' && \
+(*src)[i] != '.' && \
+!is_whitespace(*src + i, "") && (*src)[i] != SQUOTE && (*src)[i] != DQUOTE)
 		++i;
 	key = str_sub(ms, VOLATILE, *src, i);
 	*src += i;

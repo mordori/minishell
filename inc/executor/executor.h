@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 10:33:34 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/04 18:06:40 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/20 03:01:59 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include "libft_str.h"
 # include "str_utils.h"
 # include "errors.h"
-# include "io.h"
 # include "executor_utils.h"
 # include <fcntl.h>
 # include <unistd.h>
@@ -29,9 +28,6 @@
 void	executor(t_minishell *ms);
 int		execute_simple(t_minishell *ms);
 int		execute_pipeline(t_minishell *ms);
-
-//DEBUG
-int		ft_log(char *file_name, char *func_name, char *data);
 
 //cmd_processor.c
 void	run_node(t_minishell *ms, t_node *node);

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 21:46:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/17 20:44:17 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 03:53:44 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ const char	**get_quotes(void)
 const char	**get_unsupported_chars(void)
 {
 	static const char	*characters[] = \
-{">|", ">>|", "<<<", "\\", ";", "&&", "&", "||", NULL};
+{">|", ">>|", "<<<", ";", "&&", "&", "||", NULL};
 
 	return (characters);
 }

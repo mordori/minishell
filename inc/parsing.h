@@ -6,15 +6,19 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/20 02:04:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 03:01:08 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSING_H
 # define PARSING_H
 
+# define _GNU_SOURCE
+
 # include <fcntl.h>
 # include <unistd.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 # include "defines.h"
 
@@ -40,5 +44,7 @@ void	unmask_quotes(char *src);
 void	append_expanded_str(t_minishell *ms, t_ctx_exp *ctx);
 void	append_chr(t_minishell *ms, char **src, t_ctx_exp *ctx);
 bool	expand(t_minishell *ms, char **src, t_ctx_exp *ctx, t_expand_mode mode);
+void	setup_io(t_minishell *ms, t_node *node);
+void	dup_redirections(t_minishell *ms, t_node *node);
 
 #endif

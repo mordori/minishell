@@ -6,12 +6,13 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/18 19:05:39 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 03:02:41 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "cleanup.h"
+#include "parsing.h"
 
 static void	wait_pids(t_minishell *ms);
 

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/18 19:51:53 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 03:33:02 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static inline void	initialize(t_minishell *ms, char **envp)
 		signal(SIGQUIT, sig_handler);
 	}
 	errno = 0;
-	signal(SIGPIPE, sig_handler);
+	signal(SIGPIPE, SIG_IGN);
 	fd = try_open(ms, "/proc/sys/kernel/random/uuid", O_RDONLY, 0);
 	if (fd == ERROR)
 		error_exit(ms, "could not open /proc/sys/kernel/random/uuid");
@@ -122,22 +122,3 @@ static inline void	run(t_minishell *ms)
 		executor(ms);
 	}
 }
-
-// expansion.c: Error!
-// Error: WRONG_SCOPE_COMMENT  (line:  51, col:   9):      Comment is invalid in this scope
-// expansion_utils.c: Error!
-// Error: CONSECUTIVE_NEWLINES (line:  21, col:   1):      Consecutive newlines
-// Error: CONSECUTIVE_NEWLINES (line:  22, col:   1):      Consecutive newlines
-// Error: CONSECUTIVE_NEWLINES (line:  25, col:   1):      Consecutive newlines
-// Error: CONSECUTIVE_NEWLINES (line:  26, col:   1):      Consecutive newlines
-// Error: CONSECUTIVE_NEWLINES (line:  27, col:   1):      Consecutive newlines
-// Error: WRONG_SCOPE_COMMENT  (line:  45, col:   5):      Comment is invalid in this scope
-// Error: WRONG_SCOPE_COMMENT  (line:  46, col:   5):      Comment is invalid in this scope
-// Error: TOO_MANY_LINES       (line:  69, col:   1):      Function has more than 25 lines
-// Error: TOO_MANY_LINES       (line: 153, col:   1):      Function has more than 25 lines
-// io.c: OK!
-// io_utils.c: OK!
-// expansion_utils_2.c: Error!
-// Error: TOO_MANY_LINES       (line:  95, col:   1):      Function has more than 25 lines
-// Error: TOO_MANY_VARS_FUNC   (line: 104, col:   1):      Too many variables declarations in a function
-// Error: TOO_MANY_LINES       (line: 150, col:   1):      Function has more than 25 lines
