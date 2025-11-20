@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 03:53:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/18 03:06:12 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 22:45:00 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ str_join(ms, \
 p->logname, VOLATILE), \
 "@", VOLATILE), \
 p->hostname, VOLATILE), \
-"\001\033[0m:\033[38;5;39m\002", VOLATILE), \
+"\001\033[0m\002:\001\033[38;5;39m\002", VOLATILE), \
 p->home, VOLATILE), \
 p->path, VOLATILE), \
 "\001\033[0m\002$ ", VOLATILE);
