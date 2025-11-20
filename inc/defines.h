@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/18 05:01:02 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 00:44:41 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@
 #  define MEM_UNIT				1024UL
 # endif
 # ifndef MEMORY
-#  define MEMORY				8388608UL
+#  define MEMORY				16777216UL
 # endif
 
 # ifndef MAX_HEREDOC
@@ -61,11 +61,19 @@
 # ifndef NAME_MAX
 #  define NAME_MAX				64
 # endif
+# ifndef EXP_BUF
+#  define EXP_BUF				1024
+# endif
 
 # define RW_RW_RW_				0666
 # define RW_______				0600
 
 # define PROMPT					"> "
+
+# define SQUOTE					'\''
+# define DQUOTE					'\"'
+# define MASK_SQ				1
+# define MASK_DQ				2
 
 extern volatile sig_atomic_t	g_signal;
 
@@ -88,6 +96,7 @@ typedef struct s_minishell		t_minishell;
 typedef struct s_redir			t_redir;
 typedef struct s_prompt			t_prompt;
 typedef struct s_key_value		t_key_value;
+typedef struct s_ctx_exp		t_ctx_exp;
 
 typedef int						t_fun(t_minishell *, t_node *);
 
@@ -171,7 +180,7 @@ struct s_token
 {
 	char			*src;
 	t_token_type	type;
-	size_t			pos;
+	int				pos;
 };
 
 struct s_cmd
@@ -229,6 +238,16 @@ struct s_prompt
 	char		logname[NAME_MAX];
 	char		*prompt;
 };
+
+struct s_ctx_exp
+{
+	size_t		i;
+	char		*result;
+	char		*temp;
+	char		quote;
+	char		buf[EXP_BUF + 1];
+};
+
 
 const char	**get_redirections(void);
 const char	**get_quotes(void);

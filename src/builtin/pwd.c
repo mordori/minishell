@@ -6,12 +6,11 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:03 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/12 16:01:45 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 03:02:27 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
-#include "io.h"
 
 int	pwd(t_minishell *ms, t_node *node)
 {

@@ -6,15 +6,20 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:09:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/18 04:46:25 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 03:01:08 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSING_H
 # define PARSING_H
 
+# define _GNU_SOURCE
+
 # include <fcntl.h>
 # include <unistd.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+
 # include "defines.h"
 
 bool	parse_tokens(t_minishell *ms, t_token **tokens);
@@ -34,9 +39,12 @@ bool	is_unsupported_char(t_minishell *ms, const char *src);
 char	*expand_str(t_minishell *ms, char *src, t_expand_mode mode);
 char	*remove_quotes(t_minishell *ms, char *src);
 void	split_words(t_minishell *ms, char *src, t_list **list);
-char	*join_var(t_minishell *ms, char **str, char *quote, t_expand_mode mode);
-char	*locate_quote(char *str);
-void	find_quote(char *str, char **quote, char *ptr);
-char	*trim_spaces(t_minishell *ms, char *src);
+char	*join_var(t_minishell *ms, char **src, t_expand_mode mode);
+void	unmask_quotes(char *src);
+void	append_expanded_str(t_minishell *ms, t_ctx_exp *ctx);
+void	append_chr(t_minishell *ms, char **src, t_ctx_exp *ctx);
+bool	expand(t_minishell *ms, char **src, t_ctx_exp *ctx, t_expand_mode mode);
+void	setup_io(t_minishell *ms, t_node *node);
+void	dup_redirections(t_minishell *ms, t_node *node);
 
 #endif

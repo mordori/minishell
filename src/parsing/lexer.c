@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 04:09:10 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/10/19 22:36:17 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 19:48:45 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,11 @@ static inline void	set_token_type(t_token *token)
 	else if (is_pipe(token->src))
 		token->type = PIPE;
 	else if (*token->src == '\n')
+	{
 		token->type = NEW_LINE;
+		token->src = "newline";
+		token->pos = ERROR;
+	}
 	else
 		token->type = WORD;
 }

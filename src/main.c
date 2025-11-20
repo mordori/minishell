@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/18 03:06:35 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 03:33:02 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static inline void	initialize(t_minishell *ms, char **envp)
 		signal(SIGQUIT, sig_handler);
 	}
 	errno = 0;
-	signal(SIGPIPE, sig_handler);
+	signal(SIGPIPE, SIG_IGN);
 	fd = try_open(ms, "/proc/sys/kernel/random/uuid", O_RDONLY, 0);
 	if (fd == ERROR)
 		error_exit(ms, "could not open /proc/sys/kernel/random/uuid");
@@ -106,10 +106,9 @@ static inline void	run(t_minishell *ms)
 		reset_context(ms);
 		line = get_line(ms, get_prompt(ms, &p));
 		if (g_signal == SIGINT)
-		{
 			ms->state.exit_status = 130;
+		if (g_signal == SIGINT)
 			continue ;
-		}
 		if (!line)
 			exi(ms, NULL);
 		if (ms->mode == INTERACTIVE && *line && *line != ' ')
@@ -123,22 +122,3 @@ static inline void	run(t_minishell *ms)
 		executor(ms);
 	}
 }
-
-// Error: TOO_MANY_ARGS        (line:  24, col:  77):      Function has more than 4 arguments
-// Error: TOO_MANY_LINES       (line:  65, col:   1):      Function has more than 25 lines
-// Error: TOO_MANY_LINES       (line: 120, col:   1):      Function has more than 25 lines
-
-// expansion.c: Error!
-// Error: TOO_MANY_ARGS        (line:  26, col:  78):      Function has more than 4 arguments
-// Error: TOO_MANY_ARGS        (line:  97, col:  78):      Function has more than 4 arguments
-// Error: TOO_MANY_LINES       (line: 142, col:   1):      Function has more than 25 lines
-// Error: TOO_MANY_LINES       (line: 178, col:   1):      Function has more than 25 lines
-// Error: TOO_MANY_FUNCS       (line: 180, col:   1):      Too many functions in file
-// Error: TOO_MANY_VARS_FUNC   (line: 187, col:   1):      Too many variables declarations in a function
-// Error: TOO_MANY_LINES       (line: 233, col:   1):      Function has more than 25 lines
-// Error: LINE_TOO_LONG        (line: 259, col:   1):      line too long
-// Error: LINE_TOO_LONG        (line: 259, col:  90):      line too long
-// Error: TOO_MANY_FUNCS       (line: 264, col:   1):      Too many functions in file
-// Error: LINE_TOO_LONG        (line: 283, col:  82):      line too long
-// Error: LINE_TOO_LONG        (line: 302, col:  88):      line too long
-// Error: TOO_MANY_LINES       (line: 306, col:   1):      Function has more than 25 lines

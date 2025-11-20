@@ -6,12 +6,12 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/17 21:17:48 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 03:02:58 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "io.h"
+#include "parsing.h"
 
 static void	set_io(t_minishell *ms, t_node *node, int in, int pipefd[2]);
 

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 02:48:12 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/18 03:01:59 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 19:12:53 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,10 @@ int	try_open(t_minishell *ms, char *file, int o_flag, int p_flag)
 
 	fd = open(file, o_flag, p_flag);
 	if (fd == ERROR)
+	{
+		ms->state.exit_status = 1;
 		warning(ms, file);
+	}
 	return (fd);
 }
 

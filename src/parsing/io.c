@@ -6,17 +6,16 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/18 04:31:20 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 03:03:17 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "io.h"
+#include "parsing.h"
 #include "errors.h"
 #include "arena_list.h"
 #include "libft_str.h"
 #include "str_utils.h"
 #include "line_utils.h"
-#include "parsing.h"
 #include "file_utils.h"
 
 static inline int		set_in_file(t_minishell *ms, t_node *node, char *file);
@@ -38,7 +37,7 @@ void	setup_io(t_minishell *ms, t_node *node)
 		{
 			r = (t_redir *)redirs->content;
 			if (!process_redir(ms, node, r))
-				break;
+				break ;
 			redirs = redirs->next;
 		}
 		node = node->next;

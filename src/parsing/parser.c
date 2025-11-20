@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:15:08 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/17 20:55:43 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 19:48:52 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ static inline bool	is_valid_syntax(t_token *t, t_token *prev)
 		if (!prev || prev->type != WORD)
 			return (false);
 	}
+	if (t->type == NEW_LINE && t->pos == ERROR)
+		return (false);
 	return (true);
 }
 

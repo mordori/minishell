@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:12 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/18 03:04:18 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/18 19:58:58 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,12 @@ static void	is_newline_off(t_node *node, int *i, bool *is_nl_off)
 	args = node->cmd.args;
 	if (!args[*i])
 		return ;
-	while (ft_strncmp(args[*i], "-n", 2) == 0)
+	while (args[*i] && ft_strncmp(args[*i], "-n", 2) == 0)
 	{
 		j = 2;
-		while (args[*i][j] == 'n')
+		while (args[*i] && args[*i][j] == 'n')
 			j++;
-		if (args[*i][j] != 'n' && args[*i][j] != '\0')
+		if (args[*i] && args[*i][j] != 'n' && args[*i][j] != '\0')
 			break ;
 		*is_nl_off = true;
 		(*i)++;
