@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:23:57 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/12 16:46:25 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/20 22:59:48 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@ static int	remove_vars(t_minishell *ms, t_env *env, t_node *node)
 {
 	char	*arg;
 	int		i;
+	t_env	*temp;
 
 	i = 1;
+	temp = env;
 	while (node->cmd.args[i])
 	{
 		arg = node->cmd.args[i];
@@ -44,6 +46,7 @@ static int	remove_vars(t_minishell *ms, t_env *env, t_node *node)
 			env = env->next;
 		}
 		i++;
+		env = temp;
 	}
 	return (SUCCESS);
 }
