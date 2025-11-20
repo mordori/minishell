@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/18 18:55:00 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 02:12:58 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,6 @@
 #include "arena_list.h"
 #include "arena.h"
 #include "env.h"
-
-
-#include <stdio.h>
-
 
 static inline void	expand_args(t_minishell *ms, t_node *node, char **args);
 static inline void	expand_redirs(t_minishell *ms, t_list *redirs);
@@ -50,7 +46,6 @@ static inline void	expand_args(t_minishell *ms, t_node *node, char **raw_args)
 	while (*args)
 	{
 		*args = expand_str(ms, *args, EXPAND_DEFAULT);
-		// printf("ARGS: %s\n", *args);
 		split_words(ms, *args, &list);
 		++args;
 	}
@@ -61,6 +56,7 @@ static inline void	expand_args(t_minishell *ms, t_node *node, char **raw_args)
 	while (list)
 	{
 		*args = remove_quotes(ms, list->content);
+		unmask_quotes(*args);
 		++args;
 		list = list->next;
 	}
@@ -94,44 +90,32 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 	}
 }
 
-bool	init_expand(t_minishell *ms, char **str, char **src, char **result)
-{
-	*str = ft_strchr(*src, '$');
-	if (!*str)
-		return (false);
-	*result = alloc_volatile(ms, *str - *src + 1);
-	ft_memcpy(*result, *src, *str - *src);
-	return (true);
-}
-
 char	*expand_str(t_minishell *ms, char *src, t_expand_mode mode)
 {
-	char	*str;
-	char	*result;
-	char	*quote;
+	t_ctx_exp	ctx;
 
-	if (!init_expand(ms, &str, &src, &result))
+	if (!ft_strchr(src, '$'))
 		return (src);
-	quote = NULL;
-	find_quote(src, &quote, str);
-	while (str++)
+	ft_memset(&ctx, 0, sizeof(ctx));
+	ctx.result = alloc_volatile(ms, 1);
+	while (*src)
 	{
-		if (!*str || is_whitespace(str, "") || (quote && *str == *quote) || \
-*str == '$')
-			result = str_join(ms, result, "$", VOLATILE);
-		else if (*str == '?' && !(quote && *quote == '\'') && str++)
-			result = str_join(\
-ms, result, uint_to_str(ms, ms->state.exit_status), VOLATILE);
+		if (*src == '$')
+		{
+			if(!expand(ms, &src, &ctx, mode))
+				continue;
+		}
 		else
-			result = \
-str_join(ms, result, join_var(ms, &str, quote, mode), VOLATILE);
-		src = ft_strchr(str, '$');
-		if (!src)
-			break ;
-		find_quote(str, &quote, src);
-		result = str_join(\
-ms, result, str_sub(ms, VOLATILE, str, src - str), VOLATILE);
-		str = src;
+		{
+			if (\
+!ctx.quote && (*src == SQUOTE || *src == DQUOTE) && mode != EXPAND_HEREDOC)
+				ctx.quote = *src;
+			else if (\
+*src == ctx.quote && mode != EXPAND_HEREDOC)
+				ctx.quote = 0;
+			append_chr(ms, &src, &ctx);
+		}
 	}
-	return (str_join(ms, result, str, VOLATILE));
+	ctx.result = str_join(ms, ctx.result, ctx.buf, VOLATILE);
+	return (ctx.result);
 }

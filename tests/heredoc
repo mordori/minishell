@@ -1,57 +1,71 @@
 export VAR='"    G    sdf "'
 cat << eof
 testing without quotes "
-$VAR
-$VAR$VAR
-$VAR"$VAR"
-"$VAR"
-'$VAR'
-asd"$VAR"
-'$VAR'asd
-"$VAR"'$VAR'
-'$VAR'"$VAR"
+1. $VAR
+2. $VAR$VAR
+3. $VAR"$VAR"
+4. "$VAR"
+5. '$VAR'
+6. asd"$VAR"
+7. '$VAR'asd
+8. "$VAR"'$VAR'
+9. '$VAR'"$VAR"
 eof
 echo
 export VAR="'    G1  sdf '"
 cat << eof
 testing without quotes '
-$VAR
-$VAR$VAR
-$VAR"$VAR"
-"$VAR"
-'$VAR'
-asd"$VAR"
-'$VAR'asd
-"$VAR"'$VAR'
-'$VAR'"$VAR"
+1a. $VAR
+2a. $VAR$VAR
+3a. $VAR"$VAR"
+4a. "$VAR"
+5a. '$VAR'
+6a. asd"$VAR"
+7a. '$VAR'asd
+8a. "$VAR"'$VAR'
+9a. '$VAR'"$VAR"
 eof
 echo
 export VAR='"    H  a "'
 cat << eof""
 testing with double quotes
-$VAR
-$VAR$VAR
-$VAR"$VAR"
-"$VAR"
-'$VAR'
-asd"$VAR"
-'$VAR'asd
-"$VAR"'$VAR'
-'$VAR'"$VAR"
+1b. $VAR
+2b. $VAR$VAR
+3b. $VAR"$VAR"
+4b. "$VAR"
+5b. '$VAR'
+6b. asd"$VAR"
+7b. '$VAR'asd
+8b. "$VAR"'$VAR'
+9b. '$VAR'"$VAR"
 eof
 echo
 export VAR='"    I  a "'
 cat << eof''
 testing with single quotes
-$VAR
-$VAR$VAR
-$VAR"$VAR"
-"$VAR"
-'$VAR'
-asd"$VAR"
-'$VAR'asd
-"$VAR"'$VAR'
-'$VAR'"$VAR"
+1c. $VAR
+2c. $VAR$VAR
+3c. $VAR"$VAR"
+4c. "$VAR"
+5c. '$VAR'
+6c. asd"$VAR"
+7c. '$VAR'asd
+8c. "$VAR"'$VAR'
+9c. '$VAR'"$VAR"
+eof
+echo
+export VAR="    G    sdf "
+cat << eof
+testing without quotes "
+1d. $VAR
+2d. $VAR$VAR
+3d. $VAR"$VAR"
+4d. "$VAR"
+5d. '$VAR'
+6d. asd"$VAR"
+7d. '$VAR'asd
+8d. "$VAR"'$VAR'
+9d. '$VAR'"$VAR"
 eof
 echo
 cat << eof << eof << eof

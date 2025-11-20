@@ -6,22 +6,22 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 20:41:46 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/17 20:43:05 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/19 23:21:42 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "str_utils.h"
 #include "libft_str.h"
 
-bool	is_whitespace(const char *src, const char *set)
+bool	is_whitespace(const char *src, const char *ifs)
 {
-	if (!*set)
-		set = get_ifs();
-	while (*set)
+	if (!*ifs)
+		ifs = get_ifs();
+	while (*ifs)
 	{
-		if (*src == *set)
+		if (*src == *ifs)
 			return (true);
-		++set;
+		++ifs;
 	}
 	return (false);
 }

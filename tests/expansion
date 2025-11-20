@@ -1,4 +1,4 @@
-export VAR="   A   B   "
+export VAR="       A     B   "
 echo 1. $VAR
 echo 2. $VAR$VAR
 echo 3. $VAR"$VAR"
@@ -23,9 +23,10 @@ echo 21. "$VAR$VAR"
 echo 22. '$VAR$VAR'
 echo 23. ''$VAR''$VAR''
 echo 24. "$VAR""$VAR""$VAR"
-echo 25. "'"'$VAR'"'"
+echo 25. "$VAR"'"$VAR"'"$VAR"
+echo 26. "'"'$VAR'"'"
 echo
-export VAR='"   A   B   "'
+export VAR='"        A     B   "'
 echo 1a. $VAR
 echo 2a. $VAR$VAR
 echo 3a. $VAR"$VAR"
@@ -50,9 +51,10 @@ echo 21a. "$VAR$VAR"
 echo 22a. '$VAR$VAR'
 echo 23a. ''$VAR''$VAR''
 echo 24a. "$VAR""$VAR""$VAR"
-echo 25a. "'"'$VAR'"'"
+echo 25a. "$VAR"'"$VAR"'"$VAR"
+echo 26a. "'"'$VAR'"'"
 echo
-export VAR="'   A   B   '"
+export VAR="'       A      B   '"
 echo 1b. $VAR
 echo 2b. $VAR$VAR
 echo 3b. $VAR"$VAR"
@@ -77,11 +79,16 @@ echo 21b. "$VAR$VAR"
 echo 22b. '$VAR$VAR'
 echo 23b. ''$VAR''$VAR''
 echo 24b. "$VAR""$VAR""$VAR"
-echo 25b. "'"'$VAR'"'"
+echo 25b. "$VAR"'"$VAR"'"$VAR"
+echo 26b. "'"'$VAR'"'"
 echo
 echo 1c. $?
 echo 2c. $"$?"
 echo 3c. "$"$?
 echo 4c. "  $  "
-echo 5c. '$$'
-echo 5c. '$?'
+echo 5c. "  $ $  "
+echo 6c. '$$'
+echo 7c. '$?'
+echo 8c. $'$?'
+echo 9c. $"$"$?""
+echo 10c. $'$'$?''

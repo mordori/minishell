@@ -7,7 +7,6 @@ if [ $status -eq 0 ]; then
 	echo "✅ OK!"
 else
 	echo "❌ KO!"
-	echo
 	echo "$expansion"
 fi
 echo
@@ -18,8 +17,6 @@ if [ $status -eq 0 ]; then
 	echo "✅ OK!"
 else
 	echo "❌ KO!"
-	echo
 	echo "$heredoc"
 fi
 echo
-
