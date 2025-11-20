@@ -11,7 +11,7 @@ testing without quotes "
 8. "$VAR"'$VAR'
 9. '$VAR'"$VAR"
 eof
-echo
+
 export VAR="'    G1  sdf '"
 cat << eof
 testing without quotes '
@@ -25,7 +25,7 @@ testing without quotes '
 8a. "$VAR"'$VAR'
 9a. '$VAR'"$VAR"
 eof
-echo
+
 export VAR='"    H  a "'
 cat << eof""
 testing with double quotes
@@ -39,7 +39,7 @@ testing with double quotes
 8b. "$VAR"'$VAR'
 9b. '$VAR'"$VAR"
 eof
-echo
+
 export VAR='"    I  a "'
 cat << eof''
 testing with single quotes
@@ -53,7 +53,7 @@ testing with single quotes
 8c. "$VAR"'$VAR'
 9c. '$VAR'"$VAR"
 eof
-echo
+
 export VAR="    G    sdf "
 cat << eof
 testing without quotes "
@@ -67,11 +67,31 @@ testing without quotes "
 8d. "$VAR"'$VAR'
 9d. '$VAR'"$VAR"
 eof
-echo
+
 cat << eof << eof << eof
-1
+1e.
 eof
-2
+2e.
 eof
-3
+3e.
+eof
+
+cat << eof
+1f. $
+2f. "$ $"
+3f. $"$"
+4f. '$'
+5f. $?
+6f. $"$?"
+7f. "$"$?
+eof
+
+cat << eof""
+1g. $
+2g. "$ $"
+3g. $"$"
+4g. '$'
+5g. $?
+6g. $"$?"
+7g. "$"$?
 eof

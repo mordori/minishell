@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 23:33:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/20 02:12:31 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 02:42:36 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ static inline char	*mask_quotes(t_minishell *ms, char *src);
 
 bool	expand(t_minishell *ms, char **src, t_ctx_exp *ctx, t_expand_mode mode)
 {
-	if (ctx->quote == SQUOTE || \
+	if (ctx->quote == SQUOTE || (**src == '$' && (*src)[1] == 0) || \
+(**src == '$' && (*src)[1] == '$') || \
+(**src == '$' && (*src)[1] != '?' && \
+!ft_isalpha((*src)[1]) && mode == EXPAND_HEREDOC) || \
 ((*src)[1] != '?' && !ft_isalpha((*src)[1]) && ctx->quote))
 	{
 		append_chr(ms, src, ctx);
