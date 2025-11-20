@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 23:33:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/20 02:04:22 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 15:39:05 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ static inline size_t	split_word_len(char *src, char *ifs)
 
 	i = 0;
 	quote = 0;
-	while(src[i])
+	while (src[i])
 	{
 		if (!quote && is_whitespace(src + i, ifs))
 			break ;

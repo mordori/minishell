@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:55:02 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/20 00:44:41 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 15:44:00 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@
 # define INT32_LENGTH			11
 # define INT64_LENGTH			20
 
-# define MEMORY_VARS			524288UL
+# define MEMORY_VARS			1048576UL
 # ifndef MEM_UNIT
 #  define MEM_UNIT				1024UL
 # endif
@@ -247,7 +247,6 @@ struct s_ctx_exp
 	char		quote;
 	char		buf[EXP_BUF + 1];
 };
-
 
 const char	**get_redirections(void);
 const char	**get_quotes(void);
