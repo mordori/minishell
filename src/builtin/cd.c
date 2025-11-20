@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/20 02:57:14 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 23:10:19 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	cd(t_minishell *ms, t_node *node)
 	char			*path;
 	static bool		is_1st_cd = true;
 
-	if (node->cmd.args[2])
+	if (node->cmd.args[1] && node->cmd.args[2])
 	{
 		errno = 0;
 		warning(ms, str_join(ms, "cd: ", "too many arguments", VOLATILE));
