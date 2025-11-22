@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/22 16:28:52 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 17:05:34 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	execute_simple(t_minishell *ms)
 	int		status;
 
 	status = command_verification(ms, ms->node);
-	update_env_lastcmd(ms, ms->node->cmd.args);
+	set_env_defaults(ms, ms->node->cmd.args);
 	if (status)
 		return (status);
 	if (ms->node->cmd.builtin \

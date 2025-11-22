@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/22 15:45:20 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 17:35:05 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	get_opwd(t_minishell *ms, char **path, bool is_1st)
 	}
 	if (!*path)
 	{
+		errno = 0;
 		warning(ms, "cd: OLDPWD not set");
 		return (ERROR_GENERAL);
 	}
@@ -80,6 +81,9 @@ static void	update_opwd(t_minishell *ms)
 	oldpwd = envll_findkey(&ms->state, "OLDPWD");
 	if (oldpwd)
 		replace_value(oldpwd, str_dup(ms, current_pwd, PERSISTENT));
+	else
+		var_to_node(\
+ms, str_join(ms, "OLDPWD=", current_pwd, VOLATILE), &ms->state.env);
 }
 
 static void	update_pwd(t_minishell *ms)

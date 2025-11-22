@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 15:54:49 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/22 16:29:00 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 17:05:25 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	spawn_and_run(t_minishell *ms, t_node *node, int in, int pipefd[2])
 
 	child_pid = -1;
 	status = command_verification(ms, node);
-	update_env_lastcmd(ms, node->cmd.args);
+	set_env_defaults(ms, node->cmd.args);
 	if (status == SUCCESS)
 		try_fork(ms, &child_pid);
 	node->pid = child_pid;
