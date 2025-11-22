@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:07:03 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/18 03:04:25 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 16:47:18 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,11 @@ int	env(t_minishell *ms, t_node *node)
 {
 	t_env	*env;
 
-	(void)node;
+	if (node->cmd.args[1])
+	{
+		warning(ms, str_join(ms, "env: ", node->cmd.args[1], VOLATILE));
+		return (127);
+	}
 	env = ms->state.env;
 	while (env)
 	{
