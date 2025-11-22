@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/22 21:36:24 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/23 01:27:33 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,12 @@ int	execute_simple(t_minishell *ms)
 	set_env_defaults(ms, ms->node->cmd.args);
 	if (status)
 		return (status);
-	if (ms->node->cmd.builtin \
+	if ((ms->node->cmd.builtin \
 && ms->node->cmd.redir_in == STDIN_FILENO \
-&& ms->node->cmd.redir_out == STDOUT_FILENO)
+&& ms->node->cmd.redir_out == STDOUT_FILENO) \
+|| !ft_strcmp(*ms->node->cmd.args, "exit") \
+|| (!ft_strcmp(*ms->node->cmd.args, "export") && ms->node->cmd.args[1]) \
+|| !ft_strcmp(*ms->node->cmd.args, "unset"))
 		return (exec_builtin(ms, ms->node));
 	try_fork(ms, &child_pid);
 	if (child_pid == 0)
