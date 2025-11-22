@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 12:44:17 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/22 15:44:50 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 18:01:43 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,14 +92,13 @@ static bool	handle_specials(t_minishell *ms, char *var, char *key, char *value)
 
 int	handle_cd_specs(t_minishell *ms, char **path, bool is_1st_cd)
 {
-	char	buf[PATH_MAX];
-
 	if (**path == '~')
 	{
 		if (!envll_findkey(&ms->state, "HOME"))
 		{
-			*path = getcwd(buf, sizeof(buf));
-			return (SUCCESS);
+			errno = 0;
+			warning(ms, "cd: HOME not set");
+			return (ERROR_GENERAL);
 		}
 		*path = *path + 1;
 		if (**path)
