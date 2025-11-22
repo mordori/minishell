@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/22 17:05:34 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 21:36:24 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ int	execute_simple(t_minishell *ms)
 	waitpid(child_pid, &status, 0);
 	if (WIFEXITED(status))
 		ms->state.exit_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		ms->state.exit_status = 128 + WTERMSIG(status);
 	return (ms->state.exit_status);
 }
 
@@ -111,6 +113,8 @@ static void	wait_pids(t_minishell *ms)
 			waitpid(node->pid, &status, 0);
 			if (WIFEXITED(status))
 				ms->state.exit_status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				ms->state.exit_status = 128 + WTERMSIG(status);
 		}
 		if (node->cmd.redir_in == ERROR || node->cmd.redir_out == ERROR)
 			ms->state.exit_status = ERROR_GENERAL;

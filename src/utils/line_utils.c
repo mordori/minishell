@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 03:53:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/20 22:45:00 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 20:54:25 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ char	*get_line(t_minishell *ms, char *prompt)
 	char	*line;
 	char	*dup;
 
+	if (g_signal)
+		return (NULL);
 	if (ms->mode == INTERACTIVE)
 	{
 		line = readline(prompt);
@@ -68,13 +70,8 @@ t_minishell *ms, const char *src, unsigned int start, size_t len)
 
 int	rl_event(void)
 {
-	int	bytes;
-
 	if (g_signal == SIGINT)
 	{
-		bytes = write(1, "^C", 2);
-		if (bytes < 2)
-			perror("minishell");
 		rl_done = 1;
 		return (1);
 	}
@@ -86,7 +83,7 @@ char	*get_prompt(t_minishell *ms, t_prompt *p)
 	char	*home;
 
 	home = get_env_val(ms, "HOME");
-	if (!home)
+	if (!*home)
 	{
 		p->home = "";
 		p->path = ms->pwd;
@@ -106,7 +103,7 @@ char	*get_prompt(t_minishell *ms, t_prompt *p)
 		p->home = "/";
 		p->path = "";
 	}
-	p->prompt = \
+		p->prompt = \
 str_join(ms, \
 str_join(ms, \
 str_join(ms, \
