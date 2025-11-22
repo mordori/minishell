@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 20:31:56 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/20 02:54:03 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 22:47:09 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,12 @@ void	warning_syntax(t_minishell *ms, char *src)
 	msg = "undefined source";
 	if (src)
 		msg = src;
-	try_write(ms, STDERR_FILENO, "\033[1;33m");
+	try_write(ms, STDERR_FILENO, "\001\033[1;33m\002");
 	try_write(ms, STDERR_FILENO, \
 "minishell: syntax error near unxpected token `");
 	try_write(ms, STDERR_FILENO, msg);
-	try_write(ms, STDERR_FILENO, "\'\n\033[0m");
-	ms->state.exit_status = 1;
+	try_write(ms, STDERR_FILENO, "\'\n\001\033[0m\002");
+	ms->state.exit_status = 2;
 }
 
 void	warning(t_minishell *ms, char *src)
@@ -78,7 +78,7 @@ void	warning(t_minishell *ms, char *src)
 	if (src)
 		msg = src;
 	if (ms->mode == INTERACTIVE)
-		try_write(ms, STDERR_FILENO, "\033[1;33m");
+		try_write(ms, STDERR_FILENO, "\001\033[1;33m\002");
 	try_write(ms, STDERR_FILENO, "minishell: ");
 	if (errno)
 	{
@@ -91,7 +91,7 @@ void	warning(t_minishell *ms, char *src)
 		try_write(ms, STDERR_FILENO, "\n");
 	}
 	if (ms->mode == INTERACTIVE)
-		try_write(ms, STDERR_FILENO, "\033[0m");
+		try_write(ms, STDERR_FILENO, "\001\033[0m\002");
 }
 
 /**
@@ -105,7 +105,7 @@ static inline void	print_error(char *msg)
 {
 	int	bytes;
 
-	bytes = write(STDERR_FILENO, "\033[1;31m", 8);
+	bytes = write(STDERR_FILENO, "\001\033[1;31m\002", 8);
 	if (bytes != ERROR)
 	{
 		if (errno)
@@ -122,6 +122,6 @@ static inline void	print_error(char *msg)
 				bytes = write(STDERR_FILENO, "\n", 1);
 		}
 		if (bytes != ERROR)
-			bytes = write(STDERR_FILENO, "\033[0m", 5);
+			bytes = write(STDERR_FILENO, "\001\033[0m\002", 5);
 	}
 }

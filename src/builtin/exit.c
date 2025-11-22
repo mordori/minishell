@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/20 02:20:44 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 23:19:06 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,16 @@ int	exi(t_minishell *ms, t_node *node)
 	status = ms->state.exit_status;
 	if (node)
 	{
-		if (node->cmd.argc > 2)
-		{
-			errno = 0;
-			warning(ms, "exit: too many arguments");
-			return (ERROR_GENERAL);
-		}
 		if (node->cmd.args[1])
 		{
 			if (is_valid(ms, node->cmd.args[1], &status) == false)
 				status = ERROR_BUILTIN;
+			else if (node->cmd.args[2])
+			{
+				errno = 0;
+				warning(ms, "exit: too many arguments");
+				return (ERROR_GENERAL);
+			}
 		}
 	}
 	clean(ms);

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/20 03:02:41 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 17:05:34 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	executor(t_minishell *ms)
 			return ;
 		}
 		ms->state.exit_status = execute_simple(ms);
-		update_env_lastcmd(ms, ms->node->cmd.cmd, ms->node->cmd.builtin);
 	}
 	else if (ms->state.mode == PIPELINE)
 	{
@@ -48,6 +47,7 @@ int	execute_simple(t_minishell *ms)
 	int		status;
 
 	status = command_verification(ms, ms->node);
+	set_env_defaults(ms, ms->node->cmd.args);
 	if (status)
 		return (status);
 	if (ms->node->cmd.builtin \

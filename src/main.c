@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/20 03:33:02 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 17:22:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	main(int argc, char *argv[], char **envp)
 		error_exit(NULL, "defined memory amount is negative");
 	if (argc > 1)
 		error_exit(NULL, "too many arguments");
+	ft_memset(&ms, 0, sizeof(ms));
 	initialize(&ms, envp);
 	run(&ms);
 	status = ms.state.exit_status;
@@ -64,7 +65,6 @@ static inline void	initialize(t_minishell *ms, char **envp)
 {
 	int	fd;
 
-	ft_memset(ms, 0, sizeof(*ms));
 	ms->vars = arena_create(ms, MEMORY_VARS, PERSISTENT);
 	ms->pool = arena_create(ms, MEMORY, VOLATILE);
 	if (!ms->vars.base || !ms->pool.base)
@@ -87,6 +87,7 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	ft_memcpy(ms->heredoc_file, "/tmp/", 5);
 	try_read(ms, fd, ms->heredoc_file + 5, UUID_CHARS);
 	close(fd);
+	set_env_defaults(ms, NULL);
 }
 
 /**

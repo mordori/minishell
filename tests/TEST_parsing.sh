@@ -1,7 +1,7 @@
 #!/bin/bash
 echo
 echo "--------------------EXPANSION--------------------------"
-expansion=$(diff <(./minishell < tests/expansion) <(bash < tests/expansion))
+expansion=$(diff <(../minishell < expansion) <(bash < expansion))
 status=$?
 if [ $status -eq 0 ]; then
 	echo "✅ OK!"
@@ -11,7 +11,7 @@ else
 fi
 echo
 echo "---------------------HEREDOC---------------------------"
-heredoc=$(diff <(./minishell < tests/heredoc) <(bash < tests/heredoc))
+heredoc=$(diff <(../minishell < heredoc) <(bash < heredoc))
 status=$?
 if [ $status -eq 0 ]; then
 	echo "✅ OK!"

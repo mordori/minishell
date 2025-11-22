@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 10:33:34 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/20 03:01:59 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 17:05:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int		execute_pipeline(t_minishell *ms);
 void	run_node(t_minishell *ms, t_node *node);
 int		exec_builtin(t_minishell *ms, t_node *node);
 int		exec_extern(t_minishell *ms, t_node *node);
-void	update_env_lastcmd(t_minishell *ms, char *cmd, t_builtin builtin);
+void	set_env_defaults(t_minishell *ms, char **args);
 
 //cmd_verification.c
 int		command_verification(t_minishell *ms, t_node *node);

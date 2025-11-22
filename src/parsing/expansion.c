@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/20 02:12:58 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/20 22:21:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,10 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 			r->file = expand_str(ms, r->file, EXPAND_DEFAULT);
 			split_words(ms, r->file, &list);
 			if (list)
+			{
 				r->file = remove_quotes(ms, list->content);
+				unmask_quotes(r->file);
+			}
 			if (!list || list->next)
 				r->file = NULL;
 			list = list->next;
@@ -102,8 +105,8 @@ char	*expand_str(t_minishell *ms, char *src, t_expand_mode mode)
 	{
 		if (*src == '$')
 		{
-			if(!expand(ms, &src, &ctx, mode))
-				continue;
+			if (!expand(ms, &src, &ctx, mode))
+				continue ;
 		}
 		else
 		{
