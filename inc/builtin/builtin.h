@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 13:52:41 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/18 03:05:36 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 15:43:40 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 
 //cd.c
 int		cd(t_minishell *ms, t_node *node);
-int		get_opwd(t_minishell *ms, t_node *node, char **path, bool is_1st);
+int		get_opwd(t_minishell *ms, char **path, bool is_1st);
 
 //echo.c
 int		echo(t_minishell *ms, t_node *node);

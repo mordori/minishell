@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 12:44:17 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/17 20:07:45 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 15:44:50 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static bool	handle_specials(t_minishell *ms, char *var, char *key, char *value)
 	return (false);
 }
 
-int	handle_cd_specs(t_minishell *ms, char **path, t_node *node, bool is_1st_cd)
+int	handle_cd_specs(t_minishell *ms, char **path, bool is_1st_cd)
 {
 	char	buf[PATH_MAX];
 
@@ -112,7 +112,7 @@ envll_findkey(&ms->state, "HOME")->value, *path, VOLATILE);
 	}
 	else if (**path == '-')
 	{
-		if (get_opwd(ms, node, path, is_1st_cd))
+		if (get_opwd(ms, path, is_1st_cd))
 			return (ERROR_GENERAL);
 	}
 	return (SUCCESS);

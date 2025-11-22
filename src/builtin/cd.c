@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/20 23:10:19 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 15:45:20 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	cd(t_minishell *ms, t_node *node)
 	if (!path)
 		if (get_home(ms, &path))
 			return (ERROR_GENERAL);
-	if (handle_cd_specs(ms, &path, node, is_1st_cd))
+	if (handle_cd_specs(ms, &path, is_1st_cd))
 		return (ERROR_GENERAL);
 	update_opwd(ms);
 	is_1st_cd = false;
@@ -45,7 +45,7 @@ int	cd(t_minishell *ms, t_node *node)
 	return (SUCCESS);
 }
 
-int	get_opwd(t_minishell *ms, t_node *node, char **path, bool is_1st)
+int	get_opwd(t_minishell *ms, char **path, bool is_1st)
 {
 	if (*(*path + 1) == '-')
 	{
@@ -66,7 +66,7 @@ int	get_opwd(t_minishell *ms, t_node *node, char **path, bool is_1st)
 		warning(ms, "cd: OLDPWD not set");
 		return (ERROR_GENERAL);
 	}
-	try_write_endl(ms, node->cmd.redir_out, *path);
+	try_write_endl(ms, STDOUT_FILENO, *path);
 	return (SUCCESS);
 }
 

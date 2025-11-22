@@ -6,20 +6,20 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:25:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/12 16:01:38 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 15:44:34 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "builtin_utils.h"
 
-static void	display_vars(t_minishell *ms, t_state *state, t_node *node);
+static void	display_vars(t_minishell *ms, t_state *state);
 static void	put_vars_into_env(t_minishell *ms, t_node *node);
 
 int	expo(t_minishell *ms, t_node *node)
 {
 	if (!node->cmd.args[1])
-		display_vars(ms, &ms->state, node);
+		display_vars(ms, &ms->state);
 	else
 	{
 		copy_env_to(VOLATILE, ms);
@@ -32,13 +32,11 @@ int	expo(t_minishell *ms, t_node *node)
 	return (SUCCESS);
 }
 
-static void	display_vars(t_minishell *ms, t_state *state, t_node *node)
+static void	display_vars(t_minishell *ms, t_state *state)
 {
 	t_env		*head;
 	t_env		*last;
-	int			fd;
 
-	fd = node->cmd.redir_out;
 	head = state->env;
 	last = envlast(state->env);
 	quicksort(head, last);
@@ -46,7 +44,7 @@ static void	display_vars(t_minishell *ms, t_state *state, t_node *node)
 	{
 		if (head->value)
 		{
-			try_write_endl(ms, fd, str_join(ms, \
+			try_write_endl(ms, STDOUT_FILENO, str_join(ms, \
 "declare -x ", str_join(ms, \
 head->key, str_join(ms, \
 "=\"", str_join(ms, \
@@ -54,7 +52,7 @@ head->value, "\"", VOLATILE), VOLATILE), VOLATILE), VOLATILE));
 		}
 		else
 		{
-			try_write_endl(ms, fd, str_join(ms, \
+			try_write_endl(ms, STDOUT_FILENO, str_join(ms, \
 "declare -x ", head->key, VOLATILE));
 		}
 		head = head->next;

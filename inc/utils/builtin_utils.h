@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 14:28:09 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/18 03:05:03 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 15:45:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 
 bool	is_pluschar(char *var, char delimiter);
 bool	handle_cases(t_minishell *ms, int i, t_env *env, t_key_value *kv);
-int		handle_cd_specs(\
-t_minishell *ms, char **path, t_node *node, bool is_1st_cd);
+int		handle_cd_specs(t_minishell *ms, char **path, bool is_1st_cd);
 
 #endif
