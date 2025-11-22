@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:38:28 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/22 17:51:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 19:15:45 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ static inline char	*get_last_arg(t_minishell *ms, char **args)
 	char	*result;
 	t_env	*shell_v;
 
+	result = NULL;
 	while (*args)
 	{
 		result = *args;
