@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/20 23:19:06 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/23 02:20:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,9 @@ int	exi(t_minishell *ms, t_node *node)
 {
 	uint8_t	status;
 
-	if (ms->mode == INTERACTIVE)
+	if (isatty(STDOUT_FILENO))
 		try_write_endl(ms, STDOUT_FILENO, "exit");
+	errno = 0;
 	status = ms->state.exit_status;
 	if (node)
 	{
