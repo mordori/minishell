@@ -6,12 +6,24 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:07:03 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/22 16:47:18 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/23 22:04:36 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "file_utils.h"
+
+static void print_env(t_minishell *ms, t_env *env)
+{
+	int		fd_out;
+
+	fd_out = STDOUT_FILENO;
+	if (ms->state.mode == SIMPLE)
+		fd_out = ms->node->cmd.redir_out;
+	try_write(ms, fd_out, env->key);
+	try_write(ms, fd_out, "=");
+	try_write_endl(ms, fd_out, env->value);
+}
 
 int	env(t_minishell *ms, t_node *node)
 {
@@ -26,14 +38,8 @@ int	env(t_minishell *ms, t_node *node)
 	while (env)
 	{
 		if (env->value != NULL)
-		{
 			if (*env->value)
-			{
-				try_write(ms, STDOUT_FILENO, env->key);
-				try_write(ms, STDOUT_FILENO, "=");
-				try_write_endl(ms, STDOUT_FILENO, env->value);
-			}
-		}
+				print_env(ms, env);
 		env = env->next;
 	}
 	return (SUCCESS);

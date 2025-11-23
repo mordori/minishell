@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:45:12 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/18 19:58:58 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/23 22:07:32 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,26 @@ int	echo(t_minishell *ms, t_node *node)
 	bool	is_inbetween;
 	bool	is_nl_off;
 	int		i;
+	int		fd_out;
 
+	fd_out = STDOUT_FILENO;
+	if (ms->state.mode == SIMPLE)
+		fd_out = ms->node->cmd.redir_out;
 	i = 1;
 	is_inbetween = false;
 	is_newline_off(node, &i, &is_nl_off);
 	while (node->cmd.args[i])
 	{
 		if (is_inbetween)
-			try_write(ms, STDOUT_FILENO, " ");
+			try_write(ms, fd_out, " ");
 		string = node->cmd.args[i];
-		try_write(ms, STDOUT_FILENO, string);
+		try_write(ms, fd_out, string);
 		if (!is_inbetween)
 			is_inbetween = true;
 		i++;
 	}
 	if (!is_nl_off)
-		try_write(ms, STDOUT_FILENO, "\n");
+		try_write(ms, fd_out, "\n");
 	return (SUCCESS);
 }
 
