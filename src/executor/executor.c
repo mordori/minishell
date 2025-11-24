@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 15:09:55 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/23 21:56:17 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/24 19:06:58 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,16 @@ static void	wait_pids(t_minishell *ms);
 
 void	executor(t_minishell *ms)
 {
-	if (!ms->node->cmd.args)
-	{
-		close_all_fds(ms);
-		return ;
-	}
 	set_mode(ms);
 	if (ms->state.mode == SIMPLE)
 	{
-		if (ms->node->cmd.redir_in == ERROR || ms->node->cmd.redir_out == ERROR)
+		if (\
+ms->node->cmd.redir_in == ERROR \
+|| ms->node->cmd.redir_out == ERROR \
+|| !ms->node->cmd.args)
 		{
-			ms->state.exit_status = ERROR_GENERAL;
+			if (ms->node->cmd.args)
+				ms->state.exit_status = ERROR_GENERAL;
 			close_all_fds(ms);
 			return ;
 		}
@@ -109,12 +108,13 @@ static void	wait_pids(t_minishell *ms)
 		if (node->pid > 0)
 		{
 			waitpid(node->pid, &status, 0);
-			if (WIFEXITED(status))
+			if (WIFEXITED(status) && !node->next)
 				ms->state.exit_status = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
+			else if (WIFSIGNALED(status) && !node->next)
 				ms->state.exit_status = 128 + WTERMSIG(status);
 		}
-		if (node->cmd.redir_in == ERROR || node->cmd.redir_out == ERROR)
+		if ((node->cmd.redir_in == ERROR || node->cmd.redir_out == ERROR) \
+&& !node->next)
 			ms->state.exit_status = ERROR_GENERAL;
 		node = node->next;
 	}

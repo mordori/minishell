@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_handler.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvalkama <jvalkama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 12:14:16 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/14 11:52:55 by jvalkama         ###   ########.fr       */
+/*   Updated: 2025/11/24 18:37:04 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ char	*get_env_val(t_minishell *ms, char *key)
 	t_env	*env;
 
 	env = envll_findkey(&ms->state, key);
-	if (!env)
+	if (!env || !env->value)
 		return ("");
 	return (env->value);
 }

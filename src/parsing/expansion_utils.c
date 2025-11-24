@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 23:33:53 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/20 03:56:38 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/24 15:31:37 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	*join_var(t_minishell *ms, char **src, t_expand_mode mode)
 
 	i = 0;
 	while ((*src)[i] && (*src)[i] != '$' && (*src)[i] != '/' && \
-(*src)[i] != '.' && \
+(*src)[i] != '.' && (*src)[i] != '?' && \
 !is_whitespace(*src + i, "") && (*src)[i] != SQUOTE && (*src)[i] != DQUOTE)
 		++i;
 	key = str_sub(ms, VOLATILE, *src, i);

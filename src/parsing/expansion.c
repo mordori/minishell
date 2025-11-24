@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/20 22:21:04 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/24 15:28:38 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ static inline void	expand_args(t_minishell *ms, t_node *node, char **raw_args)
 {
 	char	**args;
 	t_list	*list;
-	size_t	size;
 
 	list = NULL;
 	args = raw_args;
@@ -49,8 +48,8 @@ static inline void	expand_args(t_minishell *ms, t_node *node, char **raw_args)
 		split_words(ms, *args, &list);
 		++args;
 	}
-	size = lstsize(list);
-	args = alloc_volatile(ms, (size + 1) * sizeof(char *));
+	node->cmd.argc = (int)lstsize(list);
+	args = alloc_volatile(ms, (node->cmd.argc + 1) * sizeof(char *));
 	if (!list)
 		args = NULL;
 	while (list)
@@ -60,7 +59,7 @@ static inline void	expand_args(t_minishell *ms, t_node *node, char **raw_args)
 		++args;
 		list = list->next;
 	}
-	args -= size;
+	args -= node->cmd.argc;
 	node->cmd.args = args;
 }
 
