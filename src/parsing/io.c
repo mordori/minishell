@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:05:37 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/20 03:03:17 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 20:08:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,14 +86,14 @@ try_open(ms, ms->heredoc_file, O_RDWR | O_CREAT | O_TRUNC, RW_______);
 	while (true)
 	{
 		line = get_line(ms, PROMPT);
-		if (!line || !ft_strcmp(line, eof) || g_signal)
+		if (!line || !ft_strcmp(line, eof))
 			break ;
 		if (!is_quoted)
 			line = expand_str(ms, line, EXPAND_HEREDOC);
 		try_write_endl(ms, node->cmd.redir_in, line);
 		++lines;
 	}
-	if (!line)
+	if (!line && !g_signal)
 		eof_warning(ms, eof, ms->lineno - lines);
 	close(node->cmd.redir_in);
 	node->cmd.redir_in = try_open(ms, ms->heredoc_file, O_RDWR, 0);

@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 16:52:48 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/22 17:22:38 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 23:12:12 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ static inline void	initialize(t_minishell *ms, char **envp)
 	if (isatty(STDIN_FILENO))
 	{
 		ms->mode = INTERACTIVE;
-		rl_catch_signals = 0;
 		rl_event_hook = rl_event;
 		signal(SIGINT, sig_handler);
 		signal(SIGQUIT, sig_handler);

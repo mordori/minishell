@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:25:46 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/22 15:44:34 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/23 22:05:48 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,11 @@ static void	display_vars(t_minishell *ms, t_state *state)
 {
 	t_env		*head;
 	t_env		*last;
+	int			fd_out;
 
+	fd_out = STDOUT_FILENO;
+	if (ms->state.mode == SIMPLE)
+		fd_out = ms->node->cmd.redir_out;
 	head = state->env;
 	last = envlast(state->env);
 	quicksort(head, last);
@@ -44,7 +48,7 @@ static void	display_vars(t_minishell *ms, t_state *state)
 	{
 		if (head->value)
 		{
-			try_write_endl(ms, STDOUT_FILENO, str_join(ms, \
+			try_write_endl(ms, fd_out, str_join(ms, \
 "declare -x ", str_join(ms, \
 head->key, str_join(ms, \
 "=\"", str_join(ms, \
@@ -52,7 +56,7 @@ head->value, "\"", VOLATILE), VOLATILE), VOLATILE), VOLATILE));
 		}
 		else
 		{
-			try_write_endl(ms, STDOUT_FILENO, str_join(ms, \
+			try_write_endl(ms, fd_out, str_join(ms, \
 "declare -x ", head->key, VOLATILE));
 		}
 		head = head->next;

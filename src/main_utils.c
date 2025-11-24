@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 15:41:33 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/20 15:41:35 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/23 01:31:46 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	sig_handler(int signum)
 
 void	store_pwd(t_minishell *ms)
 {
-	char		*cwd;
-	char		buf[PATH_MAX];
+	char	*cwd;
+	char	buf[PATH_MAX];
 
 	cwd = get_env_val(ms, "PWD");
 	if (!*cwd)
@@ -42,6 +42,8 @@ void	store_pwd(t_minishell *ms)
 	{
 		if (errno == ENOENT && ms->pwd[0])
 			return ;
+		warning(ms, "getcwd failed");
+		cwd = "undefined";
 	}
 	ft_memcpy(ms->pwd, cwd, ft_strlen(cwd) + 1);
 }

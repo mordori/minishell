@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 21:34:49 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/19 23:13:07 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/22 19:07:14 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,6 @@ char	*uint_to_str(t_minishell *ms, unsigned int n);
 char	**str_split(t_minishell *ms, char const *s, char c);
 bool	is_whitespace(const char *src, const char *ifs);
 char	*str_trim(char *src, const char *set);
+size_t	int_to_str(int n, char *buf);
 
 #endif
