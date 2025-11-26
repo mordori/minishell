@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 03:53:51 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/24 13:31:38 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/25 23:19:03 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,9 @@ t_minishell *ms, const char *src, unsigned int start, size_t len)
 int	rl_event(void)
 {
 	if (g_signal == SIGINT)
-	{
 		rl_done = 1;
+	if (g_signal == SIGINT || g_signal == SIGQUIT)
 		return (1);
-	}
 	return (0);
 }
 

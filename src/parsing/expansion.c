@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 04:07:18 by myli-pen          #+#    #+#             */
-/*   Updated: 2025/11/24 15:28:38 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/25 23:05:25 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static inline void	expand_redirs(t_minishell *ms, t_list *raw_redirs)
 			}
 			if (!list || list->next)
 				r->file = NULL;
-			list = list->next;
+			// list = list->next;
 		}
 		redirs = redirs->next;
 	}
