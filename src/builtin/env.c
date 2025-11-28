@@ -6,14 +6,14 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:07:03 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/23 22:04:36 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/24 15:14:28 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtin.h"
 #include "file_utils.h"
 
-static void print_env(t_minishell *ms, t_env *env)
+static void	print_env(t_minishell *ms, t_env *env)
 {
 	int		fd_out;
 
@@ -38,8 +38,7 @@ int	env(t_minishell *ms, t_node *node)
 	while (env)
 	{
 		if (env->value != NULL)
-			if (*env->value)
-				print_env(ms, env);
+			print_env(ms, env);
 		env = env->next;
 	}
 	return (SUCCESS);

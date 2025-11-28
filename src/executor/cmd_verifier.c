@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:23:27 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/20 15:16:22 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/25 23:06:41 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	command_verification(t_minishell *ms, t_node *node)
 		errno = 0;
 		warning(ms, str_join(ms, arg, ": command not found", VOLATILE));
 	}
-	else if (stat(arg, &buf) == 0 && S_ISDIR(buf.st_mode))
+	else if (!node->cmd.builtin && stat(arg, &buf) == 0 && S_ISDIR(buf.st_mode))
 	{
 		warning(ms, str_join(ms, arg, ": Is a directory", VOLATILE));
 		return (ERROR_CMD_CANTEXEC);

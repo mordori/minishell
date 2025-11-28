@@ -6,7 +6,7 @@
 /*   By: myli-pen <myli-pen@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:26:59 by jvalkama          #+#    #+#             */
-/*   Updated: 2025/11/23 02:20:28 by myli-pen         ###   ########.fr       */
+/*   Updated: 2025/11/25 02:44:49 by myli-pen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,8 @@ int	exi(t_minishell *ms, t_node *node)
 {
 	uint8_t	status;
 
-	if (isatty(STDOUT_FILENO))
+	if (ms->mode == INTERACTIVE)
 		try_write_endl(ms, STDOUT_FILENO, "exit");
-	errno = 0;
 	status = ms->state.exit_status;
 	if (node)
 	{
@@ -50,18 +49,22 @@ static inline bool	is_valid(t_minishell *ms, const char *a, uint8_t *status)
 	int		i;
 
 	i = 0;
-	if (is_numbers(a, &i) == false)
+	if (is_numbers(a, &i) == false || !*a)
 	{
 		warn_numeric(ms, a);
 		return (false);
 	}
-	if (i > 19)
+	if (i > 20)
 	{
 		warn_numeric(ms, a);
 		return (false);
 	}
 	else
-		*status = (uint8_t)ft_atouint32_t_base(a, "0123456789");
+	{
+		i = ft_atoi(a);
+		i %= 256;
+		*status = (uint8_t)i;
+	}
 	return (true);
 }
 
